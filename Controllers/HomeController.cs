@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using MuebleriaSegundoCuatri.Models;
+using Inmobiliaria2Cuatri.Models;
 using System.Diagnostics;
 
-namespace MuebleriaSegundoCuatri.Controllers
+namespace Inmobiliaria2Cuatri.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,4 +1,4 @@
-namespace MuebleriaSegundoCuatri.Models
+namespace Inmobiliaria2Cuatri.Models
 {
     public class ErrorViewModel
     {

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Inmobiliaria2Cuatri.Models.Propietario>
+@{
+    ViewData["Title"] = "Listado de Propietarios";
+}
+
+<div class="text-center">
+    <h1 class="display-4">listado de propietaros</h1>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.idPropietario)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Nombre)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.idPropietario)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Nombre)
+				</td>
+				<td>
+                    <a href ="/Propietario/Edit/@item.idPropietario">Editar</a>
+					@Html.ActionLink("Editar", "Edit", new { id = item.idPropietario }) |
+					@Html.ActionLink("Detalles", "Details", new { id = item.idPropietario }) |
+					@Html.ActionLink("Eliminar", "Delete", new { id = item.idPropietario })
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
