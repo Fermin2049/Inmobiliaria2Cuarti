@@ -18,8 +18,33 @@ namespace Inmobiliaria2Cuatri.Controllers
         public IActionResult Index()
         {
             var lista = repo.ObtenerTodos();
-            return View(lista);
-            
+            return View(lista); 
+        }
+
+        public IActionResult Edicion(int id)
+        {
+            if(id == 0)
+                return View();
+            else
+             {
+                var persona = repo.Obtener(id);
+                return View(persona);
+             }
+        }
+
+        [HttpPost]
+        public IActionResult Crear(int id, Propietario propietario)
+        {
+            if(id == 0)
+            {
+                repo.CrearPropietario(propietario);  
+            }
+            else
+             {
+                repo.ActualizarPropietario(propietario);
+             }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -30,7 +30,7 @@
 					@Html.DisplayFor(modelItem => item.Nombre)
 				</td>
 				<td>
-                    <a href ="/Propietario/Edit/@item.idPropietario">Editar</a>
+                    <a href ="/Propietario/Edicion/@item.idPropietario">Editar</a>
 					@Html.ActionLink("Editar", "Edit", new { id = item.idPropietario }) |
 					@Html.ActionLink("Detalles", "Details", new { id = item.idPropietario }) |
 					@Html.ActionLink("Eliminar", "Delete", new { id = item.idPropietario })
