@@ -1,17 +1,17 @@
-﻿@model Propietario;
+@model Propietario;
 @{
-    ViewData["Title"] = "Listado de Propietarios";
+    ViewData["Title"] = "Propietario";
 }
 
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="col-md-6">
-            <h1>Editar</h1>
+            <h1>Crear</h1>
 
             <h4>Propietario</h4>
             <hr />
 
-            <form asp-action="Edicion">
+            <form asp-action="Guardar">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Nombre" class="control-label"></label>
@@ -23,7 +23,7 @@
                     <input asp-for="Apellido" class="form-control" />
                     <span asp-validation-for="Apellido" class="text-danger"></span>
                 </div>
-				<div class="form-group">
+                <div class="form-group">
                     <label asp-for="Dni" class="control-label"></label>
                     <input asp-for="Dni" class="form-control" />
                     <span asp-validation-for="Dni" class="text-danger"></span>
@@ -38,12 +38,6 @@
                     <input asp-for="Telefono" class="form-control" />
                     <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
-				<div class="form-group">
-                    <label asp-for="Estado" class="control-label"></label>
-                    <input asp-for="Estado" class="form-control" />
-                    
-                </div>
-                
                 <div class="form-group">
                     <input type="submit" value="Crear" class="btn btn-primary" />
                 </div>
@@ -53,5 +47,5 @@
 </div>
 
 <div>
-    <a asp-action="Index">Volver</a>
+    <a asp-action="Index">Back to List</a>
 </div>

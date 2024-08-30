@@ -35,6 +35,7 @@ namespace Inmobiliaria2Cuatri.Controllers
         [HttpPost]
         public IActionResult Crear(int id, Propietario propietario)
         {
+            id = propietario.idPropietario;
             if(id == 0)
             {
                 repo.CrearPropietario(propietario);  
