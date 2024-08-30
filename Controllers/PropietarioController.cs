@@ -32,20 +32,23 @@ namespace Inmobiliaria2Cuatri.Controllers
              }
         }
 
-        [HttpPost]
-        public IActionResult Crear(int id, Propietario propietario)
+        public IActionResult Crear()
         {
-            id = propietario.idPropietario;
-            if(id == 0)
-            {
-                repo.CrearPropietario(propietario);  
-            }
-            else
-             {
-                repo.ActualizarPropietario(propietario);
-             }
+            return View();
+        }
 
-            return RedirectToAction(nameof(Index));
+        // Método para manejar el envío del formulario
+        [HttpPost]
+        public IActionResult Crear(Propietario propietario)
+        {
+            if (ModelState.IsValid)
+            {
+                repo.CrearPropietario(propietario);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(propietario);
         }
     }
 }
+
+

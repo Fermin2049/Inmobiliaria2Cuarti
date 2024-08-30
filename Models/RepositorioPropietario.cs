@@ -81,11 +81,11 @@ namespace Inmobiliaria2Cuatri.Models;
         }
 
         public int CrearPropietario(Propietario propietario)
-    {
-        int res = -1;
-        using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = @$"INSERT INTO propietario 
+            int res = 0;
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query = @$"INSERT INTO propietario 
                             ({nameof(Propietario.Nombre)}, 
                              {nameof(Propietario.Apellido)}, 
                              {nameof(Propietario.Dni)}, 
@@ -94,25 +94,25 @@ namespace Inmobiliaria2Cuatri.Models;
                              {nameof(Propietario.Estado)}) 
                          VALUES (@Nombre, @Apellido, @Dni, @Email, @Telefono, @Estado); 
                          SELECT LAST_INSERT_ID();";
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@Nombre", propietario.Nombre);
-                command.Parameters.AddWithValue("@Apellido", propietario.Apellido);
-                command.Parameters.AddWithValue("@Dni", propietario.Dni);
-                command.Parameters.AddWithValue("@Email", propietario.Email);
-                command.Parameters.AddWithValue("@Telefono", propietario.Telefono);
-                command.Parameters.AddWithValue("@Estado", propietario.Estado);
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Nombre", propietario.Nombre);
+                    command.Parameters.AddWithValue("@Apellido", propietario.Apellido);
+                    command.Parameters.AddWithValue("@Dni", propietario.Dni);
+                    command.Parameters.AddWithValue("@Email", propietario.Email);
+                    command.Parameters.AddWithValue("@Telefono", propietario.Telefono);
+                    command.Parameters.AddWithValue("@Estado", propietario.Estado);
              
-                connection.Open();
-                res = Convert.ToInt32(command.ExecuteScalar());
-            }
-        } 
-        return res;
-    }
+                    connection.Open();
+                    res = Convert.ToInt32(command.ExecuteScalar());
+                }
+            } 
+            return res;
+        }
 
-    public int ActualizarPropietario(Propietario propietario)
+    public bool ActualizarPropietario(Propietario propietario)
     {
-        int result = -1;
+        
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
             var sql = @$"UPDATE propietario 
@@ -125,7 +125,7 @@ namespace Inmobiliaria2Cuatri.Models;
                          WHERE {nameof(Propietario.idPropietario)} = @idPropietario;";
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("@PropietarioID", propietario.idPropietario);
+                command.Parameters.AddWithValue("@idPropietario", propietario.idPropietario);
                 command.Parameters.AddWithValue("@Nombre", propietario.Nombre);
                 command.Parameters.AddWithValue("@Apellido", propietario.Apellido);
                 command.Parameters.AddWithValue("@Dni", propietario.Dni);
@@ -134,16 +134,17 @@ namespace Inmobiliaria2Cuatri.Models;
                 command.Parameters.AddWithValue("@Estado", propietario.Estado);
                 
                 connection.Open();
-                result = command.ExecuteNonQuery();
-                connection.Close();
+                int result = command.ExecuteNonQuery();
+                return result > 0;
+                
             }
         }
-        return result;
+        
     }
 
-    public int EliminarPropietario(int id)
+    public bool EliminarPropietario(int id)
     {
-        int result = -1;
+       
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
             var query = @$"DELETE FROM propietario 
@@ -152,11 +153,12 @@ namespace Inmobiliaria2Cuatri.Models;
             {
                 command.Parameters.AddWithValue("@idPropietario", id);
                 connection.Open();
-                result = command.ExecuteNonQuery();
-                connection.Close();
+                int result = command.ExecuteNonQuery();
+                return result > 0;
+
             }
         }
-        return result;
+        
     }
 }
     
