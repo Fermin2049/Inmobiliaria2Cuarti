@@ -21,6 +21,7 @@ namespace Inmobiliaria2Cuatri.Controllers
             return View(lista); 
         }
 
+        // Método para mostrar el formulario de edición
         public IActionResult Edicion(int id)
         {
             if(id == 0)
@@ -32,12 +33,25 @@ namespace Inmobiliaria2Cuatri.Controllers
              }
         }
 
+        // Método para manejar el envío del formulario de edicion
+        [HttpPost]
+        public IActionResult Edicion(Propietario propietario)
+        {
+            if (ModelState.IsValid)
+            {
+                repo.ActualizarPropietario(propietario);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(propietario);
+        }
+
+        // Método para mostrar el formulario de creación
         public IActionResult Crear()
         {
             return View();
         }
 
-        // Método para manejar el envío del formulario
+        // Método para manejar el envío del formulario de creacion
         [HttpPost]
         public IActionResult Crear(Propietario propietario)
         {
@@ -47,6 +61,15 @@ namespace Inmobiliaria2Cuatri.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(propietario);
+        }
+
+        public IActionResult Eliminar(int id)
+        {
+            if (id != 0)
+            {
+                repo.EliminarLogico(id);
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

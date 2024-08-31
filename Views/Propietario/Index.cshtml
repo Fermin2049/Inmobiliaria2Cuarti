@@ -3,41 +3,68 @@
     ViewData["Title"] = "Listado de Propietarios";
 }
 
-<div class="text-center">
-    <h1 class="display-4">listado de propietaros</h1>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center mb-4">
+                <h1 class="display-4">Listado de Propietarios</h1>
+            </div>
+            <h4 class="text-center mb-4">
+                <a asp-action="Crear" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> Crear Nuevo Propietario
+                </a>
+            </h4>
+
+            <!-- Barra de búsqueda -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar propietario..." aria-label="Buscar propietario" />
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+
+            <table class="table table-hover table-bordered table-striped align-middle" id="propietariosTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().idPropietario)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Nombre)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Apellido)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Dni)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Telefono)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.idPropietario)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Dni)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                            <td>
+                                <a asp-action="Edicion" asp-route-id="@item.idPropietario" class="btn btn-sm btn-warning mx-1">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                @Html.ActionLink("Detalles", "Details", new { id = item.idPropietario }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.idPropietario }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este propietario?');" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<h4 class="text-center">
-	 <a href ="/Propietario/Crear/">Crear</a>
-</h4>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.idPropietario)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Nombre)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.idPropietario)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Nombre)
-				</td>
-				<td>
-                    <a href ="/Propietario/Edicion/@item.idPropietario">Editar</a>
-					@Html.ActionLink("Editar", "Edit", new { id = item.idPropietario }) |
-					@Html.ActionLink("Detalles", "Details", new { id = item.idPropietario }) |
-					@Html.ActionLink("Eliminar", "Delete", new { id = item.idPropietario })
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+
+<!-- Script para búsqueda en la tabla -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        var input = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#propietariosTable tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+        });
+    });
+</script>

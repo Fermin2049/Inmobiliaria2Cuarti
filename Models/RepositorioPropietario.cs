@@ -17,7 +17,8 @@ namespace Inmobiliaria2Cuatri.Models;
                                       {nameof(Propietario.Email)},
                                       {nameof(Propietario.Telefono)},
                                       {nameof(Propietario.Estado)}
-                            FROM propietario"; 
+                            FROM propietario
+                            WHERE {nameof(Propietario.Estado)} = true"; // Solo traer activos"; 
                 using(MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -142,23 +143,23 @@ namespace Inmobiliaria2Cuatri.Models;
         
     }
 
-    public bool EliminarPropietario(int id)
+    public int EliminarLogico(int id)
     {
-       
         using (MySqlConnection connection = new MySqlConnection(ConectionString))
         {
-            var query = @$"DELETE FROM propietario 
-                         WHERE {nameof(Propietario.idPropietario)} = @idPropietario;";
-            using (MySqlCommand command = new MySqlCommand(query, connection))
+            string sql = @$"UPDATE propietario 
+                            SET {nameof(Propietario.Estado)} = @Estado 
+                            WHERE {nameof(Propietario.idPropietario)} = @idPropietario;";
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
                 command.Parameters.AddWithValue("@idPropietario", id);
+                command.Parameters.AddWithValue("@Estado", false); // Marcar como eliminado lógico
                 connection.Open();
                 int result = command.ExecuteNonQuery();
-                return result > 0;
-
+                connection.Close();
+                return result;
             }
         }
-        
     }
 }
     

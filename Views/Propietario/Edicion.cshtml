@@ -1,6 +1,6 @@
 ﻿@model Propietario;
 @{
-    ViewData["Title"] = "Listado de Propietarios";
+    ViewData["Title"] = "Editar Propietario";
 }
 
 <div class="container">
@@ -12,6 +12,7 @@
             <hr />
 
             <form asp-action="Edicion">
+                <input type="hidden" asp-for="idPropietario" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Nombre" class="control-label"></label>
@@ -38,10 +39,9 @@
                     <input asp-for="Telefono" class="form-control" />
                     <span asp-validation-for="Telefono" class="text-danger"></span>
                 </div>
-				<div class="form-group">
-                    <label asp-for="Estado" class="control-label"></label>
-                    <input asp-for="Estado" class="form-control" />
-                    <span asp-validation-for="Estado" class="text-danger"></span>
+				<div class="form-group form-check">
+                    <input asp-for="Estado" type="checkbox" class="form-check-input" />
+                    <label asp-for="Estado" class="form-check-label"></label>
                 </div>
                 
                 <div class="form-group">
