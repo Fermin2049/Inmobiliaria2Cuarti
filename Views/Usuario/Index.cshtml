@@ -1,0 +1,66 @@
+@model IEnumerable<Inmobiliaria2Cuarti.Models.Usuario>
+@{
+    ViewData["Title"] = "Listado de Usuarios";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center mb-4">
+                <h1 class="display-4">Listado de Usuarios</h1>
+            </div>
+            <h4 class="text-center mb-4">
+                <a asp-action="Crear" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> Crear Nuevo Usuario
+                </a>
+            </h4>
+
+            <!-- Barra de búsqueda -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar usuario..." aria-label="Buscar usuario" />
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+
+            <table class="table table-hover table-bordered table-striped align-middle" id="usuariosTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().Nombre)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Apellido)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Rol)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Rol)</td>
+                            <td>
+                                <a asp-action="Edicion" asp-route-id="@item.Id" class="btn btn-sm btn-warning mx-1">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Id }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este usuario?');" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Script para búsqueda en la tabla -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        var input = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#usuariosTable tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+        });
+    });
+</script>

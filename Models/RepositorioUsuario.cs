@@ -18,7 +18,7 @@ namespace Inmobiliaria2Cuarti.Models
                                       {nameof(Usuario.Nombre)},
                                       {nameof(Usuario.Apellido)},
                                       {nameof(Usuario.Email)},
-                                      {nameof(Usuario.Clave)},
+                                      {nameof(Usuario.Contrasenia)},
                                       {nameof(Usuario.Avatar)},
                                       {nameof(Usuario.Rol)}
                             FROM usuario";
@@ -35,7 +35,7 @@ namespace Inmobiliaria2Cuarti.Models
                                 Nombre = reader.GetString(nameof(Usuario.Nombre)),
                                 Apellido = reader.GetString(nameof(Usuario.Apellido)),
                                 Email = reader.GetString(nameof(Usuario.Email)),
-                                Clave = reader.GetString(nameof(Usuario.Clave)),
+                                Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
                                 Avatar = reader.GetString(nameof(Usuario.Avatar)),
                                 Rol = reader.GetString(nameof(Usuario.Rol)),
                             }
@@ -57,7 +57,7 @@ namespace Inmobiliaria2Cuarti.Models
                                       {nameof(Usuario.Nombre)},
                                       {nameof(Usuario.Apellido)},
                                       {nameof(Usuario.Email)},
-                                      {nameof(Usuario.Clave)},
+                                      {nameof(Usuario.Contrasenia)},
                                       {nameof(Usuario.Avatar)},
                                       {nameof(Usuario.Rol)}
                             FROM usuario
@@ -75,7 +75,7 @@ namespace Inmobiliaria2Cuarti.Models
                             Nombre = reader.GetString(nameof(Usuario.Nombre)),
                             Apellido = reader.GetString(nameof(Usuario.Apellido)),
                             Email = reader.GetString(nameof(Usuario.Email)),
-                            Clave = reader.GetString(nameof(Usuario.Clave)),
+                            Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
                             Avatar = reader.GetString(nameof(Usuario.Avatar)),
                             Rol = reader.GetString(nameof(Usuario.Rol)),
                         };
@@ -96,7 +96,7 @@ namespace Inmobiliaria2Cuarti.Models
                             ({nameof(Usuario.Nombre)}, 
                              {nameof(Usuario.Apellido)}, 
                              {nameof(Usuario.Email)}, 
-                             {nameof(Usuario.Clave)}, 
+                             {nameof(Usuario.Contrasenia)}, 
                              {nameof(Usuario.Avatar)},
                              {nameof(Usuario.Rol)}) 
                          VALUES (@Nombre, @Apellido, @Email, @Clave, @Avatar, @Rol); 
@@ -106,7 +106,7 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@Email", usuario.Email);
-                    command.Parameters.AddWithValue("@Clave", usuario.Clave);
+                    command.Parameters.AddWithValue("@Clave", usuario.Contrasenia);
                     command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
 
@@ -126,7 +126,7 @@ namespace Inmobiliaria2Cuarti.Models
                          SET {nameof(Usuario.Nombre)} = @Nombre, 
                              {nameof(Usuario.Apellido)} = @Apellido, 
                              {nameof(Usuario.Email)} = @Email, 
-                             {nameof(Usuario.Clave)} = @Clave, 
+                             {nameof(Usuario.Contrasenia)} = @Clave, 
                              {nameof(Usuario.Avatar)} = @Avatar,
                              {nameof(Usuario.Rol)} = @Rol
                          WHERE {nameof(Usuario.Id)} = @Id;";
@@ -136,7 +136,7 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@Email", usuario.Email);
-                    command.Parameters.AddWithValue("@Clave", usuario.Clave);
+                    command.Parameters.AddWithValue("@Clave", usuario.Contrasenia);
                     command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
 

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj": {}
+    "C:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj": {
+    "C:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj",
+        "projectUniqueName": "C:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj",
         "projectName": "MuebleriaSegundoCuatri",
-        "projectPath": "c:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj",
+        "projectPath": "C:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\MuebleriaSegundoCuatri.csproj",
         "packagesPath": "C:\\Users\\Fermin\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\obj\\",
+        "outputPath": "C:\\Users\\Fermin\\Desktop\\inmoviliriaSegundoCuatri\\Inmobiliaria2Cuarti\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Fermin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -46,6 +46,22 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "FirebaseAdmin": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "FirebaseStorage.net": {
+              "target": "Package",
+              "version": "[1.0.3, )"
+            },
+            "Google.Apis.Auth": {
+              "target": "Package",
+              "version": "[1.67.0, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[8.4.0, )"

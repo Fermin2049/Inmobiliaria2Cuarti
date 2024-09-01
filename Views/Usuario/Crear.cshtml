@@ -1,0 +1,56 @@
+@model Inmobiliaria2Cuarti.Models.Usuario
+@{
+    ViewData["Title"] = "Usuario";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <h1>Crear</h1>
+
+            <h4>Usuario</h4>
+            <hr />
+
+            <form asp-action="Crear" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Contrasenia" class="control-label"></label>
+                    <input asp-for="Contrasenia" class="form-control" type="password" />
+                    <span asp-validation-for="Contrasenia" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Avatar" class="control-label"></label>
+                    <input asp-for="Avatar" class="form-control" type="file" />
+                    <span asp-validation-for="Avatar" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Rol" class="control-label"></label>
+                    <input asp-for="Rol" class="form-control" />
+                    <span asp-validation-for="Rol" class="text-danger"></span>
+                </div>
+                <div class="form-group text-center">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
