@@ -12,8 +12,8 @@ namespace Inmobiliaria2Cuarti.Models
         [DataType(DataType.Date)]
         public DateTime FechaPago { get; set; }
 
-        public string Detalle { get; set; }
-        public decimal Importe { get; set; }
-        public string Estado { get; set; }
+        public string? Detalle { get; set; }
+        public decimal? Importe { get; set; }
+        public string? Estado { get; set; }
     }
 }
