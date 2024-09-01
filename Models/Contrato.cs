@@ -24,6 +24,6 @@ namespace Inmobiliaria2Cuarti.Models
         [DataType(DataType.Currency)]
         public decimal Comision { get; set; }
 
-        public string Condiciones { get; set; }
+        public string? Condiciones { get; set; }
     }
 }
