@@ -2,9 +2,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using BCrypt.Net;
-using Firebase.Storage; // Importa el namespace correcto para Firebase Storage
+using Firebase.Storage;
 using Inmobiliaria2Cuarti.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Inmobiliaria2Cuarti.Controllers
 {
@@ -25,6 +27,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(lista);
         }
 
+        [HttpGet]
         public IActionResult Edicion(int id)
         {
             if (id == 0)
@@ -43,14 +46,29 @@ namespace Inmobiliaria2Cuarti.Controllers
             {
                 if (Avatar != null && Avatar.Length > 0)
                 {
-                    var stream = Avatar.OpenReadStream();
-                    // Usa FirebaseStorage.net para subir la imagen
-                    var task = new FirebaseStorage("gs://inmobilirianet.appspot.com")
-                        .Child("avatars")
-                        .Child(Avatar.FileName)
-                        .PutAsync(stream);
+                    try
+                    {
+                        var stream = Avatar.OpenReadStream();
+                        var task = new FirebaseStorage("inmobilirianet.appspot.com")
+                            .Child("avatars")
+                            .Child(Avatar.FileName)
+                            .PutAsync(stream);
 
-                    usuario.Avatar = await task;
+                        usuario.Avatar = await task;
+                    }
+                    catch (FirebaseStorageException ex)
+                    {
+                        ModelState.AddModelError(
+                            string.Empty,
+                            "Error al subir el archivo: " + ex.Message
+                        );
+                        return View(usuario);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                        return View(usuario);
+                    }
                 }
 
                 usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
@@ -60,6 +78,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(usuario);
         }
 
+        [HttpGet]
         public IActionResult Crear()
         {
             return View();
@@ -68,23 +87,42 @@ namespace Inmobiliaria2Cuarti.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(Usuario usuario, IFormFile Avatar)
         {
-            if (ModelState.IsValid)
+            if (Avatar != null && Avatar.Length > 0)
             {
-                if (Avatar != null && Avatar.Length > 0)
+                try
                 {
                     var stream = Avatar.OpenReadStream();
-                    var task = new FirebaseStorage("gs://inmobilirianet.appspot.com")
+
+                    // Actualizar la URL para la carga
+                    var task = new FirebaseStorage("inmobilirianet.appspot.com") // Quitar el prefijo gs://
                         .Child("avatars")
                         .Child(Avatar.FileName)
                         .PutAsync(stream);
 
                     usuario.Avatar = await task;
                 }
+                catch (FirebaseStorageException ex)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Error al subir el archivo: " + ex.Message
+                    );
+                    return View(usuario);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                    return View(usuario);
+                }
+            }
 
+            if (ModelState.IsValid)
+            {
                 usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
                 repo.CrearUsuario(usuario);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(usuario);
         }
 

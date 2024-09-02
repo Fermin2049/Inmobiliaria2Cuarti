@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-08-2024 a las 02:44:08
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 02-09-2024 a las 02:59:55
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -67,10 +67,17 @@ CREATE TABLE `inquilino` (
   `Nombre` varchar(50) NOT NULL,
   `Apellido` varchar(50) NOT NULL,
   `Dni` int(50) NOT NULL,
-  `Telefono` int(50) NOT NULL,
+  `Telefono` varchar(100) NOT NULL,
   `Email` varchar(30) NOT NULL,
   `Estado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `inquilino`
+--
+
+INSERT INTO `inquilino` (`idInquilino`, `Nombre`, `Apellido`, `Dni`, `Telefono`, `Email`, `Estado`) VALUES
+(1, 'Fermin', 'Fernandez', 33539061, '2147483647', 'fermin2049@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -128,7 +135,8 @@ INSERT INTO `propietario` (`idPropietario`, `Nombre`, `Apellido`, `Dni`, `Telefo
 (17, 'José', 'Molina', 89009876, '555-8901', 'jose.molina@example.com', 1),
 (18, 'Clara', 'Ortega', 90109876, '555-9012', 'clara.ortega@example.com', 1),
 (19, 'Andrés', 'Cruz', 23456780, '555-1230', 'andres.cruz@example.com', 1),
-(20, 'Paula', 'Santos', 34567890, '555-2340', 'paula.santos@example.com', 1);
+(20, 'Paula', 'Santos', 34567890, '555-2340', 'paula.santos@example.com', 1),
+(21, 'ENRIQUE ROLANDO', 'GODOY', 78901234, '2664010204', 'GODOY4695@GMAIL.COM', 0);
 
 -- --------------------------------------------------------
 
@@ -137,11 +145,23 @@ INSERT INTO `propietario` (`idPropietario`, `Nombre`, `Apellido`, `Dni`, `Telefo
 --
 
 CREATE TABLE `usuario` (
-  `idUsuario` int(10) NOT NULL,
+  `Id` int(10) NOT NULL,
+  `Nombre` varchar(50) NOT NULL,
+  `Apellido` varchar(50) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Contrasenia` varchar(50) NOT NULL,
+  `Avatar` varchar(255) NOT NULL,
   `Rol` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`Id`, `Nombre`, `Apellido`, `Email`, `Contrasenia`, `Avatar`, `Rol`) VALUES
+(1, 'Fermin', 'Fernandez', 'fermin2049@gmail.com', 'Fermin', '', '1'),
+(2, 'Tomas', 'Fernandez', 'Tomas2049@gmail.com', 'asdsads', 'asdsadsa', '1'),
+(3, 'ENRIQUE ROLANDO', 'GODOY', 'GODOY4695@GMAIL.COM', '$2a$11$wJYoIApbgt/JX/tsIXj2Q.3h3wUr.FDj3J17KyOZOQa', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2Fcat.jpg?alt=media&token=4ee45119-14af-47d1-8be4-87d39ac00372', '1');
 
 --
 -- Índices para tablas volcadas
@@ -166,7 +186,9 @@ ALTER TABLE `inmueble`
 -- Indices de la tabla `inquilino`
 --
 ALTER TABLE `inquilino`
-  ADD PRIMARY KEY (`idInquilino`);
+  ADD PRIMARY KEY (`idInquilino`),
+  ADD UNIQUE KEY `Dni` (`Dni`,`Telefono`,`Email`),
+  ADD UNIQUE KEY `Dni_2` (`Dni`,`Telefono`,`Email`);
 
 --
 -- Indices de la tabla `pagos`
@@ -185,7 +207,7 @@ ALTER TABLE `propietario`
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`idUsuario`);
+  ADD PRIMARY KEY (`Id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -207,7 +229,7 @@ ALTER TABLE `inmueble`
 -- AUTO_INCREMENT de la tabla `inquilino`
 --
 ALTER TABLE `inquilino`
-  MODIFY `idInquilino` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idInquilino` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `pagos`
@@ -219,13 +241,13 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
-  MODIFY `idPropietario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `idPropietario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `idUsuario` int(10) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

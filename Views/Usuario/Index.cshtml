@@ -27,6 +27,8 @@
                         <th>@Html.DisplayNameFor(model => model.First().Nombre)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Apellido)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Contrasenia)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Avatar)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Rol)</th>
                         <th>Acciones</th>
                     </tr>
@@ -38,6 +40,10 @@
                             <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
                             <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Contrasenia)</td>
+                            <td>
+                                <img src="@item.Avatar" alt="Avatar" style="width: 50px; height: 50px;" />
+                            </td>
                             <td>@Html.DisplayFor(modelItem => item.Rol)</td>
                             <td>
                                 <a asp-action="Edicion" asp-route-id="@item.Id" class="btn btn-sm btn-warning mx-1">
