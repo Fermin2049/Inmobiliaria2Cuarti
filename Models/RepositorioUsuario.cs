@@ -22,7 +22,8 @@ namespace Inmobiliaria2Cuarti.Models
                                       {nameof(Usuario.Avatar)},
                                       {nameof(Usuario.Rol)},
                                       {nameof(Usuario.Estado)}
-                            FROM usuario";
+                            FROM usuario
+                            WHERE {nameof(Usuario.Estado)} = true";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -102,7 +103,7 @@ namespace Inmobiliaria2Cuarti.Models
                              {nameof(Usuario.Email)}, 
                              {nameof(Usuario.Contrasenia)}, 
                              {nameof(Usuario.Avatar)},
-                             {nameof(Usuario.Rol)}),
+                             {nameof(Usuario.Rol)},
                             {nameof(Usuario.Estado)}) 
                          VALUES (@Nombre, @Apellido, @Email, @Clave, @Avatar, @Rol, @Estado); 
                          SELECT LAST_INSERT_ID();";
