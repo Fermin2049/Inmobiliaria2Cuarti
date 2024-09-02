@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MuebleriaSegundoCuatri")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3a80b3e86aaf40fe6bf4c93becd3a4f90e38074e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6db81c3772a37bd08f3eff7a0150a520b916dd55")]
 [assembly: System.Reflection.AssemblyProductAttribute("MuebleriaSegundoCuatri")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MuebleriaSegundoCuatri")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
