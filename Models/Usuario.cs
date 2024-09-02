@@ -16,5 +16,6 @@ namespace Inmobiliaria2Cuarti.Models
 
         public string? Avatar { get; set; }
         public string? Rol { get; set; }
+        public bool Estado { get; set; }
     }
 }

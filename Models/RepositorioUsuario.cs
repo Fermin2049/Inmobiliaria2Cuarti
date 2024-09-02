@@ -20,7 +20,8 @@ namespace Inmobiliaria2Cuarti.Models
                                       {nameof(Usuario.Email)},
                                       {nameof(Usuario.Contrasenia)},
                                       {nameof(Usuario.Avatar)},
-                                      {nameof(Usuario.Rol)}
+                                      {nameof(Usuario.Rol)},
+                                      {nameof(Usuario.Estado)}
                             FROM usuario";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -38,6 +39,7 @@ namespace Inmobiliaria2Cuarti.Models
                                 Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
                                 Avatar = reader.GetString(nameof(Usuario.Avatar)),
                                 Rol = reader.GetString(nameof(Usuario.Rol)),
+                                Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                             }
                         );
                     }
@@ -59,7 +61,8 @@ namespace Inmobiliaria2Cuarti.Models
                                       {nameof(Usuario.Email)},
                                       {nameof(Usuario.Contrasenia)},
                                       {nameof(Usuario.Avatar)},
-                                      {nameof(Usuario.Rol)}
+                                      {nameof(Usuario.Rol)},
+                                      {nameof(Usuario.Estado)}
                             FROM usuario
                             WHERE {nameof(Usuario.Id)} = @id";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -78,6 +81,7 @@ namespace Inmobiliaria2Cuarti.Models
                             Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
                             Avatar = reader.GetString(nameof(Usuario.Avatar)),
                             Rol = reader.GetString(nameof(Usuario.Rol)),
+                            Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                         };
                     }
                     connection.Close();
@@ -98,8 +102,9 @@ namespace Inmobiliaria2Cuarti.Models
                              {nameof(Usuario.Email)}, 
                              {nameof(Usuario.Contrasenia)}, 
                              {nameof(Usuario.Avatar)},
-                             {nameof(Usuario.Rol)}) 
-                         VALUES (@Nombre, @Apellido, @Email, @Clave, @Avatar, @Rol); 
+                             {nameof(Usuario.Rol)}),
+                            {nameof(Usuario.Estado)}) 
+                         VALUES (@Nombre, @Apellido, @Email, @Clave, @Avatar, @Rol, @Estado); 
                          SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -109,6 +114,7 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Clave", usuario.Contrasenia);
                     command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
+                    command.Parameters.AddWithValue("@Estado", usuario.Estado);
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
@@ -128,7 +134,8 @@ namespace Inmobiliaria2Cuarti.Models
                              {nameof(Usuario.Email)} = @Email, 
                              {nameof(Usuario.Contrasenia)} = @Clave, 
                              {nameof(Usuario.Avatar)} = @Avatar,
-                             {nameof(Usuario.Rol)} = @Rol
+                             {nameof(Usuario.Rol)} = @Rol,
+                             {nameof(Usuario.Estado)} = @Estado
                          WHERE {nameof(Usuario.Id)} = @Id;";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
@@ -139,6 +146,7 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Clave", usuario.Contrasenia);
                     command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
+                    command.Parameters.AddWithValue("@Estado", usuario.Estado);
 
                     connection.Open();
                     int result = command.ExecuteNonQuery();
