@@ -1,0 +1,72 @@
+@model Inmobiliaria2Cuarti.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalle de Usuario";
+}
+
+<h2>Detalle de Usuario</h2>
+
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Apellido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Apellido)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Contrasenia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Contrasenia)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Avatar)
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.Avatar))
+            {
+                <img src="@Model.Avatar" alt="Avatar" style="max-width: 100px;" />
+            }
+            else
+            {
+                <span>No Avatar</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rol)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Rol)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-primary">Volver a la lista</a>
+</div>

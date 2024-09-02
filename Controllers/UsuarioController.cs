@@ -126,6 +126,16 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(usuario);
         }
 
+        public IActionResult Detalle(int id)
+        {
+            var usuario = repo.Obtener(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return View(usuario);
+        }
+
         public IActionResult Eliminar(int id)
         {
             if (id != 0)

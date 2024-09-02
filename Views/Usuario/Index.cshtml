@@ -49,7 +49,7 @@
                                 <a asp-action="Edicion" asp-route-id="@item.Id" class="btn btn-sm btn-warning mx-1">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Detalle", "Detalle", new { id = item.Id }, new { @class = "btn btn-sm btn-info mx-1" })
                                 @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Id }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este usuario?');" })
                             </td>
                         </tr>
