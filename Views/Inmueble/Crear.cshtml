@@ -1,0 +1,67 @@
+@model Inmueble;
+@{
+    ViewData["Title"] = "Inmueble";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <h1>Crear</h1>
+
+            <h4>Inmueble</h4>
+            <hr />
+
+            <form asp-action="Edicion">
+                <input type="hidden" asp-for="idInmueble" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="idInmueble" class="control-label"></label>
+                    <input asp-for="idInmueble" class="form-control" />
+                    <span asp-validation-for="idInmueble" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="idPropietario" class="control-label"></label>
+                    <input asp-for="idPropietario" class="form-control" />
+                    <span asp-validation-for="idPropietario" class="text-danger"></span>
+                </div>
+				<div class="form-group">
+                    <label asp-for="Direccion" class="control-label"></label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Uso" class="control-label"></label>
+                    <input asp-for="Uso" class="form-control" />
+                    <span asp-validation-for="Uso" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Tipo" class="control-label"></label>
+                    <input asp-for="Tipo" class="form-control" />
+                    <span asp-validation-for="Tipo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CantAmbiente" class="control-label"></label>
+                    <input asp-for="CantAmbiente" class="form-control" />
+                    <span asp-validation-for="CantAmbiente" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Valor" class="control-label"></label>
+                    <input asp-for="Valor" class="form-control" />
+                    <span asp-validation-for="Valor" class="text-danger"></span>
+                </div>
+				<div class="form-group form-check">
+                    <input asp-for="Estado" type="checkbox" class="form-check-input" />
+                    <label asp-for="Estado" class="form-check-label"></label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Editar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
