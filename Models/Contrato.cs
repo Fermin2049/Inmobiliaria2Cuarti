@@ -1,19 +1,24 @@
 using System;
+namespace Inmobiliaria2Cuarti.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Inmobiliaria2Cuarti.Models
-{
     public class Contrato
     {
+        [Key]
         public int IdContrato { get; set; }
+        [Required]
         public int IdInmueble { get; set; }
+        [Required]
         public int IdInquilino { get; set; }
+        [Required]
 
         [DataType(DataType.Date)]
         public DateTime FechaInicio { get; set; }
+        [Required]
 
         [DataType(DataType.Date)]
         public DateTime FechaFin { get; set; }
+        [Required]
 
         [DataType(DataType.Currency)]
         public decimal MontoRenta { get; set; }
@@ -26,4 +31,6 @@ namespace Inmobiliaria2Cuarti.Models
 
         public string? Condiciones { get; set; }
     }
-}
+
+
+
