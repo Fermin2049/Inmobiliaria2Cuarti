@@ -54,7 +54,7 @@ namespace Inmobiliaria2Cuatri.Controllers
             ViewBag.Propietario = new SelectList(
                 repoPropietario.ObtenerTodos(),
                 "IdPropietario",
-                "Direccion"
+                "Nombre"
             );
           
             return View();
