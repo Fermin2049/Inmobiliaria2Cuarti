@@ -1,7 +1,7 @@
 namespace Inmobiliaria2Cuatri.Models;
     public class Propietario
     {
-        public int idPropietario { get; set; }
+        public int IdPropietario { get; set; }
         public string? Nombre { get; set; }
         public string? Apellido { get; set; }
         public int  Dni { get; set; }

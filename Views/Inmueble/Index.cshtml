@@ -7,11 +7,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="text-center mb-4">
-                <h1 class="display-4">Listado de Inquilonos</h1>
+                <h1 class="display-4">Listado de Inmuebles</h1>
             </div>
             <h4 class="text-center mb-4">
                 <a asp-action="Crear" class="btn btn-success">
-                    <i class="fas fa-plus-circle"></i> Crear Nuevo Inquilino
+                    <i class="fas fa-plus-circle"></i> Crear Nuevo Inmueble
                 </a>
             </h4>
 
@@ -24,8 +24,8 @@
             <table class="table table-hover table-bordered table-striped align-middle" id="inmueblesTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.First().idInmueble)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().idPropietario)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().IdInmueble)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().IdPropietario)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Direccion)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Uso)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Tipo)</th>
@@ -39,8 +39,8 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.idInmueble)</td>
-                            <td>@Html.DisplayFor(modelItem => item.idPropietario)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IdInmueble)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IdPropietario)</td>
                             <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
                             <td>@Html.DisplayFor(modelItem => item.Uso)</td>
                             <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
@@ -48,11 +48,11 @@
                             <td>@Html.DisplayFor(modelItem => item.Valor)</td>
                             <td>@Html.DisplayFor(modelItem => item.Estado)</td>
                             <td>
-                                <a asp-action="Edicion" asp-route-id="@item.idInmueble" class="btn btn-sm btn-warning mx-1">
+                                <a asp-action="Edicion" asp-route-id="@item.IdInmueble" class="btn btn-sm btn-warning mx-1">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                @Html.ActionLink("Detalles", "Details", new { id = item.idInmueble }, new { @class = "btn btn-sm btn-info mx-1" })
-                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.idInmueble }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este propietario?');" })
+                                @Html.ActionLink("Detalles", "Details", new { id = item.IdInmueble }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdInmueble }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este propietario?');" })
                             </td>
                         </tr>
                     }

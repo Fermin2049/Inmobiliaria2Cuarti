@@ -1,7 +1,7 @@
 namespace Inmobiliaria2Cuatri.Models;
     public class Inquilino
     {
-        public int idInquilino { get; set; }
+        public int IdInquilino { get; set; }
         public string? Nombre { get; set; }
         public string? Apellido { get; set; }
         public int  Dni { get; set; }

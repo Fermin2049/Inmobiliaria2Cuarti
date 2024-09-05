@@ -42,11 +42,11 @@
                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
                             <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
                             <td>
-                                <a asp-action="Edicion" asp-route-id="@item.idPropietario" class="btn btn-sm btn-warning mx-1">
+                                <a asp-action="Edicion" asp-route-id="@item.IdPropietario" class="btn btn-sm btn-warning mx-1">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                @Html.ActionLink("Detalles", "Details", new { id = item.idPropietario }, new { @class = "btn btn-sm btn-info mx-1" })
-                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.idPropietario }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este propietario?');" })
+                                @Html.ActionLink("Detalles", "Details", new { id = item.IdPropietario }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdPropietario }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este propietario?');" })
                             </td>
                         </tr>
                     }

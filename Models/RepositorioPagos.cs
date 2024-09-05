@@ -61,10 +61,10 @@ namespace Inmobiliaria2Cuarti.Models
                               {nameof(Pagos.Importe)},
                               {nameof(Pagos.Estado)}
                         FROM pagos
-                        WHERE {nameof(Pagos.IdPago)} = @id";
+                        WHERE {nameof(Pagos.IdPago)} = @IdPago";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@IdPago", id);
                     connection.Open();
                     var reader = command.ExecuteReader();
                     if (reader.Read())

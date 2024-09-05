@@ -14,7 +14,7 @@ namespace Inmobiliaria2Cuarti.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Usuario.Id)},
+                    $@"SELECT {nameof(Usuario.IdUsuario)},
                                       {nameof(Usuario.Nombre)},
                                       {nameof(Usuario.Apellido)},
                                       {nameof(Usuario.Email)},
@@ -33,7 +33,7 @@ namespace Inmobiliaria2Cuarti.Models
                         usuarios.Add(
                             new Usuario
                             {
-                                Id = reader.GetInt32(nameof(Usuario.Id)),
+                                IdUsuario = reader.GetInt32(nameof(Usuario.IdUsuario)),
                                 Nombre = reader.GetString(nameof(Usuario.Nombre)),
                                 Apellido = reader.GetString(nameof(Usuario.Apellido)),
                                 Email = reader.GetString(nameof(Usuario.Email)),
@@ -56,7 +56,7 @@ namespace Inmobiliaria2Cuarti.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Usuario.Id)},
+                    $@"SELECT {nameof(Usuario.IdUsuario)},
                                       {nameof(Usuario.Nombre)},
                                       {nameof(Usuario.Apellido)},
                                       {nameof(Usuario.Email)},
@@ -65,17 +65,17 @@ namespace Inmobiliaria2Cuarti.Models
                                       {nameof(Usuario.Rol)},
                                       {nameof(Usuario.Estado)}
                             FROM usuario
-                            WHERE {nameof(Usuario.Id)} = @id";
+                            WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@IdUsuario", id);
                     connection.Open();
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
                         res = new Usuario
                         {
-                            Id = reader.GetInt32(nameof(Usuario.Id)),
+                            IdUsuario = reader.GetInt32(nameof(Usuario.IdUsuario)),
                             Nombre = reader.GetString(nameof(Usuario.Nombre)),
                             Apellido = reader.GetString(nameof(Usuario.Apellido)),
                             Email = reader.GetString(nameof(Usuario.Email)),
@@ -137,10 +137,10 @@ namespace Inmobiliaria2Cuarti.Models
                              {nameof(Usuario.Avatar)} = @Avatar,
                              {nameof(Usuario.Rol)} = @Rol,
                              {nameof(Usuario.Estado)} = @Estado
-                         WHERE {nameof(Usuario.Id)} = @Id;";
+                         WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario;";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", usuario.Id);
+                    command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
                     command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@Email", usuario.Email);
@@ -163,7 +163,7 @@ namespace Inmobiliaria2Cuarti.Models
                 string sql =
                     @$"UPDATE usuario 
                             SET {nameof(Usuario.Rol)} = 'Eliminado' 
-                            WHERE {nameof(Usuario.Id)} = @Id;";
+                            WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario;";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@Id", id);

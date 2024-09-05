@@ -13,8 +13,8 @@ namespace Inmobiliaria2Cuatri.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Inmueble.idInmueble)},
-                                      {nameof(Inmueble.idPropietario)},
+                    $@"SELECT {nameof(Inmueble.IdInmueble)},
+                                      {nameof(Inmueble.IdPropietario)},
                                       {nameof(Inmueble.Direccion)},
                                       {nameof(Inmueble.Uso)},
                                       {nameof(Inmueble.Tipo)},
@@ -32,8 +32,8 @@ namespace Inmobiliaria2Cuatri.Models
                         inmuebles.Add(
                             new Inmueble
                             {
-                                idInmueble = reader.GetInt32(nameof(Inmueble.idInmueble)),
-                                idPropietario = reader.GetInt32(nameof(Inmueble.idPropietario)),
+                                IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
+                                IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                                 Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                                 Uso = reader.GetString(nameof(Inmueble.Uso)),
                                 Tipo = reader.GetString(nameof(Inmueble.Tipo)),
@@ -55,8 +55,8 @@ namespace Inmobiliaria2Cuatri.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Inmueble.idInmueble)},
-                                      {nameof(Inmueble.idPropietario)},
+                    $@"SELECT {nameof(Inmueble.IdInmueble)},
+                                      {nameof(Inmueble.IdPropietario)},
                                       {nameof(Inmueble.Direccion)},
                                       {nameof(Inmueble.Uso)},
                                       {nameof(Inmueble.Tipo)},
@@ -64,18 +64,18 @@ namespace Inmobiliaria2Cuatri.Models
                                       {nameof(Inmueble.Valor)},
                                       {nameof(Inmueble.Estado)}
                             FROM inmueble
-                            WHERE {nameof(Inmueble.idInmueble)} = @idInmueble";
+                            WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@idInmueble", id);
+                    command.Parameters.AddWithValue("@IdInmueble", id);
                     connection.Open();
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
                         res = new Inmueble
                         {
-                            idInmueble = reader.GetInt32(nameof(Inmueble.idInmueble)),
-                            idPropietario = reader.GetInt32(nameof(Inmueble.idPropietario)),
+                            IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
+                            IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                             Uso = reader.GetString(nameof(Inmueble.Uso)),
                             Tipo = reader.GetString(nameof(Inmueble.Tipo)),
@@ -97,7 +97,7 @@ namespace Inmobiliaria2Cuatri.Models
             {
                 var query =
                     @$"INSERT INTO inmueble 
-                            ({nameof(Inmueble.idPropietario)}, 
+                            ({nameof(Inmueble.IdPropietario)}, 
                              {nameof(Inmueble.Direccion)}, 
                              {nameof(Inmueble.Uso)}, 
                              {nameof(Inmueble.Tipo)}, 
@@ -108,7 +108,7 @@ namespace Inmobiliaria2Cuatri.Models
                          SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@IdPropietario", inmueble.idPropietario);
+                    command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
                     command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
@@ -129,18 +129,18 @@ namespace Inmobiliaria2Cuatri.Models
             {
                 var sql =
                     @$"UPDATE inmueble 
-                         SET {nameof(Inmueble.idPropietario)} = @IdPropietario, 
+                         SET {nameof(Inmueble.IdPropietario)} = @IdPropietario, 
                              {nameof(Inmueble.Direccion)} = @Direccion, 
                              {nameof(Inmueble.Uso)} = @Uso, 
                              {nameof(Inmueble.Tipo)} = @Tipo, 
                              {nameof(Inmueble.CantAmbiente)} = @CantAmbiente, 
                              {nameof(Inmueble.Valor)} = @Valor,
                              {nameof(Inmueble.Estado)} = @Estado
-                         WHERE {nameof(Inmueble.idInmueble)} = @IdInmueble;";
+                         WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble;";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@IdInmueble", inmueble.idInmueble);
-                    command.Parameters.AddWithValue("@IdPropietario", inmueble.idPropietario);
+                    command.Parameters.AddWithValue("@IdInmueble", inmueble.IdInmueble);
+                    command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
                     command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
@@ -163,7 +163,7 @@ namespace Inmobiliaria2Cuatri.Models
                 string sql =
                     @$"UPDATE inmueble 
                             SET {nameof(Inmueble.Estado)} = @Estado 
-                            WHERE {nameof(Inmueble.idInmueble)} = @IdInmueble;";
+                            WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble;";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@IdInmueble", id);
