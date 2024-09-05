@@ -61,7 +61,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             );
             ViewBag.Inquilinos = new SelectList(
                 repoInquilino.ObtenerTodos(),
-                "idInquilino",
+                "IdInquilino",
                 "Nombre"
             );
             return View();
@@ -83,7 +83,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             );
             ViewBag.Inquilinos = new SelectList(
                 repoInquilino.ObtenerTodos(),
-                "idInquilino",
+                "IdInquilino",
                 "Nombre"
             );
             return View(contrato);
