@@ -15,13 +15,8 @@
                 <input type="hidden" asp-for="IdInmueble" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="IdInmueble" class="control-label"></label>
-                    <input asp-for="IdInmueble" class="form-control" />
-                    <span asp-validation-for="IdInmueble" class="text-danger"></span>
-                </div>
-                <div class="form-group">
                     <label asp-for="IdPropietario" class="control-label"></label>
-                    <input asp-for="IdPropietario" class="form-control" />
+                    <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.Propietarios"></select>
                     <span asp-validation-for="IdPropietario" class="text-danger"></span>
                 </div>
 				<div class="form-group">

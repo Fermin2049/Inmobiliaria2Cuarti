@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Inmobiliaria2Cuatri.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace Inmobiliaria2Cuatri.Controllers
@@ -8,11 +9,13 @@ namespace Inmobiliaria2Cuatri.Controllers
     {
         private readonly ILogger<InmuebleController> _logger;
         private RepositorioInmueble repo;
+        private RepositorioPropietario repoPropietario;
 
         public InmuebleController(ILogger<InmuebleController> logger)
         {
             _logger = logger;
             repo = new RepositorioInmueble();
+            repoPropietario = new RepositorioPropietario();
         }
 
         public IActionResult Index()
@@ -48,6 +51,12 @@ namespace Inmobiliaria2Cuatri.Controllers
         // Método para mostrar el formulario de creación
         public IActionResult Crear()
         {
+            ViewBag.Propietario = new SelectList(
+                repoPropietario.ObtenerTodos(),
+                "IdPropietario",
+                "Direccion"
+            );
+          
             return View();
         }
 
