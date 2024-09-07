@@ -67,6 +67,13 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View();
         }
 
+        public IActionResult FiltrarPorPlazo(int plazo)
+        {
+            var lista = repo.ObtenerPorPlazo(plazo);
+            ViewBag.PlazoSeleccionado = plazo;
+            return View("Index", lista);
+        }
+
         // Método para manejar el envío del formulario de creacion
         [HttpPost]
         public IActionResult Crear(Contrato contrato)

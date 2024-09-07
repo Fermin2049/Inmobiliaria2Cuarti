@@ -15,6 +15,27 @@
                 </a>
             </h4>
 
+            <!-- Selector de plazo -->
+            <div class="mb-3">
+                <label for="plazoSelect" class="form-label">Filtrar contratos que terminan en:</label>
+                    <select id="plazoSelect" class="form-select" onchange="filtrarPorPlazo()">
+                        <option value="0">Seleccione un plazo</option>
+                        @foreach (var plazo in new[] { 30, 60, 90 })
+                        {
+                            if (ViewBag.PlazoSeleccionado == plazo)
+                            {
+                                <option value="@plazo" selected>@plazo días</option>
+                         }
+                            else
+                            {
+                                <option value="@plazo">@plazo días</option>
+                            }
+                        }
+                    </select>
+
+
+            </div>
+
             <!-- Barra de búsqueda -->
             <div class="input-group mb-3">
                 <input type="text" class="form-control" id="searchInput" placeholder="Buscar contrato..." aria-label="Buscar contrato" />
@@ -75,4 +96,14 @@
             row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
         });
     });
+
+    function filtrarPorPlazo() {
+        var plazo = document.getElementById('plazoSelect').value;
+        if (plazo != 0) {
+            window.location.href = '@Url.Action("FiltrarPorPlazo", "Contrato")?plazo=' + plazo;
+        } else {
+            // Refrescar la lista completa de contratos sin filtrar
+            window.location.href = '@Url.Action("Index", "Contrato")';
+        }
+    }
 </script>
