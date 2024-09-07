@@ -14,16 +14,24 @@ namespace Inmobiliaria2Cuarti.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Contrato.IdContrato)},
-                              {nameof(Contrato.IdInmueble)},
-                              {nameof(Contrato.IdInquilino)},
-                              {nameof(Contrato.FechaInicio)},
-                              {nameof(Contrato.FechaFin)},
-                              {nameof(Contrato.MontoRenta)},
-                              {nameof(Contrato.Deposito)},
-                              {nameof(Contrato.Comision)},
-                              {nameof(Contrato.Condiciones)}
-                        FROM contrato";
+                    $@"SELECT c.{nameof(Contrato.IdContrato)},
+                              c.{nameof(Contrato.IdInmueble)},
+                              c.{nameof(Contrato.IdInquilino)},
+                              c.{nameof(Contrato.FechaInicio)},
+                              c.{nameof(Contrato.FechaFin)},
+                              c.{nameof(Contrato.MontoRenta)},
+                              c.{nameof(Contrato.Deposito)},
+                              c.{nameof(Contrato.Comision)},
+                              c.{nameof(Contrato.Condiciones)},
+                              p.Nombre AS PropietarioNombre,
+                              p.Apellido AS PropietarioApellido,
+                              i.Direccion AS InmuebleDireccion,
+                              inq.Nombre AS InquilinoNombre,
+                              inq.Apellido AS InquilinoApellido
+                       FROM contrato c
+                       JOIN inmueble i ON c.IdInmueble = i.IdInmueble
+                       JOIN propietario p ON i.IdPropietario = p.IdPropietario
+                       JOIN inquilino inq ON c.IdInquilino = inq.IdInquilino";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -42,6 +50,11 @@ namespace Inmobiliaria2Cuarti.Models
                                 Deposito = reader.GetDecimal(nameof(Contrato.Deposito)),
                                 Comision = reader.GetDecimal(nameof(Contrato.Comision)),
                                 Condiciones = reader.GetString(nameof(Contrato.Condiciones)),
+                                PropietarioNombre = reader.GetString("PropietarioNombre"),
+                                PropietarioApellido = reader.GetString("PropietarioApellido"),
+                                InmuebleDireccion = reader.GetString("InmuebleDireccion"),
+                                InquilinoNombre = reader.GetString("InquilinoNombre"),
+                                InquilinoApellido = reader.GetString("InquilinoApellido"),
                             }
                         );
                     }
