@@ -25,8 +25,9 @@
                 <thead class="table-dark">
                     <tr>
                         <th>@Html.DisplayNameFor(model => model.IdContrato)</th>
-                        <th>@Html.DisplayNameFor(model => model.IdInmueble)</th>
-                        <th>@Html.DisplayNameFor(model => model.IdInquilino)</th>
+                        <th>Propietario</th>
+                        <th>Dirección del Inmueble</th>
+                        <th>Inquilino</th>
                         <th>@Html.DisplayNameFor(model => model.FechaInicio)</th>
                         <th>@Html.DisplayNameFor(model => model.FechaFin)</th>
                         <th>@Html.DisplayNameFor(model => model.MontoRenta)</th>
@@ -34,17 +35,16 @@
                         <th>@Html.DisplayNameFor(model => model.Comision)</th>
                         <th>@Html.DisplayNameFor(model => model.Condiciones)</th>
                         <th>Acciones</th>
-
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                       
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.IdContrato)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IdInmueble)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IdInquilino)</td>
+                            <td>@item.PropietarioNombre @item.PropietarioApellido</td>
+                            <td>@item.InmuebleDireccion</td>
+                            <td>@item.InquilinoNombre @item.InquilinoApellido</td>
                             <td>@Html.DisplayFor(modelItem => item.FechaInicio)</td>
                             <td>@Html.DisplayFor(modelItem => item.FechaFin)</td>
                             <td>@Html.DisplayFor(modelItem => item.MontoRenta)</td>
@@ -53,15 +53,13 @@
                             <td>@Html.DisplayFor(modelItem => item.Condiciones)</td>
                             <td>
                                 <a asp-action="Edicion" asp-route-id="@item.IdContrato" class="btn btn-sm btn-warning mx-1">
-                <i class="fas fa-edit"></i> Editar
-            </a>
-            @Html.ActionLink("Detalles", "Details", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
-            @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este contrato?');" })
-        </td>
-    </tr>
-}
-
-                    
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                @Html.ActionLink("Detalles", "Details", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este contrato?');" })
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
