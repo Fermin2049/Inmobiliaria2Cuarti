@@ -56,6 +56,7 @@ namespace Inmobiliaria2Cuatri.Controllers
                 "IdPropietario",
                 "Nombre"
             );
+            ViewBag.Tipos = new SelectList(Enum.GetValues(typeof(TipoInmueble)));
           
             return View();
         }
