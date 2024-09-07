@@ -36,7 +36,7 @@ namespace Inmobiliaria2Cuatri.Models
                                 IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                                 Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                                 Uso = reader.GetString(nameof(Inmueble.Uso)),
-                                Tipo = reader.GetString(nameof(Inmueble.Tipo)),
+                                Tipo = Enum.Parse<TipoInmueble>(reader.GetString(nameof(Inmueble.Tipo))),
                                 CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
                                 Valor = reader.GetDecimal(nameof(Inmueble.Valor)),
                                 Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
@@ -78,7 +78,7 @@ namespace Inmobiliaria2Cuatri.Models
                             IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                             Uso = reader.GetString(nameof(Inmueble.Uso)),
-                            Tipo = reader.GetString(nameof(Inmueble.Tipo)),
+                            Tipo = Enum.Parse<TipoInmueble>(reader.GetString(nameof(Inmueble.Tipo))),
                             CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
                             Valor = reader.GetDecimal(nameof(Inmueble.Valor)),
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
@@ -111,7 +111,7 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
+                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo.ToString());
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);
@@ -143,7 +143,7 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
+                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo.ToString());
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);

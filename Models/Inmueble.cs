@@ -11,11 +11,19 @@ public class Inmueble
     [Required]
     public string? Uso { get; set; }
     [Required]
-    public string? Tipo { get; set; }
+    public TipoInmueble Tipo { get; set; }
     [Required]
     public int CantAmbiente { get; set; }
     [Required]
     public decimal Valor { get; set; }
     [Required]
     public bool Estado { get; set; }
+}
+
+public enum TipoInmueble
+{
+    Casa,
+    Depto,
+    Local,
+    Oficina 
 }
