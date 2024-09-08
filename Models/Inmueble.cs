@@ -18,12 +18,14 @@ public class Inmueble
     public decimal Valor { get; set; }
     [Required]
     public bool Estado { get; set; }
+    public Propietario? Propietario { get; set; }
+    
 }
 
 public enum TipoInmueble
 {
-    Casa,
-    Depto,
-    Local,
-    Oficina 
+    Casa =1,
+    Depto = 2,
+    Local = 3,
+    Oficina = 4 
 }

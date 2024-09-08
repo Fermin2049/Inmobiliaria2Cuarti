@@ -49,6 +49,7 @@ namespace Inmobiliaria2Cuatri.Controllers
         }
 
         // Método para mostrar el formulario de creación
+        [HttpGet]
         public IActionResult Crear()
         {
             ViewBag.Propietario = new SelectList(
@@ -67,9 +68,13 @@ namespace Inmobiliaria2Cuatri.Controllers
         {
             if (ModelState.IsValid)
             {
-                repo.CrearInmueble(inmueble);
+                repo.CrearInmueble(inmueble);  // Asegúrate de que este método esté correctamente implementado
                 return RedirectToAction(nameof(Index));
             }
+
+            // Recarga los ViewBag en caso de error de validación
+            ViewBag.Propietario = new SelectList(repoPropietario.ObtenerTodos(), "IdPropietario", "Nombre");
+            ViewBag.Tipos = new SelectList(Enum.GetValues(typeof(TipoInmueble)));
             return View(inmueble);
         }
 
