@@ -46,6 +46,7 @@ namespace Inmobiliaria2Cuatri.Models
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
                             Propietario = new Propietario
                             {
+                                IdPropietario = reader.GetInt32("IdPropietario"),
                                 Nombre = reader.GetString("PropietarioNombre"),
                                 Apellido = reader.GetString("PropietarioApellido")
                             }
@@ -119,7 +120,7 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
+                    command.Parameters.AddWithValue("@Tipo", (int)inmueble.Tipo);
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);
@@ -153,7 +154,7 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
+                    command.Parameters.AddWithValue("@Tipo", (int)inmueble.Tipo);
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);

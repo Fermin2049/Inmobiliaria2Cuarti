@@ -44,8 +44,8 @@ namespace Inmobiliaria2Cuatri.Models
     public enum TipoInmueble
     {
         Casa = 1,
-        Oficina = 2,
-        Departamento = 3,
+        Depto = 2,
+        Oficina = 3,
         Almacen = 4
     }
 }

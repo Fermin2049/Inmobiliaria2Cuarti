@@ -1,4 +1,4 @@
-﻿@model Inmueble;
+﻿@model Inmobiliaria2Cuatri.Models.Inmueble
 
 @{
     ViewData["Title"] = "Editar Inmueble";
@@ -7,62 +7,75 @@
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="col-md-6">
-            <h1>Editar</h1>
-
-            <h4>Inmueble</h4>
+            <h1>Editar Inmueble</h1>
+            <h4>Formulario de Edición de Inmueble</h4>
             <hr />
 
-            <form asp-action="Edicion">
+            <form asp-action="Edicion" method="post">
+                <!-- Campo oculto para enviar el ID del inmueble -->
                 <input type="hidden" asp-for="IdInmueble" />
+
+                <!-- Mensajes de validación -->
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="IdInmueble" class="control-label"></label>
-                    <input asp-for="IdInmueble" class="form-control" />
-                    <span asp-validation-for="IdInmueble" class="text-danger"></span>
-                </div>
+                
+                <!-- Campo para seleccionar Propietario -->
                 <div class="form-group">
                     <label asp-for="IdPropietario" class="control-label"></label>
-                    <input asp-for="IdPropietario" class="form-control" />
+                    <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.PropietariosLista"></select>
                     <span asp-validation-for="IdPropietario" class="text-danger"></span>
                 </div>
-				<div class="form-group">
+
+                <!-- Campo para Dirección -->
+                <div class="form-group">
                     <label asp-for="Direccion" class="control-label"></label>
                     <input asp-for="Direccion" class="form-control" />
                     <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Uso -->
                 <div class="form-group">
                     <label asp-for="Uso" class="control-label"></label>
                     <input asp-for="Uso" class="form-control" />
                     <span asp-validation-for="Uso" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Tipo -->
                 <div class="form-group">
                     <label asp-for="Tipo" class="control-label"></label>
-                    <input asp-for="Tipo" class="form-control" />
+                        <select asp-for="Tipo" class="form-control">
+                            <option value="1">Casa</option>
+                            <option value="2">Oficina</option>
+                            <option value="3">Departamento</option>
+                            <option value="4">Almacen</option>
+                        </select>
                     <span asp-validation-for="Tipo" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Cantidad de Ambientes -->
                 <div class="form-group">
                     <label asp-for="CantAmbiente" class="control-label"></label>
                     <input asp-for="CantAmbiente" class="form-control" />
                     <span asp-validation-for="CantAmbiente" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Valor -->
                 <div class="form-group">
                     <label asp-for="Valor" class="control-label"></label>
                     <input asp-for="Valor" class="form-control" />
                     <span asp-validation-for="Valor" class="text-danger"></span>
                 </div>
-				<div class="form-group form-check">
+
+                <!-- Campo para Estado -->
+                <div class="form-group form-check">
                     <input asp-for="Estado" type="checkbox" class="form-check-input" />
                     <label asp-for="Estado" class="form-check-label"></label>
                 </div>
                 
-                <div class="form-group">
-                    <input type="submit" value="Editar" class="btn btn-primary" />
+                <div class="d-flex justify-content-between">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
                 </div>
             </form>
         </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Volver</a>
 </div>

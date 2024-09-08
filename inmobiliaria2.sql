@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-09-2024 a las 22:36:00
+-- Tiempo de generación: 09-09-2024 a las 00:57:01
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -75,7 +75,8 @@ INSERT INTO `inmueble` (`IdInmueble`, `IdPropietario`, `Direccion`, `Uso`, `Tipo
 (1, 1, '123 Calle Ficticia', 'Comercial', 0, 3, 150000, 1),
 (2, 2, '456 Calle Imaginaria', 'Personal', 0, 5, 300000, 1),
 (3, 1, 'Calle Falsa 123', 'Residencial', 0, 3, 150000, 1),
-(4, 2, 'Avenida Siempre Viva 742', 'Comercial', 2, 1, 100000, 1);
+(4, 2, 'Avenida Siempre Viva 742', 'Comercial', 2, 1, 100000, 1),
+(5, 15, 'Ilusión 1234', 'Trabajo', 3, 3, 1000000, 1);
 
 -- --------------------------------------------------------
 
@@ -169,7 +170,8 @@ INSERT INTO `propietario` (`IdPropietario`, `Nombre`, `Apellido`, `Dni`, `Telefo
 (18, 'Clara', 'Ortega', 90109876, '555-9012', 'clara.ortega@example.com', 1),
 (19, 'Andrés', 'Cruz', 23456780, '555-1230', 'andres.cruz@example.com', 1),
 (20, 'Paula', 'Santos', 34567890, '555-2340', 'paula.santos@example.com', 1),
-(21, 'ENRIQUE ROLANDO', 'GODOY', 78901234, '2664010204', 'GODOY4695@GMAIL.COM', 0);
+(21, 'ENRIQUE ROLANDO', 'GODOY', 78901234, '2664010204', 'GODOY4695@GMAIL.COM', 0),
+(22, 'dsdsd', 'bgbgbg', 25987321, '789632514', 'v@j.com', 1);
 
 -- --------------------------------------------------------
 
@@ -259,7 +261,7 @@ ALTER TABLE `contrato`
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `IdInmueble` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `IdInmueble` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
@@ -277,7 +279,7 @@ ALTER TABLE `pagos`
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
-  MODIFY `IdPropietario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `IdPropietario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
