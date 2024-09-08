@@ -25,6 +25,10 @@ namespace Inmobiliaria2Cuarti.Models
         public decimal? Importe { get; set; }
 
         [Required]
-        public bool? Estado { get; set; }
+        public bool Estado { get; set; }
+
+        public string? UsuarioCreacion { get; set; }
+
+        public string? UsuarioAnulacion { get; set; }
     }
 }

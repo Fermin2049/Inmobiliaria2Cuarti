@@ -1,0 +1,57 @@
+@model Inmobiliaria2Cuarti.Models.Pagos
+
+@{
+    ViewData["Title"] = "Editar Pago";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <h1>Editar</h1>
+
+            <h4>Pago</h4>
+            <hr />
+
+            <form asp-action="Edicion">
+                <input type="hidden" asp-for="IdPago" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="IdContrato" class="control-label"></label>
+                    <input asp-for="IdContrato" class="form-control" readonly />
+                    <span asp-validation-for="IdContrato" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NroPago" class="control-label"></label>
+                    <input asp-for="NroPago" class="form-control" readonly />
+                    <span asp-validation-for="NroPago" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaPago" class="control-label"></label>
+                    <input asp-for="FechaPago" class="form-control" type="date" />
+                    <span asp-validation-for="FechaPago" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Detalle" class="control-label"></label>
+                    <input asp-for="Detalle" class="form-control" />
+                    <span asp-validation-for="Detalle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Importe" class="control-label"></label>
+                    <input asp-for="Importe" class="form-control" />
+                    <span asp-validation-for="Importe" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Estado" class="control-label"></label>
+                    <input asp-for="Estado" type="checkbox" class="form-check-input" />
+                </div>
+                <div class="form-group text-center">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>

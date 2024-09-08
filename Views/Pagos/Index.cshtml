@@ -1,0 +1,71 @@
+@model IEnumerable<Inmobiliaria2Cuarti.Models.Pagos>
+
+@{
+    ViewData["Title"] = "Listado de Pagos";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center mb-4">
+                <h1 class="display-4">Listado de Pagos</h1>
+            </div>
+            <h4 class="text-center mb-4">
+                <a asp-action="Crear" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> Crear Nuevo Pago
+                </a>
+            </h4>
+
+            <!-- Barra de búsqueda -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar pago..." aria-label="Buscar pago" />
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+
+            <table class="table table-hover table-bordered table-striped align-middle" id="pagosTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().IdContrato)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().NroPago)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().FechaPago)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Detalle)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Importe)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Estado)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.IdContrato)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NroPago)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FechaPago)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Detalle)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Importe)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                            <td>
+                                <a asp-action="Edicion" asp-route-id="@item.IdPago" class="btn btn-sm btn-warning mx-1">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                @Html.ActionLink("Detalle", "Detalle", new { id = item.IdPago }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdPago }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este pago?');" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Script para búsqueda en la tabla -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        var input = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#pagosTable tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+        });
+    });
+</script>
