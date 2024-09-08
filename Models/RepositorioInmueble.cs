@@ -13,41 +13,49 @@ namespace Inmobiliaria2Cuatri.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Inmueble.IdInmueble)},
-                                      {nameof(Inmueble.IdPropietario)},
-                                      {nameof(Inmueble.Direccion)},
-                                      {nameof(Inmueble.Uso)},
-                                      {nameof(Inmueble.Tipo)},
-                                      {nameof(Inmueble.CantAmbiente)},
-                                      {nameof(Inmueble.Valor)},
-                                      {nameof(Inmueble.Estado)}
-                            FROM inmueble
-                            WHERE {nameof(Inmueble.Estado)} = true"; // Solo traer activos
-                using (MySqlCommand command = new MySqlCommand(query, connection))
+                        @$"SELECT I.{nameof(Inmueble.IdInmueble)},
+                        I.{nameof(Inmueble.IdPropietario)},
+                        I.{nameof(Inmueble.Direccion)},
+                        I.{nameof(Inmueble.Uso)},
+                        I.{nameof(Inmueble.Tipo)},
+                        I.{nameof(Inmueble.CantAmbiente)},
+                        I.{nameof(Inmueble.Valor)},
+                        I.{nameof(Inmueble.Estado)},
+                        P.Nombre AS PropietarioNombre,
+                        P.Apellido AS PropietarioApellido
+                FROM inmueble I
+                JOIN propietario P ON P.IdPropietario = I.IdPropietario
+                WHERE I.{nameof(Inmueble.Estado)} = true"; 
+
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                connection.Open();
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    connection.Open();
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        inmuebles.Add(
-                            new Inmueble
+                    inmuebles.Add(
+                        new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
+                            IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
+                            Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                            Uso = reader.GetString(nameof(Inmueble.Uso)),
+                            Tipo = reader.GetString(nameof(Inmueble.Tipo)),
+                            CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
+                            Valor = reader.GetInt32(nameof(Inmueble.Valor)),
+                            Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                            Propietario = new Propietario
                             {
-                                IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
-                                IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
-                                Direccion = reader.GetString(nameof(Inmueble.Direccion)),
-                                Uso = reader.GetString(nameof(Inmueble.Uso)),
-                                Tipo = Enum.Parse<TipoInmueble>(reader.GetString(nameof(Inmueble.Tipo))),
-                                CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
-                                Valor = reader.GetDecimal(nameof(Inmueble.Valor)),
-                                Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                                Nombre = reader.GetString("PropietarioNombre"),
+                                Apellido = reader.GetString("PropietarioApellido")
                             }
-                        );
+                        });
                     }
-                    connection.Close();
-                }
-                return inmuebles;
+                }   
             }
+            return inmuebles;
         }
+
 
         public Inmueble? Obtener(int id)
         {
@@ -78,9 +86,9 @@ namespace Inmobiliaria2Cuatri.Models
                             IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                             Uso = reader.GetString(nameof(Inmueble.Uso)),
-                            Tipo = Enum.Parse<TipoInmueble>(reader.GetString(nameof(Inmueble.Tipo))),
+                            Tipo = reader.GetString(nameof(Inmueble.Tipo)),
                             CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
-                            Valor = reader.GetDecimal(nameof(Inmueble.Valor)),
+                            Valor = reader.GetInt32(nameof(Inmueble.Valor)),
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
                         };
                     }
@@ -111,13 +119,15 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo.ToString());
+                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
+                    inmueble.IdInmueble = res;
+                    connection.Close();
                 }
             return res;
         }
@@ -143,7 +153,7 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo.ToString());
+                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);
