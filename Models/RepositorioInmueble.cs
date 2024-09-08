@@ -23,9 +23,9 @@ namespace Inmobiliaria2Cuatri.Models
                         I.{nameof(Inmueble.Estado)},
                         P.Nombre AS PropietarioNombre,
                         P.Apellido AS PropietarioApellido
-                FROM inmueble I
-                JOIN propietario P ON P.IdPropietario = I.IdPropietario
-                WHERE I.{nameof(Inmueble.Estado)} = true"; 
+                    FROM inmueble I
+                    JOIN propietario P ON P.IdPropietario = I.IdPropietario
+                    WHERE I.{nameof(Inmueble.Estado)} = true"; 
 
             using (MySqlCommand command = new MySqlCommand(query, connection))
             {
@@ -40,7 +40,7 @@ namespace Inmobiliaria2Cuatri.Models
                             IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                             Uso = reader.GetString(nameof(Inmueble.Uso)),
-                            Tipo = reader.GetString(nameof(Inmueble.Tipo)),
+                            Tipo = (TipoInmueble)reader.GetInt32(nameof(Inmueble.Tipo)),
                             CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
                             Valor = reader.GetInt32(nameof(Inmueble.Valor)),
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
@@ -86,7 +86,7 @@ namespace Inmobiliaria2Cuatri.Models
                             IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
                             Direccion = reader.GetString(nameof(Inmueble.Direccion)),
                             Uso = reader.GetString(nameof(Inmueble.Uso)),
-                            Tipo = reader.GetString(nameof(Inmueble.Tipo)),
+                            Tipo = (TipoInmueble)reader.GetInt32(nameof(Inmueble.Tipo)),
                             CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
                             Valor = reader.GetInt32(nameof(Inmueble.Valor)),
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),

@@ -1,4 +1,5 @@
-@model Inmueble;
+@model Inmobiliaria2Cuatri.Models.Inmueble
+
 @{
     ViewData["Title"] = "Crear Inmueble";
 }
@@ -6,45 +7,70 @@
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="col-md-6">
-            <h1>Crear</h1>
-
-            <h4>Inmueble</h4>
+            <h1>Crear Inmueble</h1>
+            <h4>Formulario de Inmueble</h4>
             <hr />
 
-            <form asp-action="Crear">
+            <form asp-action="Crear" method="post">
                 <input type="hidden" asp-for="IdInmueble" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <!-- Campo para seleccionar Propietario -->
                 <div class="form-group">
-                    <label asp-for="IdPropietario" class="control-label"></label>
-                    <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.Propietario"></select>
+                    <label for="IdPropietario">Propietario:</label>
+                    <select class="form-control" id="IdPropietario" name="IdPropietario">
+                        @foreach (var propietario in ViewBag.PropietariosLista)
+                        {
+                            <option value="@propietario.IdPropietario">
+                                @propietario.Propietario.Nombre @propietario.Propietario.Apellido
+                            </option>
+                        }
+                    </select>
                     <span asp-validation-for="IdPropietario" class="text-danger"></span>
                 </div>
-				<div class="form-group">
+
+                <!-- Campo para Dirección -->
+                <div class="form-group">
                     <label asp-for="Direccion" class="control-label"></label>
                     <input asp-for="Direccion" class="form-control" />
                     <span asp-validation-for="Direccion" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Uso -->
                 <div class="form-group">
                     <label asp-for="Uso" class="control-label"></label>
                     <input asp-for="Uso" class="form-control" />
                     <span asp-validation-for="Uso" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Tipo (ENUM) -->
                 <div class="form-group">
                     <label asp-for="Tipo" class="control-label"></label>
-                    <select asp-for="Tipo" class="form-control" asp-items="ViewBag.Tipos"></select>
+                    <select asp-for="Tipo" class="form-control">
+                        @foreach (var item in Enum.GetValues(typeof(Inmobiliaria2Cuatri.Models.TipoInmueble)))
+                        {
+                            <option value="@item">@item.ToString()</option>
+                        }
+                    </select>
                     <span asp-validation-for="Tipo" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Cantidad de Ambientes -->
                 <div class="form-group">
                     <label asp-for="CantAmbiente" class="control-label"></label>
                     <input asp-for="CantAmbiente" class="form-control" />
                     <span asp-validation-for="CantAmbiente" class="text-danger"></span>
                 </div>
+
+                <!-- Campo para Valor -->
                 <div class="form-group">
                     <label asp-for="Valor" class="control-label"></label>
                     <input asp-for="Valor" class="form-control" />
                     <span asp-validation-for="Valor" class="text-danger"></span>
                 </div>
-				<div class="form-group form-check">
+
+                <!-- Campo para Estado -->
+                <div class="form-group form-check">
                     <input asp-for="Estado" type="checkbox" class="form-check-input" />
                     <label asp-for="Estado" class="form-check-label"></label>
                 </div>
@@ -58,6 +84,6 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

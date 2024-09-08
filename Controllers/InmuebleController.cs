@@ -40,6 +40,7 @@ namespace Inmobiliaria2Cuatri.Controllers
         [HttpPost]
         public IActionResult Edicion(Inmueble inmueble)
         {
+             
             if (ModelState.IsValid)
             {
                 repo.ActualizarInmueble(inmueble);
@@ -52,25 +53,13 @@ namespace Inmobiliaria2Cuatri.Controllers
         [HttpGet]
         public IActionResult Crear()
         {
-            ViewBag.Propietario = new SelectList(
-                repoPropietario.ObtenerTodos(),
-                "IdPropietario",
-                "Nombre"
-            );
-            
-            ViewBag.Tipos = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Casa", Text = "Casa" },
-                new SelectListItem { Value = "Depto", Text = "Depto" },
-                new SelectListItem { Value = "Local", Text = "Local" },
-                new SelectListItem { Value = "Oficina", Text = "Oficina" }
-            };
-          
+            var listaPropietarios = repoPropietario.ObtenerTodos();
+            ViewBag.PropietariosLista = listaPropietarios;
             return View();
         }
 
-        // Método para manejar el envío del formulario de creacion
-        [HttpPost]
+  // Método para manejar el envío del formulario de creacion       
+         [HttpPost]
         public IActionResult Crear(Inmueble inmueble)
         {
             if (ModelState.IsValid)
@@ -78,16 +67,6 @@ namespace Inmobiliaria2Cuatri.Controllers
                 repo.CrearInmueble(inmueble);  
                 return RedirectToAction(nameof(Index));
             }
-
-            // Recarga los ViewBag en caso de error de validación
-            ViewBag.Propietario = new SelectList(repoPropietario.ObtenerTodos(), "IdPropietario", "Nombre");
-            ViewBag.Tipos = new List<SelectListItem>
-            {
-                new SelectListItem { Value = "Casa", Text = "Casa" },
-                new SelectListItem { Value = "Depto", Text = "Depto" },
-                new SelectListItem { Value = "Local", Text = "Local" },
-                new SelectListItem { Value = "Oficina", Text = "Oficina" }
-            };
             return View(inmueble);
         }
 
