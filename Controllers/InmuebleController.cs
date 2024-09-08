@@ -57,7 +57,14 @@ namespace Inmobiliaria2Cuatri.Controllers
                 "IdPropietario",
                 "Nombre"
             );
-            ViewBag.Tipos = new SelectList(Enum.GetValues(typeof(TipoInmueble)));
+            
+            ViewBag.Tipos = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Casa", Text = "Casa" },
+                new SelectListItem { Value = "Depto", Text = "Depto" },
+                new SelectListItem { Value = "Local", Text = "Local" },
+                new SelectListItem { Value = "Oficina", Text = "Oficina" }
+            };
           
             return View();
         }
@@ -68,13 +75,19 @@ namespace Inmobiliaria2Cuatri.Controllers
         {
             if (ModelState.IsValid)
             {
-                repo.CrearInmueble(inmueble);  // Asegúrate de que este método esté correctamente implementado
+                repo.CrearInmueble(inmueble);  
                 return RedirectToAction(nameof(Index));
             }
 
             // Recarga los ViewBag en caso de error de validación
             ViewBag.Propietario = new SelectList(repoPropietario.ObtenerTodos(), "IdPropietario", "Nombre");
-            ViewBag.Tipos = new SelectList(Enum.GetValues(typeof(TipoInmueble)));
+            ViewBag.Tipos = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Casa", Text = "Casa" },
+                new SelectListItem { Value = "Depto", Text = "Depto" },
+                new SelectListItem { Value = "Local", Text = "Local" },
+                new SelectListItem { Value = "Oficina", Text = "Oficina" }
+            };
             return View(inmueble);
         }
 
