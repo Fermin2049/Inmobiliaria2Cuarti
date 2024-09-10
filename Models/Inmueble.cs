@@ -6,28 +6,41 @@ namespace Inmobiliaria2Cuatri.Models
     {
         [Key]
         public int IdInmueble { get; set; }
+
         [Required]
         public int IdPropietario { get; set; }
+
         [Required]
         public string? Direccion { get; set; }
+
         [Required]
         public string? Uso { get; set; }
+
         [Required]
-        public TipoInmueble Tipo { get; set; } // Asegúrate de que TipoInmueble esté en el mismo espacio de nombres
+        public TipoInmueble Tipo { get; set; }
+
         [Required]
         public int CantAmbiente { get; set; }
+
         [Required]
         public int Valor { get; set; }
+
         [Required]
         public bool Estado { get; set; }
         public Propietario? Propietario { get; set; }
 
-        public Inmueble()
-        {
+        public Inmueble() { }
 
-        }
-
-        public Inmueble(int idInmueble, int idPropietario, string? direccion, string? uso, TipoInmueble tipo, int cantAmbiente, int valor, bool estado)
+        public Inmueble(
+            int idInmueble,
+            int idPropietario,
+            string? direccion,
+            string? uso,
+            TipoInmueble tipo,
+            int cantAmbiente,
+            int valor,
+            bool estado
+        )
         {
             IdInmueble = idInmueble;
             IdPropietario = idPropietario;
@@ -46,6 +59,6 @@ namespace Inmobiliaria2Cuatri.Models
         Casa = 1,
         Depto = 2,
         Oficina = 3,
-        Almacen = 4
+        Almacen = 4,
     }
 }
