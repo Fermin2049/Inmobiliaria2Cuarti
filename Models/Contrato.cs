@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Inmobiliaria2Cuarti.Models;
+using System.ComponentModel.DataAnnotations;
 
 public class Contrato
 {

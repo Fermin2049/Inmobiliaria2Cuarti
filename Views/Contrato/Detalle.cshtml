@@ -1,0 +1,79 @@
+@model Inmobiliaria2Cuarti.Models.Contrato
+
+@{
+    ViewData["Title"] = "Detalle Contrato";
+}
+
+<h2>Detalle de Contrato</h2>
+
+<div>
+    <h4>Contrato</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdContrato)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdContrato)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInmueble)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdInmueble)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdInquilino)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdInquilino)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFin)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaFin)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MontoRenta)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MontoRenta)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Deposito)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Deposito)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Comision)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comision)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Condiciones)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Condiciones)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-primary">Volver a la lista</a>
+</div>
