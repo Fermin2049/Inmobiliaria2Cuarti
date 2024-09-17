@@ -50,17 +50,15 @@
                     <textarea asp-for="Condiciones" class="form-control"></textarea>
                     <span asp-validation-for="Condiciones" class="text-danger"></span>
                 </div>
-                <div class="form-group text-center">
+                <div class="d-flex justify-content-between">
                     <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

@@ -104,5 +104,15 @@ namespace Inmobiliaria2Cuarti.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Detalle(int id)
+        {
+            var contrato = repo.Obtener(id);
+            if (contrato == null)
+            {
+                return NotFound();
+            }
+            return View(contrato);
+        }
     }
 }

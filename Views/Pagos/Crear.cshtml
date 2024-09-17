@@ -43,17 +43,15 @@
                     <label asp-for="Estado" class="control-label"></label>
                     <input asp-for="Estado" type="checkbox" class="form-check-input" />
                 </div>
-                <div class="form-group text-center">
+                <div class="d-flex justify-content-between">
                     <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Volver a la lista</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

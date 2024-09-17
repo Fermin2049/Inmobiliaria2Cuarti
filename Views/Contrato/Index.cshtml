@@ -76,7 +76,7 @@
                                 <a asp-action="Edicion" asp-route-id="@item.IdContrato" class="btn btn-sm btn-warning mx-1">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                @Html.ActionLink("Detalles", "Details", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
+                                @Html.ActionLink("Detalles", "Detalle", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
                                 @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este contrato?');" })
                             </td>
                         </tr>

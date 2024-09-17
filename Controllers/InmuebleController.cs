@@ -139,5 +139,15 @@ namespace Inmobiliaria2Cuatri.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Detalle(int id)
+        {
+            var inmueble = repo.Obtener(id);
+            if (inmueble == null)
+            {
+                return NotFound();
+            }
+            return View(inmueble);
+        }
     }
 }
