@@ -1,9 +1,12 @@
 using System.Diagnostics;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using Firebase.Storage;
 using Inmobiliaria2Cuarti.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -118,9 +121,23 @@ namespace Inmobiliaria2Cuarti.Controllers
 
             if (ModelState.IsValid)
             {
+                // Generar el hash de la contraseña y agregar un log para verificar
                 usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
+                _logger.LogInformation(
+                    $"Hash generado para el usuario {usuario.Email}: {usuario.Contrasenia}"
+                );
+
+                // Guardar el usuario en la base de datos
                 repo.CrearUsuario(usuario);
+                _logger.LogInformation($"Usuario {usuario.Email} creado correctamente.");
+
                 return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                _logger.LogWarning(
+                    $"Error al crear el usuario {usuario.Email}: {string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))}"
+                );
             }
 
             return View(usuario);

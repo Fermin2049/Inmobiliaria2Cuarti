@@ -39,7 +39,7 @@ namespace Inmobiliaria2Cuarti.Models
                                 Email = reader.GetString(nameof(Usuario.Email)),
                                 Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
                                 Avatar = reader.GetString(nameof(Usuario.Avatar)),
-                                Rol = reader.GetString(nameof(Usuario.Rol)),
+                                Rol = reader.GetInt32(nameof(Usuario.Rol)),
                                 Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                             }
                         );
@@ -81,7 +81,7 @@ namespace Inmobiliaria2Cuarti.Models
                             Email = reader.GetString(nameof(Usuario.Email)),
                             Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
                             Avatar = reader.GetString(nameof(Usuario.Avatar)),
-                            Rol = reader.GetString(nameof(Usuario.Rol)),
+                            Rol = reader.GetInt32(nameof(Usuario.Rol)),
                             Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                         };
                     }
@@ -91,37 +91,70 @@ namespace Inmobiliaria2Cuarti.Models
             }
         }
 
-        public int CrearUsuario(Usuario usuario)
+        public Usuario? ObtenerPorEmail(string email)
         {
-            int res = 0;
+            Usuario? res = null;
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    @$"INSERT INTO usuario 
-                            ({nameof(Usuario.Nombre)}, 
-                             {nameof(Usuario.Apellido)}, 
-                             {nameof(Usuario.Email)}, 
-                             {nameof(Usuario.Contrasenia)}, 
-                             {nameof(Usuario.Avatar)},
-                             {nameof(Usuario.Rol)},
-                            {nameof(Usuario.Estado)}) 
-                         VALUES (@Nombre, @Apellido, @Email, @Clave, @Avatar, @Rol, @Estado); 
-                         SELECT LAST_INSERT_ID();";
+                    $@"SELECT {nameof(Usuario.IdUsuario)},
+                                      {nameof(Usuario.Nombre)},
+                                      {nameof(Usuario.Apellido)},
+                                      {nameof(Usuario.Email)},
+                                      {nameof(Usuario.Contrasenia)},
+                                      {nameof(Usuario.Avatar)},
+                                      {nameof(Usuario.Rol)},
+                                      {nameof(Usuario.Estado)}
+                               FROM usuario
+                               WHERE {nameof(Usuario.Email)} = @Email";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        res = new Usuario
+                        {
+                            IdUsuario = reader.GetInt32(nameof(Usuario.IdUsuario)),
+                            Nombre = reader.GetString(nameof(Usuario.Nombre)),
+                            Apellido = reader.GetString(nameof(Usuario.Apellido)),
+                            Email = reader.GetString(nameof(Usuario.Email)),
+                            Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
+                            Avatar = reader.GetString(nameof(Usuario.Avatar)),
+                            Rol = reader.GetInt32(nameof(Usuario.Rol)),
+                            Estado = reader.GetBoolean(nameof(Usuario.Estado)),
+                        };
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public int CrearUsuario(Usuario usuario)
+        {
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    $@"INSERT INTO usuario (Nombre, Apellido, Email, Contrasenia, Avatar, Rol, Estado)
+                       VALUES (@Nombre, @Apellido, @Email, @Contrasenia, @Avatar, @Rol, @Estado);
+                       SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@Email", usuario.Email);
-                    command.Parameters.AddWithValue("@Clave", usuario.Contrasenia);
+                    command.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia); // Ya hasheada en el controlador
                     command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
                     command.Parameters.AddWithValue("@Estado", usuario.Estado);
-
                     connection.Open();
-                    res = Convert.ToInt32(command.ExecuteScalar());
+                    var id = Convert.ToInt32(command.ExecuteScalar());
+                    connection.Close();
+                    return id;
                 }
             }
-            return res;
         }
 
         public bool ActualizarUsuario(Usuario usuario)
