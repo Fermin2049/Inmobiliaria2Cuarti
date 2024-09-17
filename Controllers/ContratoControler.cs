@@ -1,11 +1,13 @@
 using System.Diagnostics;
 using Inmobiliaria2Cuarti.Models;
 using Inmobiliaria2Cuatri.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Inmobiliaria2Cuarti.Controllers
 {
+    [Authorize]
     public class ContratoController : Controller
     {
         private readonly ILogger<ContratoController> _logger;

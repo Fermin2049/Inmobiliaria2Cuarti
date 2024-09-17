@@ -2,12 +2,14 @@ using System;
 using System.Threading.Tasks;
 using Inmobiliaria2Cuarti.Models;
 using Inmobiliaria2Cuatri.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 
 namespace Inmobiliaria2Cuarti.Controllers
 {
+    [Authorize]
     public class PagosController : Controller
     {
         private readonly ILogger<PagosController> _logger;

@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using Inmobiliaria2Cuatri.Models;
 using System.Diagnostics;
+using Inmobiliaria2Cuatri.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Inmobiliaria2Cuatri.Controllers
 {
+    [Authorize]
     public class PropietarioController : Controller
     {
         private readonly ILogger<PropietarioController> _logger;
@@ -18,19 +20,19 @@ namespace Inmobiliaria2Cuatri.Controllers
         public IActionResult Index()
         {
             var lista = repo.ObtenerTodos();
-            return View(lista); 
+            return View(lista);
         }
 
         // Método para mostrar el formulario de edición
         public IActionResult Edicion(int id)
         {
-            if(id == 0)
+            if (id == 0)
                 return View();
             else
-             {
+            {
                 var persona = repo.Obtener(id);
                 return View(persona);
-             }
+            }
         }
 
         // Método para manejar el envío del formulario de edicion
@@ -83,5 +85,3 @@ namespace Inmobiliaria2Cuatri.Controllers
         }
     }
 }
-
-

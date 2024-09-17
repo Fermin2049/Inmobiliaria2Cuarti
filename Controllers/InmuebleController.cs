@@ -1,11 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using Inmobiliaria2Cuatri.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.Linq;
+using Inmobiliaria2Cuatri.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Inmobiliaria2Cuatri.Controllers
 {
+    [Authorize]
     public class InmuebleController : Controller
     {
         private readonly ILogger<InmuebleController> _logger;
@@ -22,7 +24,7 @@ namespace Inmobiliaria2Cuatri.Controllers
         public IActionResult Index()
         {
             var lista = repo.ObtenerTodos();
-            return View(lista); 
+            return View(lista);
         }
 
         // Método para mostrar el formulario de edición
@@ -41,11 +43,13 @@ namespace Inmobiliaria2Cuatri.Controllers
 
             // Cargar la lista de propietarios para el dropdown
             var listaPropietarios = repoPropietario.ObtenerTodos();
-            ViewBag.PropietariosLista = listaPropietarios.Select(p => new SelectListItem
-            {
-                Value = p.IdPropietario.ToString(),
-                Text = $"{p.Nombre} {p.Apellido}"
-            }).ToList();
+            ViewBag.PropietariosLista = listaPropietarios
+                .Select(p => new SelectListItem
+                {
+                    Value = p.IdPropietario.ToString(),
+                    Text = $"{p.Nombre} {p.Apellido}",
+                })
+                .ToList();
 
             return View(inmueble); // Pasar el inmueble a la vista para ser editado
         }
@@ -64,17 +68,22 @@ namespace Inmobiliaria2Cuatri.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error al actualizar el inmueble: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "No se pudo actualizar el inmueble. Por favor, intente de nuevo.");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "No se pudo actualizar el inmueble. Por favor, intente de nuevo."
+                    );
                 }
             }
 
             // Recarga los ViewBag en caso de error de validación
             var listaPropietarios = repoPropietario.ObtenerTodos();
-            ViewBag.PropietariosLista = listaPropietarios.Select(p => new SelectListItem
-            {
-                Value = p.IdPropietario.ToString(),
-                Text = $"{p.Nombre} {p.Apellido}"
-            }).ToList();
+            ViewBag.PropietariosLista = listaPropietarios
+                .Select(p => new SelectListItem
+                {
+                    Value = p.IdPropietario.ToString(),
+                    Text = $"{p.Nombre} {p.Apellido}",
+                })
+                .ToList();
 
             return View(inmueble); // Devolver la vista de edición con los datos actuales y el mensaje de error
         }
@@ -84,16 +93,18 @@ namespace Inmobiliaria2Cuatri.Controllers
         public IActionResult Crear()
         {
             var listaPropietarios = repoPropietario.ObtenerTodos();
-            ViewBag.PropietariosLista = listaPropietarios.Select(p => new SelectListItem
-            {
-                Value = p.IdPropietario.ToString(),
-                Text = $"{p.Nombre} {p.Apellido}"
-            }).ToList();
+            ViewBag.PropietariosLista = listaPropietarios
+                .Select(p => new SelectListItem
+                {
+                    Value = p.IdPropietario.ToString(),
+                    Text = $"{p.Nombre} {p.Apellido}",
+                })
+                .ToList();
 
             return View();
         }
 
-        // Método para manejar el envío del formulario de creación       
+        // Método para manejar el envío del formulario de creación
         [HttpPost]
         public IActionResult Crear(Inmueble inmueble)
         {
@@ -101,23 +112,28 @@ namespace Inmobiliaria2Cuatri.Controllers
             {
                 try
                 {
-                    repo.CrearInmueble(inmueble);  
+                    repo.CrearInmueble(inmueble);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error al crear el inmueble: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "No se pudo crear el inmueble. Por favor, intente de nuevo.");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "No se pudo crear el inmueble. Por favor, intente de nuevo."
+                    );
                 }
             }
 
             // Recarga los ViewBag en caso de error de validación
             var listaPropietarios = repoPropietario.ObtenerTodos();
-            ViewBag.PropietariosLista = listaPropietarios.Select(p => new SelectListItem
-            {
-                Value = p.IdPropietario.ToString(),
-                Text = $"{p.Nombre} {p.Apellido}"
-            }).ToList();
+            ViewBag.PropietariosLista = listaPropietarios
+                .Select(p => new SelectListItem
+                {
+                    Value = p.IdPropietario.ToString(),
+                    Text = $"{p.Nombre} {p.Apellido}",
+                })
+                .ToList();
 
             return View(inmueble);
         }
@@ -134,7 +150,10 @@ namespace Inmobiliaria2Cuatri.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error al eliminar el inmueble: {ex.Message}");
-                    ModelState.AddModelError(string.Empty, "No se pudo eliminar el inmueble. Por favor, intente de nuevo.");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "No se pudo eliminar el inmueble. Por favor, intente de nuevo."
+                    );
                 }
             }
             return RedirectToAction(nameof(Index));

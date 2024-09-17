@@ -47,6 +47,7 @@ namespace Inmobiliaria2Cuarti.Controllers
                         {
                             new Claim(ClaimTypes.Name, usuario.Email),
                             new Claim(ClaimTypes.Role, ((RolUsuario)usuario.Rol).ToString()),
+                            new Claim("Avatar", usuario.Avatar ?? string.Empty),
                         };
 
                         var claimsIdentity = new ClaimsIdentity(
