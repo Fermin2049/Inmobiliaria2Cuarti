@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Inicializar Firebase
 FirebaseConfig.Initialize();
+
+// Configurar Google Cloud Storage
+string credentialPath =
+    @"C:\Users\Fermin\Desktop\inmoviliriaSegundoCuatri\Inmobiliaria2Cuarti\Config\inmobilirianet-bda045475369.json";
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

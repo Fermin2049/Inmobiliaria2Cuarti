@@ -45,7 +45,7 @@ namespace Inmobiliaria2Cuarti.Controllers
                         );
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.Name, usuario.Email),
+                            new Claim(ClaimTypes.Name, usuario.Email ?? string.Empty),
                             new Claim(ClaimTypes.Role, ((RolUsuario)usuario.Rol).ToString()),
                             new Claim("Avatar", usuario.Avatar ?? string.Empty),
                         };

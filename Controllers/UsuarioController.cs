@@ -1,9 +1,14 @@
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BCrypt.Net;
 using Firebase.Storage;
+using FirebaseAdmin;
+using FirebaseAdmin.Auth;
+using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Storage.V1;
 using Inmobiliaria2Cuarti.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -14,16 +19,18 @@ using Microsoft.Extensions.Logging;
 
 namespace Inmobiliaria2Cuarti.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Administrador")]
     public class UsuarioController : Controller
     {
         private readonly ILogger<UsuarioController> _logger;
         private RepositorioUsuario repo;
+        private readonly StorageClient storageClient;
 
         public UsuarioController(ILogger<UsuarioController> logger)
         {
             _logger = logger;
             repo = new RepositorioUsuario();
+            storageClient = StorageClient.Create();
         }
 
         public IActionResult Index()
@@ -56,6 +63,7 @@ namespace Inmobiliaria2Cuarti.Controllers
                         var stream = Avatar.OpenReadStream();
                         var task = new FirebaseStorage("inmobilirianet.appspot.com")
                             .Child("avatars")
+                            .Child(usuario.Email)
                             .Child(Avatar.FileName)
                             .PutAsync(stream);
 
@@ -97,10 +105,9 @@ namespace Inmobiliaria2Cuarti.Controllers
                 try
                 {
                     var stream = Avatar.OpenReadStream();
-
-                    // Actualizar la URL para la carga
-                    var task = new FirebaseStorage("inmobilirianet.appspot.com") // Quitar el prefijo gs://
+                    var task = new FirebaseStorage("inmobilirianet.appspot.com")
                         .Child("avatars")
+                        .Child(usuario.Email)
                         .Child(Avatar.FileName)
                         .PutAsync(stream);
 
@@ -123,13 +130,11 @@ namespace Inmobiliaria2Cuarti.Controllers
 
             if (ModelState.IsValid)
             {
-                // Generar el hash de la contraseña y agregar un log para verificar
                 usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
                 _logger.LogInformation(
                     $"Hash generado para el usuario {usuario.Email}: {usuario.Contrasenia}"
                 );
 
-                // Guardar el usuario en la base de datos
                 repo.CrearUsuario(usuario);
                 _logger.LogInformation($"Usuario {usuario.Email} creado correctamente.");
 
@@ -162,6 +167,69 @@ namespace Inmobiliaria2Cuarti.Controllers
                 repo.EliminarLogico(id);
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ModificarAvatar()
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var bucketName = "inmobilirianet.appspot.com";
+            var prefix = $"avatars/{email}/";
+            var storageClient = StorageClient.Create();
+            var objects = storageClient.ListObjects(bucketName, prefix);
+
+            var urls = objects
+                .Select(obj =>
+                    $"https://storage.googleapis.com/inmobilirianet.appspot.com/{obj.Name}"
+                )
+                .ToList();
+
+            return View(urls); // Devuelve las URLs de las imágenes a la vista
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubirAvatar(IFormFile Avatar)
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (Avatar != null && Avatar.Length > 0)
+            {
+                try
+                {
+                    var stream = Avatar.OpenReadStream();
+                    var task = new FirebaseStorage("inmobilirianet.appspot.com")
+                        .Child("avatars")
+                        .Child(email)
+                        .Child(Avatar.FileName)
+                        .PutAsync(stream);
+
+                    await task;
+                }
+                catch (FirebaseStorageException ex)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "Error al subir el archivo: " + ex.Message
+                    );
+                    return View();
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                    return View();
+                }
+            }
+
+            return RedirectToAction(nameof(ModificarAvatar));
         }
     }
 }

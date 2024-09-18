@@ -14,7 +14,7 @@ public static class FirebaseConfig
                         Path.Combine(
                             Directory.GetCurrentDirectory(),
                             "Config",
-                            "inmobilirianet-firebase-adminsdk-emkga-8e21bb1350.json"
+                            "inmobilirianet-bda045475369.json"
                         )
                     ),
                 }

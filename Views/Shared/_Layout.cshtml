@@ -17,7 +17,7 @@
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-            @if (User.Identity.IsAuthenticated)
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -25,10 +25,10 @@
                         @User.Identity.Name
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("ModificarAvatar", "Usuario")">Modificar Avatar</a></li>
+                        <li><a class="dropdown-item" href="#!">Configurar Perfil</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Logout</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")">Salir</a></li>
                     </ul>
                 </li>
             }
@@ -48,7 +48,8 @@
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <a class="nav-link" href="http://localhost:5117/Propietario">Propietario</a>
                             <a class="nav-link" href="http://localhost:5117/Inquilino">Inquilino</a>
-                            <a class="nav-link" href="http://localhost:5117/Usuario">Usuario</a>
+                            <a class="nav-link" href="http://localhost:5117/Usuario" 
+                            style="@(User.IsInRole("Administrador") ? "display:block;" : "display:none;")">Usuario</a>
                             <a class="nav-link" href="http://localhost:5117/Contrato">Contrato</a>
                             <a class="nav-link" href="http://localhost:5117/Inmueble">Inmueble</a>
                             <a class="nav-link" href="http://localhost:5117/Pagos">Pagos</a>
