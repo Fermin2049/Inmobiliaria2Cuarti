@@ -1,0 +1,50 @@
+@model Inmobiliaria2Cuarti.Models.ConfigurarPerfilViewModel
+@{
+    ViewData["Title"] = "Configurar Perfil";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <h1>Configurar Perfil</h1>
+            <hr />
+
+            <form asp-action="ConfigurarPerfil" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="Apellido" class="control-label"></label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="ContraseniaAnterior" class="control-label"></label>
+                    <input asp-for="ContraseniaAnterior" class="form-control" type="password" />
+                    <span asp-validation-for="ContraseniaAnterior" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label asp-for="ContraseniaNueva" class="control-label"></label>
+                    <input asp-for="ContraseniaNueva" class="form-control" type="password" />
+                    <span asp-validation-for="ContraseniaNueva" class="text-danger"></span>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
+                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

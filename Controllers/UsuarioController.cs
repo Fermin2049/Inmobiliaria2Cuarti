@@ -307,5 +307,82 @@ namespace Inmobiliaria2Cuarti.Controllers
 
             return RedirectToAction(nameof(ModificarAvatar));
         }
+
+        [HttpGet]
+        public IActionResult ConfigurarPerfil()
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var usuario = repo.ObtenerPorEmail(email);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Crea el ViewModel y lo llena con los datos del usuario
+            var model = new ConfigurarPerfilViewModel
+            {
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                Email = usuario.Email,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ConfigurarPerfil(ConfigurarPerfilViewModel modelo)
+        {
+            if (ModelState.IsValid)
+            {
+                var email = User.FindFirst(ClaimTypes.Name)?.Value;
+                if (email == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var usuarioExistente = repo.ObtenerPorEmail(email);
+                if (usuarioExistente == null)
+                {
+                    return NotFound();
+                }
+
+                usuarioExistente.Nombre = modelo.Nombre;
+                usuarioExistente.Apellido = modelo.Apellido;
+
+                // Verificar si se quiere cambiar la contraseña
+                if (!string.IsNullOrEmpty(modelo.ContraseniaNueva))
+                {
+                    if (
+                        BCrypt.Net.BCrypt.Verify(
+                            modelo.ContraseniaAnterior,
+                            usuarioExistente.Contrasenia
+                        )
+                    )
+                    {
+                        usuarioExistente.Contrasenia = BCrypt.Net.BCrypt.HashPassword(
+                            modelo.ContraseniaNueva
+                        );
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(
+                            "ContraseniaAnterior",
+                            "La contraseña anterior es incorrecta."
+                        );
+                        return View(modelo);
+                    }
+                }
+
+                repo.ActualizarUsuario(usuarioExistente);
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(modelo);
+        }
     }
 }

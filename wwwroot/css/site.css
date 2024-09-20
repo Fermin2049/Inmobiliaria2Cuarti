@@ -85,6 +85,28 @@
     box-sizing: border-box;
 }
 
+/* Alinear a la derecha */
+.navbar-nav.ms-auto {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para la imagen de avatar */
+.avatar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Estilo para el nombre de usuario */
+.navbar-text {
+    font-size: 16px;
+    color: #333;
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
     :root {
         scroll-behavior: smooth;
@@ -615,7 +637,7 @@ progress {
 }
 
     .blockquote-footer::before {
-        content: "— ";
+        content: "ï¿½ï¿½";
     }
 
 .img-fluid {
