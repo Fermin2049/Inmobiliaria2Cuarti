@@ -1,3 +1,4 @@
+using System.IO;
 using System.Security.Claims;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
@@ -8,12 +9,13 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configurar Google Cloud Storage
+string basePath = AppDomain.CurrentDomain.BaseDirectory;
+string credentialPath = Path.Combine(basePath, "Config", "inmobilirianet-bda045475369.json");
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
+
 // Inicializar Firebase
 FirebaseConfig.Initialize();
-
-// Configurar Google Cloud Storage
-string credentialPath = @"\Config\inmobilirianet-bda045475369.json";
-Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -36,7 +38,6 @@ builder.Services.AddAuthorization(options =>
         "Administrador",
         policy => policy.RequireClaim(ClaimTypes.Role, "Administrador")
     );
-    options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Empleado"));
 });
 
 var app = builder.Build();
@@ -44,24 +45,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error/500");
-    app.UseStatusCodePagesWithReExecute("/Error/{0}");
+    app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
 
-// Manejar solicitudes no encontradas
-app.Use(
-    async (context, next) =>
-    {
-        await next();
-        if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
-        {
-            context.Request.Path = "/Home/Restringido";
-            await next();
-        }
-    }
-);
-
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -69,9 +57,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Account}/{action=Login}/{id?}");
-
-app.MapControllerRoute(name: "authenticated", pattern: "{controller=Home}/{action=Index}/{id?}")
-    .RequireAuthorization();
+app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
