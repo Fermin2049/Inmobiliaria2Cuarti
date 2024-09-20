@@ -213,20 +213,96 @@ namespace Inmobiliaria2Cuarti.Controllers
                         .PutAsync(stream);
 
                     await task;
+
+                    var usuario = repo.ObtenerPorEmail(email);
+                    if (usuario != null)
+                    {
+                        usuario.Avatar =
+                            $"https://storage.googleapis.com/inmobilirianet.appspot.com/avatars/{email}/{Avatar.FileName}";
+                        repo.ActualizarUsuario(usuario);
+                    }
                 }
                 catch (FirebaseStorageException ex)
                 {
-                    ModelState.AddModelError(
-                        string.Empty,
-                        "Error al subir el archivo: " + ex.Message
+                    _logger.LogError(
+                        ex,
+                        "Error al subir el avatar para el usuario: {Email}",
+                        email
                     );
-                    return View();
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
-                    return View();
+                    _logger.LogError(
+                        ex,
+                        "Error inesperado al subir el avatar para el usuario: {Email}",
+                        email
+                    );
                 }
+            }
+
+            return RedirectToAction(nameof(ModificarAvatar));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarAvatar()
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var usuario = repo.ObtenerPorEmail(email);
+            if (usuario != null)
+            {
+                usuario.Avatar = null;
+                repo.ActualizarUsuario(usuario);
+            }
+
+            return RedirectToAction(nameof(ModificarAvatar));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SeleccionarAvatar(string avatarUrl)
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var usuario = repo.ObtenerPorEmail(email);
+            if (usuario != null)
+            {
+                usuario.Avatar = avatarUrl;
+                repo.ActualizarUsuario(usuario);
+            }
+
+            return RedirectToAction(nameof(ModificarAvatar));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EliminarFoto(string avatarUrl)
+        {
+            var email = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (email == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var bucketName = "inmobilirianet.appspot.com";
+            var objectName = avatarUrl.Replace(
+                "https://storage.googleapis.com/inmobilirianet.appspot.com/",
+                ""
+            );
+
+            try
+            {
+                await storageClient.DeleteObjectAsync(bucketName, objectName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al eliminar la foto: {AvatarUrl}", avatarUrl);
             }
 
             return RedirectToAction(nameof(ModificarAvatar));

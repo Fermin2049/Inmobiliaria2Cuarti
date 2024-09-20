@@ -98,15 +98,15 @@ namespace Inmobiliaria2Cuarti.Models
             {
                 var query =
                     $@"SELECT {nameof(Usuario.IdUsuario)},
-                                      {nameof(Usuario.Nombre)},
-                                      {nameof(Usuario.Apellido)},
-                                      {nameof(Usuario.Email)},
-                                      {nameof(Usuario.Contrasenia)},
-                                      {nameof(Usuario.Avatar)},
-                                      {nameof(Usuario.Rol)},
-                                      {nameof(Usuario.Estado)}
-                               FROM usuario
-                               WHERE {nameof(Usuario.Email)} = @Email";
+                                  {nameof(Usuario.Nombre)},
+                                  {nameof(Usuario.Apellido)},
+                                  {nameof(Usuario.Email)},
+                                  {nameof(Usuario.Contrasenia)},
+                                  {nameof(Usuario.Avatar)},
+                                  {nameof(Usuario.Rol)},
+                                  {nameof(Usuario.Estado)}
+                        FROM usuario
+                        WHERE {nameof(Usuario.Email)} = @Email";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Email", email);
@@ -117,11 +117,23 @@ namespace Inmobiliaria2Cuarti.Models
                         res = new Usuario
                         {
                             IdUsuario = reader.GetInt32(nameof(Usuario.IdUsuario)),
-                            Nombre = reader.GetString(nameof(Usuario.Nombre)),
-                            Apellido = reader.GetString(nameof(Usuario.Apellido)),
-                            Email = reader.GetString(nameof(Usuario.Email)),
-                            Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
-                            Avatar = reader.GetString(nameof(Usuario.Avatar)),
+                            Nombre = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Nombre)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Nombre)),
+                            Apellido = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Apellido)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Apellido)),
+                            Email = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Email)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Email)),
+                            Contrasenia = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Usuario.Contrasenia))
+                            )
+                                ? null
+                                : reader.GetString(nameof(Usuario.Contrasenia)),
+                            Avatar = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Avatar)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Avatar)),
                             Rol = reader.GetInt32(nameof(Usuario.Rol)),
                             Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                         };

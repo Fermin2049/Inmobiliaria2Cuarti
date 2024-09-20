@@ -1,9 +1,9 @@
 @model List<string>
 
-<h2>Modificar Avatar</h2>
+<h2 class="text-center">Modificar Avatar</h2>
 
 <!-- Formulario para subir una nueva imagen -->
-<form asp-action="SubirAvatar" enctype="multipart/form-data" method="post">
+<form asp-action="SubirAvatar" enctype="multipart/form-data" method="post" class="text-center">
     <div class="form-group">
         <label for="avatar">Selecciona una imagen para tu avatar</label>
         <input type="file" name="Avatar" class="form-control" />
@@ -11,19 +11,33 @@
     <button type="submit" class="btn btn-primary">Subir Avatar</button>
 </form>
 
+<!-- Opción para eliminar el avatar actual -->
+<form asp-action="EliminarAvatar" method="post" class="text-center mt-3">
+    <button type="submit" class="btn btn-danger">Eliminar Avatar Actual</button>
+</form>
+
 <!-- Mostrar las imágenes disponibles -->
-<h3>Avatares disponibles:</h3>
+<h3 class="text-center mt-5">Avatares disponibles:</h3>
 @if (Model != null && Model.Any())
 {
-    @foreach (var url in Model)
-    {
-        <div>
-            <img src="@url" alt="Avatar" style="width:100px;height:100px;" />
-        </div>
-    }
+    <div class="d-flex flex-wrap justify-content-center">
+        @foreach (var url in Model)
+        {
+            <div class="m-2 text-center">
+                <img src="@url" alt="Avatar" class="img-thumbnail" style="width:150px;height:150px;" />
+                <form asp-action="SeleccionarAvatar" method="post" class="mt-2">
+                    <input type="hidden" name="avatarUrl" value="@url" />
+                    <button type="submit" class="btn btn-success">Seleccionar</button>
+                </form>
+                <form asp-action="EliminarFoto" method="post" class="mt-2">
+                    <input type="hidden" name="avatarUrl" value="@url" />
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        }
+    </div>
 }
 else
 {
-    <p>No hay imágenes disponibles.</p>
+    <p class="text-center">No hay imágenes disponibles.</p>
 }
-

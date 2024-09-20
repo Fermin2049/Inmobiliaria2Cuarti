@@ -12,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 FirebaseConfig.Initialize();
 
 // Configurar Google Cloud Storage
-string credentialPath =
-    @"C:\Users\Fermin\Desktop\inmoviliriaSegundoCuatri\Inmobiliaria2Cuarti\Config\inmobilirianet-bda045475369.json";
+string credentialPath = @"\Config\inmobilirianet-bda045475369.json";
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 // Add services to the container.
