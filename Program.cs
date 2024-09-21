@@ -38,6 +38,14 @@ builder.Services.AddAuthorization(options =>
         "Administrador",
         policy => policy.RequireClaim(ClaimTypes.Role, "Administrador")
     );
+    options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Empleado"));
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
+
+    options.AddPolicy("Empleado", policy => policy.RequireRole("Empleado"));
 });
 
 var app = builder.Build();

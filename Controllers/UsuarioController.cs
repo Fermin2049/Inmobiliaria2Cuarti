@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Inmobiliaria2Cuarti.Controllers
 {
-    [Authorize(Policy = "Administrador")]
+    [Authorize(Roles = "Administrador,Empleado")]
     public class UsuarioController : Controller
     {
         private readonly ILogger<UsuarioController> _logger;
@@ -33,12 +33,14 @@ namespace Inmobiliaria2Cuarti.Controllers
             storageClient = StorageClient.Create();
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Index()
         {
             var lista = repo.ObtenerTodos();
             return View(lista);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult Edicion(int id)
         {
@@ -51,6 +53,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> Edicion(Usuario usuario, IFormFile Avatar)
         {
@@ -91,12 +94,14 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(usuario);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public IActionResult Crear()
         {
             return View();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         public async Task<IActionResult> Crear(Usuario usuario, IFormFile Avatar)
         {
@@ -150,6 +155,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(usuario);
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Detalle(int id)
         {
             var usuario = repo.Obtener(id);
@@ -160,6 +166,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(usuario);
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id)
         {
             if (id != 0)
