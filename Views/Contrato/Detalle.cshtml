@@ -11,24 +11,17 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdContrato)
+            Propietario
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdContrato)
+            @Model.PropietarioNombre @Model.PropietarioApellido
         </dd>
 
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdInmueble)
+            Inquilino
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdInmueble)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdInquilino)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdInquilino)
+            @Model.InquilinoNombre @Model.InquilinoApellido
         </dd>
 
         <dt class="col-sm-2">
