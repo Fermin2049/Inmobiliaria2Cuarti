@@ -64,16 +64,19 @@ namespace Inmobiliaria2Cuatri.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT {nameof(Inmueble.IdInmueble)},
-                                      {nameof(Inmueble.IdPropietario)},
-                                      {nameof(Inmueble.Direccion)},
-                                      {nameof(Inmueble.Uso)},
-                                      {nameof(Inmueble.Tipo)},
-                                      {nameof(Inmueble.CantAmbiente)},
-                                      {nameof(Inmueble.Valor)},
-                                      {nameof(Inmueble.Estado)}
-                            FROM inmueble
-                            WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble";
+                    $@"SELECT i.{nameof(Inmueble.IdInmueble)},
+                                      i.{nameof(Inmueble.IdPropietario)},
+                                      i.{nameof(Inmueble.Direccion)},
+                                      i.{nameof(Inmueble.Uso)},
+                                      i.{nameof(Inmueble.Tipo)},
+                                      i.{nameof(Inmueble.CantAmbiente)},
+                                      i.{nameof(Inmueble.Valor)},
+                                      i.{nameof(Inmueble.Estado)},
+                                      p.Nombre,
+                                      p.Apellido
+                            FROM inmueble i
+                            INNER JOIN propietario p ON i.IdPropietario = p.IdPropietario
+                            WHERE i.{nameof(Inmueble.IdInmueble)} = @IdInmueble";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdInmueble", id);
@@ -91,6 +94,11 @@ namespace Inmobiliaria2Cuatri.Models
                             CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
                             Valor = reader.GetInt32(nameof(Inmueble.Valor)),
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                            Propietario = new Propietario
+                            {
+                                Nombre = reader.GetString(nameof(Propietario.Nombre)),
+                                Apellido = reader.GetString(nameof(Propietario.Apellido))
+                            }
                         };
                     }
                     connection.Close();
