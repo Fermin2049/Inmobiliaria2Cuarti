@@ -188,7 +188,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             var bucketName = "inmobilirianet.appspot.com";
             var prefix = $"avatars/{email}/";
             var storageClient = StorageClient.Create();
-            var objects = storageClient.ListObjects(bucketName, prefix);
+            var objects = await Task.Run(() => storageClient.ListObjects(bucketName, prefix));
 
             var urls = objects
                 .Select(obj =>
@@ -259,11 +259,11 @@ namespace Inmobiliaria2Cuarti.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var usuario = repo.ObtenerPorEmail(email);
+            var usuario = await Task.Run(() => repo.ObtenerPorEmail(email));
             if (usuario != null)
             {
                 usuario.Avatar = null;
-                repo.ActualizarUsuario(usuario);
+                await Task.Run(() => repo.ActualizarUsuario(usuario));
             }
 
             return RedirectToAction(nameof(ModificarAvatar));
@@ -278,11 +278,11 @@ namespace Inmobiliaria2Cuarti.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var usuario = repo.ObtenerPorEmail(email);
+            var usuario = await Task.Run(() => repo.ObtenerPorEmail(email));
             if (usuario != null)
             {
                 usuario.Avatar = avatarUrl;
-                repo.ActualizarUsuario(usuario);
+                await Task.Run(() => repo.ActualizarUsuario(usuario));
             }
 
             return RedirectToAction(nameof(ModificarAvatar));
