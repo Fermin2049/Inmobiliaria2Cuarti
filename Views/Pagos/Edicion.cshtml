@@ -10,6 +10,7 @@
             <h1>Editar Pago</h1>
             <hr />
             <form asp-action="Edicion" method="post">
+                <input type="hidden" asp-for="IdPago" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="IdContrato" class="control-label">Dni Inquilino</label>

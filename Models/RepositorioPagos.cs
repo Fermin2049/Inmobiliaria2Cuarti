@@ -94,7 +94,7 @@ namespace Inmobiliaria2Cuarti.Models
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
 
-                    var updateNroPagoQuery = 
+                    var updateNroPagoQuery =
                         @$"UPDATE Pagos 
                             SET {nameof(Pagos.NroPago)} = @NroPago 
                             WHERE {nameof(Pagos.IdPago)} = @IdPago;";
@@ -114,15 +114,16 @@ namespace Inmobiliaria2Cuarti.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    @$"UPDATE Pagos 
-                               SET {nameof(Pagos.IdContrato)} = @IdContrato,
-                                   {nameof(Pagos.FechaPago)} = @FechaPago,
-                                   {nameof(Pagos.Importe)} = @Importe,
-                                   {nameof(Pagos.Detalle)} = @Detalle,
-                                   {nameof(Pagos.Estado)} = @Estado,
-                                   {nameof(Pagos.UsuarioCreacion)} = @UsuarioCreacion,
-                                   {nameof(Pagos.UsuarioAnulacion)} = @UsuarioAnulacion
-                               WHERE {nameof(Pagos.IdPago)} = @IdPago;";
+                    @"
+                    UPDATE Pagos 
+                    SET 
+                        IdContrato = @IdContrato,
+                        FechaPago = @FechaPago,
+                        Importe = @Importe,
+                        Detalle = @Detalle,
+                        Estado = @Estado
+                    WHERE IdPago = @IdPago;";
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdPago", pago.IdPago);
@@ -131,8 +132,6 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Importe", pago.Importe);
                     command.Parameters.AddWithValue("@Detalle", pago.Detalle);
                     command.Parameters.AddWithValue("@Estado", pago.Estado);
-                    command.Parameters.AddWithValue("@UsuarioCreacion", pago.UsuarioCreacion);
-                    command.Parameters.AddWithValue("@UsuarioAnulacion", pago.UsuarioAnulacion);
 
                     connection.Open();
                     int result = command.ExecuteNonQuery();

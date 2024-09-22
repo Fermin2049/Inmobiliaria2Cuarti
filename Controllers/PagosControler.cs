@@ -78,8 +78,15 @@ namespace Inmobiliaria2Cuarti.Controllers
             {
                 try
                 {
-                    repo.ActualizarPago(pago);
-                    TempData["SuccessMessage"] = "Pago actualizado correctamente.";
+                    bool actualizado = repo.ActualizarPago(pago);
+                    if (actualizado)
+                    {
+                        TempData["SuccessMessage"] = "Pago actualizado correctamente.";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "No se pudo actualizar el pago.";
+                    }
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
