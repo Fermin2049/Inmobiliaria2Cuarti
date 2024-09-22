@@ -1,9 +1,6 @@
 using System;
 using System.Linq;
-<<<<<<< Updated upstream
-=======
 using System.Threading.Tasks;
->>>>>>> Stashed changes
 using Inmobiliaria2Cuarti.Models;
 using Inmobiliaria2Cuatri.Models;
 using Microsoft.AspNetCore.Authorization;
