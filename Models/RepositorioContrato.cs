@@ -139,6 +139,7 @@ namespace Inmobiliaria2Cuarti.Models
                       c.{nameof(Contrato.Condiciones)},
                       p.Nombre AS PropietarioNombre,
                       p.Apellido AS PropietarioApellido,
+                      i.Direccion AS InmuebleDireccion,
                       inq.Nombre AS InquilinoNombre,
                       inq.Apellido AS InquilinoApellido
                 FROM contrato c
@@ -168,6 +169,7 @@ namespace Inmobiliaria2Cuarti.Models
                     // Asignar los datos del propietario e inquilino
                             PropietarioNombre = reader.GetString("PropietarioNombre"),
                             PropietarioApellido = reader.GetString("PropietarioApellido"),
+                            InmuebleDireccion = reader.GetString("InmuebleDireccion"),
                             InquilinoNombre = reader.GetString("InquilinoNombre"),
                             InquilinoApellido = reader.GetString("InquilinoApellido")
                         };
