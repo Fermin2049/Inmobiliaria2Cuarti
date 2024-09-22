@@ -32,14 +32,28 @@ namespace Inmobiliaria2Cuarti.Controllers
         // Método para mostrar el formulario de edición
         public IActionResult Edicion(int id)
         {
+            ViewBag.Inmuebles = new SelectList(
+                repoInmueble.ObtenerTodos(),
+                "IdInmueble",
+                "Direccion"
+            );
+            ViewBag.Inquilinos = new SelectList(
+                repoInquilino.ObtenerTodos(),
+                "IdInquilino",
+                "Nombre"
+            );
             if (id == 0)
-                return View();
+            {
+                return View(new Contrato());
+            }
             else
             {
                 var contrato = repo.Obtener(id);
                 return View(contrato);
             }
         }
+        
+        
 
         // Método para manejar el envío del formulario de edicion
         [HttpPost]

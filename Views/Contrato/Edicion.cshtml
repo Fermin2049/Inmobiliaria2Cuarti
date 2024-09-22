@@ -1,0 +1,61 @@
+@model Inmobiliaria2Cuarti.Models.Contrato
+@{
+    ViewData["Title"] = "Editar Contrato";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <h1>Editar Contrato</h1>
+            <hr />
+            <form asp-action="Edicion" method="post">
+                <input type="hidden" asp-for="IdContrato" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="IdInmueble" class="control-label">Direccion</label>
+                    <select asp-for="IdInmueble" class="form-control" asp-items="ViewBag.Inmuebles"></select>
+                    <span asp-validation-for="IdInmueble" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdInquilino" class="control-label">Nombre Inquilino</label>
+                    <select asp-for="IdInquilino" class="form-control" asp-items="ViewBag.Inquilinos"></select>
+                    <span asp-validation-for="IdInquilino" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaInicio" class="control-label"></label>
+                    <input asp-for="FechaInicio" class="form-control" />
+                    <span asp-validation-for="FechaInicio" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FechaFin" class="control-label"></label>
+                    <input asp-for="FechaFin" class="form-control" />
+                    <span asp-validation-for="FechaFin" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MontoRenta" class="control-label"></label>
+                    <input asp-for="MontoRenta" class="form-control" />
+                    <span asp-validation-for="MontoRenta" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Deposito" class="control-label"></label>
+                    <input asp-for="Deposito" class="form-control" />
+                    <span asp-validation-for="Deposito" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Comision" class="control-label"></label>
+                    <input asp-for="Comision" class="form-control" />
+                    <span asp-validation-for="Comision" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Condiciones" class="control-label"></label>
+                    <textarea asp-for="Condiciones" class="form-control"></textarea>
+                    <span asp-validation-for="Condiciones" class="text-danger"></span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
