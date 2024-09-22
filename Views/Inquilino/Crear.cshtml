@@ -1,8 +1,11 @@
-@model Inquilino;
+@model Inquilino
 @{
     ViewData["Title"] = "Inquilino";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
+<body data-success-message="@successMessage" data-error-message="@errorMessage">
 <div class="container">
     <div class="d-flex justify-content-center">
         <div class="col-md-6">
@@ -50,4 +53,4 @@
         </div>
     </div>
 </div>
-
+</body>

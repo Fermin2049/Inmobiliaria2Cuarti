@@ -52,7 +52,9 @@
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
                                 @Html.ActionLink("Detalles", "Detalle", new { id = item.IdInmueble }, new { @class = "btn btn-sm btn-info mx-1" })
-                                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdInmueble }, new { @class = "btn btn-sm btn-danger mx-1", @onclick = "return confirm('¿Está seguro que desea eliminar este propietario?');" })
+                                <button class="btn btn-sm btn-danger mx-1" data-delete-url="@Url.Action("Eliminar", "Inmueble", new { id = item.IdInmueble })">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
                             </td>
                         </tr>
                     }

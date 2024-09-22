@@ -53,14 +53,27 @@ namespace Inmobiliaria2Cuatri.Controllers
             return View();
         }
 
-        // Método para manejar el envío del formulario de creacion
+        [HttpPost]
         [HttpPost]
         public IActionResult Crear(Inquilino inquilino)
         {
             if (ModelState.IsValid)
             {
-                repo.CrearInquilino(inquilino);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    repo.CrearInquilino(inquilino);
+                    TempData["SuccessMessage"] = "Inquilino guardado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] =
+                        "Hubo un error al guardar el inquilino: " + ex.Message;
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Hubo un error en la validación del formulario.";
             }
             return View(inquilino);
         }
