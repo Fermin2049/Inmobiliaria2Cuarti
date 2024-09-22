@@ -11,12 +11,6 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IdUsuario)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.IdUsuario)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
         <dd class="col-sm-10">
@@ -35,12 +29,6 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Contrasenia)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Contrasenia)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Avatar)
         </dt>
         <dd class="col-sm-10">
@@ -57,7 +45,7 @@
             @Html.DisplayNameFor(model => model.Rol)
         </dt>
         <dd class="col-sm-10">
-            @Model.Rol.ToString()
+            @(Model.Rol == (int)Inmobiliaria2Cuarti.Models.RolUsuario.Administrador ? "Administrador" : "Empleado")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Estado)
