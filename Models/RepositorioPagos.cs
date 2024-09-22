@@ -75,18 +75,16 @@ namespace Inmobiliaria2Cuarti.Models
                 var query =
                     @$"INSERT INTO Pagos 
                                ({nameof(Pagos.IdContrato)}, 
-                                {nameof(Pagos.NroPago)}, 
                                 {nameof(Pagos.FechaPago)}, 
                                 {nameof(Pagos.Importe)}, 
                                 {nameof(Pagos.Detalle)}, 
                                 {nameof(Pagos.Estado)},
                                 {nameof(Pagos.UsuarioCreacion)}) 
-                               VALUES (@IdContrato, @NumeroPagos, @FechaPagos, @Importe, @Detalle, @Anulado, @UsuarioCreacion); 
+                               VALUES (@IdContrato, @FechaPagos, @Importe, @Detalle, @Anulado, @UsuarioCreacion); 
                                SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdContrato", Pagos.IdContrato);
-                    command.Parameters.AddWithValue("@NumeroPagos", Pagos.NroPago);
                     command.Parameters.AddWithValue("@FechaPagos", Pagos.FechaPago);
                     command.Parameters.AddWithValue("@Importe", Pagos.Importe);
                     command.Parameters.AddWithValue("@Detalle", Pagos.Detalle);
@@ -95,6 +93,17 @@ namespace Inmobiliaria2Cuarti.Models
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
+
+                    var updateNroPagoQuery = 
+                        @$"UPDATE Pagos 
+                            SET {nameof(Pagos.NroPago)} = @NroPago 
+                            WHERE {nameof(Pagos.IdPago)} = @IdPago;";
+                    using (var updateCommand = new MySqlCommand(updateNroPagoQuery, connection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@NroPago", res);
+                        updateCommand.Parameters.AddWithValue("@IdPago", res);
+                        updateCommand.ExecuteNonQuery();
+                    }
                 }
             }
             return res;
@@ -107,7 +116,6 @@ namespace Inmobiliaria2Cuarti.Models
                 var query =
                     @$"UPDATE Pagos 
                                SET {nameof(Pagos.IdContrato)} = @IdContrato,
-                                   {nameof(Pagos.NroPago)} = @NroPago,
                                    {nameof(Pagos.FechaPago)} = @FechaPago,
                                    {nameof(Pagos.Importe)} = @Importe,
                                    {nameof(Pagos.Detalle)} = @Detalle,
@@ -119,7 +127,6 @@ namespace Inmobiliaria2Cuarti.Models
                 {
                     command.Parameters.AddWithValue("@IdPago", pago.IdPago);
                     command.Parameters.AddWithValue("@IdContrato", pago.IdContrato);
-                    command.Parameters.AddWithValue("@NroPago", pago.NroPago);
                     command.Parameters.AddWithValue("@FechaPago", pago.FechaPago);
                     command.Parameters.AddWithValue("@Importe", pago.Importe);
                     command.Parameters.AddWithValue("@Detalle", pago.Detalle);

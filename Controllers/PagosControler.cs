@@ -1,5 +1,9 @@
 using System;
 using System.Linq;
+<<<<<<< Updated upstream
+=======
+using System.Threading.Tasks;
+>>>>>>> Stashed changes
 using Inmobiliaria2Cuarti.Models;
 using Inmobiliaria2Cuatri.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -25,17 +29,39 @@ namespace Inmobiliaria2Cuarti.Controllers
             repoInquilino = new RepositorioInquilino();
         }
 
+        // Acción para listar pagos
         public IActionResult Index()
         {
             var lista = repo.ObtenerPagossPorContrato(0); // Cambiar 0 por el id del contrato si es necesario
             return View(lista);
         }
 
+        // Acción GET para mostrar la edición de un pago
         [HttpGet]
         public IActionResult Edicion(int id)
         {
+            // Obtener los contratos e inquilinos
+            var contratos = repoContrato.ObtenerTodos();
+            var inquilinos = repoInquilino.ObtenerTodos();
+
+            var contratosInquilinos = contratos.Join(
+                inquilinos,
+                contrato => contrato.IdInquilino,
+                inquilino => inquilino.IdInquilino,
+                (contrato, inquilino) => new { contrato.IdContrato, InquilinoDni = inquilino.Dni }
+            );
+
+            ViewBag.ContratosInquilinos = new SelectList(
+                contratosInquilinos,
+                "IdContrato",
+                "InquilinoDni"
+            );
+
+            // Si id es 0, devolver un nuevo pago para crear uno
             if (id == 0)
+            {
                 return View(new Pagos());
+            }
             else
             {
                 var pago = repo.ObtenerPagossPorContrato(id).FirstOrDefault();
@@ -47,6 +73,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             }
         }
 
+        // Acción POST para actualizar un pago existente
         [HttpPost]
         public IActionResult Edicion(Pagos pago)
         {
@@ -63,9 +90,29 @@ namespace Inmobiliaria2Cuarti.Controllers
                     TempData["ErrorMessage"] = "Hubo un error al actualizar el pago: " + ex.Message;
                 }
             }
+
+            // Si no es válido, recargar los datos para los dropdowns
+            var contratos = repoContrato.ObtenerTodos();
+            var inquilinos = repoInquilino.ObtenerTodos();
+
+            var contratosInquilinos = contratos.Join(
+                inquilinos,
+                contrato => contrato.IdInquilino,
+                inquilino => inquilino.IdInquilino,
+                (contrato, inquilino) => new { contrato.IdContrato, InquilinoDni = inquilino.Dni }
+            );
+
+            ViewBag.ContratosInquilinos = new SelectList(
+                contratosInquilinos,
+                "IdContrato",
+                "InquilinoDni"
+            );
+
+            // Retornar la vista con los errores de validación
             return View(pago);
         }
 
+        // Acción GET para ver los detalles de un pago
         public IActionResult Detalle(int id)
         {
             var pago = repo.ObtenerPagossPorContrato(id).FirstOrDefault();
@@ -76,6 +123,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(pago);
         }
 
+        // Acción GET para crear un nuevo pago
         [HttpGet]
         public IActionResult Crear()
         {
@@ -98,6 +146,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View();
         }
 
+        // Acción POST para crear un nuevo pago
         [HttpPost]
         public IActionResult Crear(Pagos pago)
         {
@@ -115,6 +164,7 @@ namespace Inmobiliaria2Cuarti.Controllers
                 }
             }
 
+            // Si no es válido, recargar los datos para los dropdowns
             var contratos = repoContrato.ObtenerTodos();
             var inquilinos = repoInquilino.ObtenerTodos();
 
@@ -134,6 +184,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(pago);
         }
 
+        // Acción para eliminar un pago (anulación lógica)
         public IActionResult Eliminar(int id)
         {
             if (id != 0)

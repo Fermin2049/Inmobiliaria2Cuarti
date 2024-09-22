@@ -11,7 +11,6 @@ namespace Inmobiliaria2Cuarti.Models
         [Required]
         public int IdContrato { get; set; }
 
-        [Required]
         public int NroPago { get; set; }
 
         [Required]
