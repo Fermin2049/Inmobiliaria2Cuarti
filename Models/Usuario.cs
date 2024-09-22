@@ -11,10 +11,10 @@ namespace Inmobiliaria2Cuarti.Models
         public string? Apellido { get; set; }
         public string? Email { get; set; }
 
-        [Required, DataType(DataType.Password)]
+        [DataType(DataType.Password)]
         public string? Contrasenia { get; set; }
 
-        public string? Avatar { get; set; }
+        public string? Avatar { get; set; } // No Required attribute here
         public int Rol { get; set; }
         public bool Estado { get; set; }
     }

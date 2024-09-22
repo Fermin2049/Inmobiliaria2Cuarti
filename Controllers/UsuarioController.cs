@@ -57,8 +57,11 @@ namespace Inmobiliaria2Cuarti.Controllers
         [HttpPost]
         public async Task<IActionResult> Edicion(Usuario usuario, IFormFile Avatar)
         {
+            ModelState.Remove("Avatar");
             if (ModelState.IsValid)
             {
+                // Subir avatar solo si se seleccionó uno nuevo
+
                 if (Avatar != null && Avatar.Length > 0)
                 {
                     try
@@ -86,10 +89,36 @@ namespace Inmobiliaria2Cuarti.Controllers
                         return View(usuario);
                     }
                 }
+                else
+                {
+                    // Mantener el avatar actual si no se ha subido uno nuevo
+                    var usuarioActual = repo.Obtener(usuario.IdUsuario);
+                    if (usuarioActual != null)
+                    {
+                        usuario.Avatar = usuarioActual.Avatar;
+                    }
+                }
 
-                usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
-                repo.ActualizarUsuario(usuario);
-                return RedirectToAction(nameof(Index));
+                // Solo re-hash la contraseña si ha sido cambiada
+                var usuarioActualContrasenia = repo.Obtener(usuario.IdUsuario);
+                if (!string.IsNullOrEmpty(usuario.Contrasenia))
+                {
+                    usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
+                }
+                else if (usuarioActualContrasenia != null)
+                {
+                    usuario.Contrasenia = usuarioActualContrasenia.Contrasenia;
+                }
+
+                bool actualizado = repo.ActualizarUsuario(usuario);
+                if (actualizado)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError("", "No se pudo actualizar el usuario.");
+                }
             }
             return View(usuario);
         }
@@ -105,6 +134,7 @@ namespace Inmobiliaria2Cuarti.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(Usuario usuario, IFormFile Avatar)
         {
+            ModelState.Remove("Avatar");
             if (Avatar != null && Avatar.Length > 0)
             {
                 try

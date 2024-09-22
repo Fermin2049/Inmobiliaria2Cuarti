@@ -27,7 +27,6 @@
                         <th>@Html.DisplayNameFor(model => model.First().Nombre)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Apellido)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Email)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Contrasenia)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Avatar)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Rol)</th>
                         <th>Acciones</th>
@@ -40,11 +39,19 @@
                             <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
                             <td>@Html.DisplayFor(modelItem => item.Apellido)</td>
                             <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Contrasenia)</td>
                             <td>
                                 <img src="@item.Avatar" alt="Avatar" style="width: 50px; height: 50px;" />
                             </td>
-                            <td>@Html.DisplayFor(modelItem => item.Rol)</td>
+                            <td>
+                                @if (item.Rol == 1)
+                                {
+                                    <span>Administrador</span>
+                                }
+                                else if (item.Rol == 2)
+                                {
+                                    <span>Empleado</span>
+                                }
+                            </td>
                             <td>
                                 <a asp-action="Edicion" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-warning mx-1">
                                     <i class="fas fa-edit"></i> Editar

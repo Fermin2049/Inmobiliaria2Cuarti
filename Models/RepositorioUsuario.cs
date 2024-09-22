@@ -15,15 +15,15 @@ namespace Inmobiliaria2Cuarti.Models
             {
                 var query =
                     $@"SELECT {nameof(Usuario.IdUsuario)},
-                                      {nameof(Usuario.Nombre)},
-                                      {nameof(Usuario.Apellido)},
-                                      {nameof(Usuario.Email)},
-                                      {nameof(Usuario.Contrasenia)},
-                                      {nameof(Usuario.Avatar)},
-                                      {nameof(Usuario.Rol)},
-                                      {nameof(Usuario.Estado)}
-                            FROM usuario
-                            WHERE {nameof(Usuario.Estado)} = true";
+                                  {nameof(Usuario.Nombre)},
+                                  {nameof(Usuario.Apellido)},
+                                  {nameof(Usuario.Email)},
+                                  {nameof(Usuario.Contrasenia)},
+                                  {nameof(Usuario.Avatar)},
+                                  {nameof(Usuario.Rol)},
+                                  {nameof(Usuario.Estado)}
+                        FROM usuario
+                        WHERE {nameof(Usuario.Estado)} = true";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     connection.Open();
@@ -34,11 +34,25 @@ namespace Inmobiliaria2Cuarti.Models
                             new Usuario
                             {
                                 IdUsuario = reader.GetInt32(nameof(Usuario.IdUsuario)),
-                                Nombre = reader.GetString(nameof(Usuario.Nombre)),
-                                Apellido = reader.GetString(nameof(Usuario.Apellido)),
-                                Email = reader.GetString(nameof(Usuario.Email)),
-                                Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
-                                Avatar = reader.GetString(nameof(Usuario.Avatar)),
+                                Nombre = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Nombre)))
+                                    ? null
+                                    : reader.GetString(nameof(Usuario.Nombre)),
+                                Apellido = reader.IsDBNull(
+                                    reader.GetOrdinal(nameof(Usuario.Apellido))
+                                )
+                                    ? null
+                                    : reader.GetString(nameof(Usuario.Apellido)),
+                                Email = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Email)))
+                                    ? null
+                                    : reader.GetString(nameof(Usuario.Email)),
+                                Contrasenia = reader.IsDBNull(
+                                    reader.GetOrdinal(nameof(Usuario.Contrasenia))
+                                )
+                                    ? null
+                                    : reader.GetString(nameof(Usuario.Contrasenia)),
+                                Avatar = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Avatar)))
+                                    ? null
+                                    : reader.GetString(nameof(Usuario.Avatar)),
                                 Rol = reader.GetInt32(nameof(Usuario.Rol)),
                                 Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                             }
@@ -57,15 +71,15 @@ namespace Inmobiliaria2Cuarti.Models
             {
                 var query =
                     $@"SELECT {nameof(Usuario.IdUsuario)},
-                                      {nameof(Usuario.Nombre)},
-                                      {nameof(Usuario.Apellido)},
-                                      {nameof(Usuario.Email)},
-                                      {nameof(Usuario.Contrasenia)},
-                                      {nameof(Usuario.Avatar)},
-                                      {nameof(Usuario.Rol)},
-                                      {nameof(Usuario.Estado)}
-                            FROM usuario
-                            WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
+                                  {nameof(Usuario.Nombre)},
+                                  {nameof(Usuario.Apellido)},
+                                  {nameof(Usuario.Email)},
+                                  {nameof(Usuario.Contrasenia)},
+                                  {nameof(Usuario.Avatar)},
+                                  {nameof(Usuario.Rol)},
+                                  {nameof(Usuario.Estado)}
+                        FROM usuario
+                        WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdUsuario", id);
@@ -76,11 +90,23 @@ namespace Inmobiliaria2Cuarti.Models
                         res = new Usuario
                         {
                             IdUsuario = reader.GetInt32(nameof(Usuario.IdUsuario)),
-                            Nombre = reader.GetString(nameof(Usuario.Nombre)),
-                            Apellido = reader.GetString(nameof(Usuario.Apellido)),
-                            Email = reader.GetString(nameof(Usuario.Email)),
-                            Contrasenia = reader.GetString(nameof(Usuario.Contrasenia)),
-                            Avatar = reader.GetString(nameof(Usuario.Avatar)),
+                            Nombre = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Nombre)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Nombre)),
+                            Apellido = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Apellido)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Apellido)),
+                            Email = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Email)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Email)),
+                            Contrasenia = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Usuario.Contrasenia))
+                            )
+                                ? null
+                                : reader.GetString(nameof(Usuario.Contrasenia)),
+                            Avatar = reader.IsDBNull(reader.GetOrdinal(nameof(Usuario.Avatar)))
+                                ? null
+                                : reader.GetString(nameof(Usuario.Avatar)),
                             Rol = reader.GetInt32(nameof(Usuario.Rol)),
                             Estado = reader.GetBoolean(nameof(Usuario.Estado)),
                         };
@@ -173,30 +199,40 @@ namespace Inmobiliaria2Cuarti.Models
         {
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
-                var sql =
-                    @$"UPDATE usuario 
-                         SET {nameof(Usuario.Nombre)} = @Nombre, 
-                             {nameof(Usuario.Apellido)} = @Apellido, 
-                             {nameof(Usuario.Email)} = @Email, 
-                             {nameof(Usuario.Contrasenia)} = @Clave, 
-                             {nameof(Usuario.Avatar)} = @Avatar,
-                             {nameof(Usuario.Rol)} = @Rol,
-                             {nameof(Usuario.Estado)} = @Estado
-                         WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario;";
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                // Construimos la query dinámicamente para no actualizar el avatar si no ha sido modificado
+                var query =
+                    $@"
+            UPDATE usuario SET
+                {nameof(Usuario.Nombre)} = @Nombre,
+                {nameof(Usuario.Apellido)} = @Apellido,
+                {nameof(Usuario.Email)} = @Email,
+                {nameof(Usuario.Contrasenia)} = @Contrasenia,
+                {nameof(Usuario.Rol)} = @Rol,
+                {nameof(Usuario.Estado)} = @Estado"
+                    + (usuario.Avatar != null ? $", {nameof(Usuario.Avatar)} = @Avatar" : "")
+                    + $" WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
+
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
                     command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@Email", usuario.Email);
-                    command.Parameters.AddWithValue("@Clave", usuario.Contrasenia);
-                    command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
+                    command.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
+
+                    if (usuario.Avatar != null)
+                    {
+                        command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
+                    }
+
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
                     command.Parameters.AddWithValue("@Estado", usuario.Estado);
 
                     connection.Open();
-                    int result = command.ExecuteNonQuery();
-                    return result > 0;
+                    int rowsAffected = command.ExecuteNonQuery();
+                    connection.Close();
+
+                    return rowsAffected > 0;
                 }
             }
         }
@@ -205,13 +241,11 @@ namespace Inmobiliaria2Cuarti.Models
         {
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
-                string sql =
-                    @$"UPDATE usuario 
-                            SET {nameof(Usuario.Rol)} = 'Eliminado' 
-                            WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario;";
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                var query =
+                    $@"UPDATE usuario SET {nameof(Usuario.Estado)} = false WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@IdUsuario", id);
                     connection.Open();
                     int result = command.ExecuteNonQuery();
                     connection.Close();
