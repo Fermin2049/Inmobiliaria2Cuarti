@@ -2,73 +2,76 @@
 
 @{
     ViewData["Title"] = "Crear Inmueble";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
-<div class="container">
-    <div class="d-flex justify-content-center">
-        <div class="col-md-6">
-            <h1>Crear Inmueble</h1>
-            <h4>Formulario de Inmueble</h4>
-            <hr />
-            <form asp-action="Crear" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <!-- Campo para seleccionar Propietario -->
-                <div class="form-group">
-                    <label asp-for="IdPropietario" class="control-label">Nombre</label>
-                    <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.PropietariosLista"></select>
-                    <span asp-validation-for="IdPropietario" class="text-danger"></span>
-                </div>
-                <!-- Campo para Dirección -->
-                <div class="form-group">
-                    <label asp-for="Direccion" class="control-label"></label>
-                    <input asp-for="Direccion" class="form-control" />
-                    <span asp-validation-for="Direccion" class="text-danger"></span>
-                </div>
-                <!-- Campo para Uso -->
-                <div class="form-group">
-                    <label asp-for="Uso" class="control-label"></label>
-                    <input asp-for="Uso" class="form-control" />
-                    <span asp-validation-for="Uso" class="text-danger"></span>
-                </div>
-                <!-- Campo para Tipo (ENUM) -->
-                <div class="form-group">
-                    <label asp-for="Tipo" class="control-label"></label>
-                    <select asp-for="Tipo" class="form-control">
-                        @foreach (var item in Enum.GetValues(typeof(Inmobiliaria2Cuatri.Models.TipoInmueble)))
-                        {
-                            <option value="@((int)item)">@item.ToString()</option>
-                        }
-                    </select>
-                    <span asp-validation-for="Tipo" class="text-danger"></span>
-                </div>
-                <!-- Campo para Cantidad de Ambientes -->
-                <div class="form-group">
-                    <label asp-for="CantAmbiente" class="control-label"></label>
-                    <input asp-for="CantAmbiente" class="form-control" />
-                    <span asp-validation-for="CantAmbiente" class="text-danger"></span>
-                </div>
-                <!-- Campo para Valor -->
-                <div class="form-group">
-                    <label asp-for="Valor" class="control-label"></label>
-                    <input asp-for="Valor" class="form-control" />
-                    <span asp-validation-for="Valor" class="text-danger"></span>
-                </div>
-                <!-- Campo para Estado -->
-                <div class="form-group form-check">
-                    <input asp-for="Estado" type="checkbox" class="form-check-input" />
-                    <label asp-for="Estado" class="form-check-label"></label>
-                </div>
-                
-                <div class="d-flex justify-content-between">
-                    <input type="submit" value="Guardar" class="btn btn-primary" />
-                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
-                </div>
-            </form>
+<body data-success-message="@successMessage" data-error-message="@errorMessage">
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <h1>Crear Inmueble</h1>
+                <h4>Formulario de Inmueble</h4>
+                <hr />
+                <form asp-action="Crear" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- Campo para seleccionar Propietario -->
+                    <div class="form-group">
+                        <label asp-for="IdPropietario" class="control-label">Nombre</label>
+                        <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.PropietariosLista"></select>
+                        <span asp-validation-for="IdPropietario" class="text-danger"></span>
+                    </div>
+                    <!-- Campo para Dirección -->
+                    <div class="form-group">
+                        <label asp-for="Direccion" class="control-label"></label>
+                        <input asp-for="Direccion" class="form-control" />
+                        <span asp-validation-for="Direccion" class="text-danger"></span>
+                    </div>
+                    <!-- Campo para Uso -->
+                    <div class="form-group">
+                        <label asp-for="Uso" class="control-label"></label>
+                        <input asp-for="Uso" class="form-control" />
+                        <span asp-validation-for="Uso" class="text-danger"></span>
+                    </div>
+                    <!-- Campo para Tipo (ENUM) -->
+                    <div class="form-group">
+                        <label asp-for="Tipo" class="control-label"></label>
+                        <select asp-for="Tipo" class="form-control">
+                            @foreach (var item in Enum.GetValues(typeof(Inmobiliaria2Cuatri.Models.TipoInmueble)))
+                            {
+                                <option value="@((int)item)">@item.ToString()</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Tipo" class="text-danger"></span>
+                    </div>
+                    <!-- Campo para Cantidad de Ambientes -->
+                    <div class="form-group">
+                        <label asp-for="CantAmbiente" class="control-label"></label>
+                        <input asp-for="CantAmbiente" class="form-control" />
+                        <span asp-validation-for="CantAmbiente" class="text-danger"></span>
+                    </div>
+                    <!-- Campo para Valor -->
+                    <div class="form-group">
+                        <label asp-for="Valor" class="control-label"></label>
+                        <input asp-for="Valor" class="form-control" />
+                        <span asp-validation-for="Valor" class="text-danger"></span>
+                    </div>
+                    <!-- Campo para Estado -->
+                    <div class="form-group form-check">
+                        <input asp-for="Estado" type="checkbox" class="form-check-input" />
+                        <label asp-for="Estado" class="form-check-label"></label>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                        <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>

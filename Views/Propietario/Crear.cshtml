@@ -1,9 +1,11 @@
-@model Propietario;
+@model Propietario
 @{
     ViewData["Title"] = "Propietario";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
-<div class="container">
+<body data-success-message="@successMessage" data-error-message="@errorMessage">
     <div class="d-flex justify-content-center">
         <div class="col-md-6">
             <h1>Crear</h1>
@@ -49,5 +51,4 @@
             </form>
         </div>
     </div>
-</div>
-
+</body>

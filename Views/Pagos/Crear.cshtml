@@ -2,57 +2,60 @@
 
 @{
     ViewData["Title"] = "Crear Pago";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
-<div class="container">
-    <div class="d-flex justify-content-center">
-        <div class="col-md-6">
-            <h1>Crear</h1>
+<body data-success-message="@successMessage" data-error-message="@errorMessage">
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <h1>Crear</h1>
 
-            <h4>Pago</h4>
-            <hr />
+                <h4>Pago</h4>
+                <hr />
 
-            <form asp-action="Crear">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="IdContrato" class="control-label"></label>
-                    <select asp-for="IdContrato" class="form-control" asp-items="ViewBag.ContratosInquilinos"></select>
-                    <span asp-validation-for="IdContrato" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="NroPago" class="control-label"></label>
-                    <input asp-for="NroPago" class="form-control" />
-                    <span asp-validation-for="NroPago" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="FechaPago" class="control-label"></label>
-                    <input asp-for="FechaPago" class="form-control" type="date" />
-                    <span asp-validation-for="FechaPago" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Detalle" class="control-label"></label>
-                    <input asp-for="Detalle" class="form-control" />
-                    <span asp-validation-for="Detalle" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Importe" class="control-label"></label>
-                    <input asp-for="Importe" class="form-control" />
-                    <span asp-validation-for="Importe" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Estado" class="control-label"></label>
-                    <input asp-for="Estado" type="checkbox" class="form-check-input" />
-                </div>
-                <div class="d-flex justify-content-between">
-                    <input type="submit" value="Guardar" class="btn btn-primary" />
-                    <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
-                </div>
-            </form>
+                <form asp-action="Crear">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="IdContrato" class="control-label"></label>
+                        <select asp-for="IdContrato" class="form-control" asp-items="ViewBag.ContratosInquilinos"></select>
+                        <span asp-validation-for="IdContrato" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NroPago" class="control-label"></label>
+                        <input asp-for="NroPago" class="form-control" />
+                        <span asp-validation-for="NroPago" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FechaPago" class="control-label"></label>
+                        <input asp-for="FechaPago" class="form-control" type="date" />
+                        <span asp-validation-for="FechaPago" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Detalle" class="control-label"></label>
+                        <input asp-for="Detalle" class="form-control" />
+                        <span asp-validation-for="Detalle" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Importe" class="control-label"></label>
+                        <input asp-for="Importe" class="form-control" />
+                        <span asp-validation-for="Importe" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Estado" class="control-label"></label>
+                        <input asp-for="Estado" type="checkbox" class="form-check-input" />
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                        <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>

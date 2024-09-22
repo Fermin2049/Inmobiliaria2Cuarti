@@ -63,15 +63,14 @@ namespace Inmobiliaria2Cuatri.Controllers
                 try
                 {
                     repo.ActualizarInmueble(inmueble);
+                    TempData["SuccessMessage"] = "Inmueble actualizado correctamente.";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error al actualizar el inmueble: {ex.Message}");
-                    ModelState.AddModelError(
-                        string.Empty,
-                        "No se pudo actualizar el inmueble. Por favor, intente de nuevo."
-                    );
+                    TempData["ErrorMessage"] =
+                        "No se pudo actualizar el inmueble. Por favor, intente de nuevo.";
                 }
             }
 
@@ -113,15 +112,14 @@ namespace Inmobiliaria2Cuatri.Controllers
                 try
                 {
                     repo.CrearInmueble(inmueble);
+                    TempData["SuccessMessage"] = "Inmueble creado correctamente.";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error al crear el inmueble: {ex.Message}");
-                    ModelState.AddModelError(
-                        string.Empty,
-                        "No se pudo crear el inmueble. Por favor, intente de nuevo."
-                    );
+                    TempData["ErrorMessage"] =
+                        "No se pudo crear el inmueble. Por favor, intente de nuevo.";
                 }
             }
 
@@ -150,10 +148,8 @@ namespace Inmobiliaria2Cuatri.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error al eliminar el inmueble: {ex.Message}");
-                    ModelState.AddModelError(
-                        string.Empty,
-                        "No se pudo eliminar el inmueble. Por favor, intente de nuevo."
-                    );
+                    TempData["ErrorMessage"] =
+                        "No se pudo eliminar el inmueble. Por favor, intente de nuevo.";
                 }
             }
             return RedirectToAction(nameof(Index));

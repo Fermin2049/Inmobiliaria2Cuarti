@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
 
 namespace Inmobiliaria2Cuarti.Controllers
 {
@@ -61,31 +62,28 @@ namespace Inmobiliaria2Cuarti.Controllers
             if (ModelState.IsValid)
             {
                 // Subir avatar solo si se seleccionó uno nuevo
-
                 if (Avatar != null && Avatar.Length > 0)
                 {
                     try
                     {
+                        // Subir a Firebase Storage
                         var stream = Avatar.OpenReadStream();
-                        var task = new FirebaseStorage("inmobilirianet.appspot.com")
-                            .Child("avatars")
-                            .Child(usuario.Email)
-                            .Child(Avatar.FileName)
-                            .PutAsync(stream);
-
-                        usuario.Avatar = await task;
+                        var storageObject = await storageClient.UploadObjectAsync(
+                            "your-bucket-name",
+                            Avatar.FileName,
+                            null,
+                            stream
+                        );
+                        usuario.Avatar = storageObject.MediaLink;
                     }
                     catch (FirebaseStorageException ex)
                     {
-                        ModelState.AddModelError(
-                            string.Empty,
-                            "Error al subir el archivo: " + ex.Message
-                        );
+                        TempData["ErrorMessage"] = "Error al subir el avatar: " + ex.Message;
                         return View(usuario);
                     }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                        TempData["ErrorMessage"] = "Error al subir el avatar: " + ex.Message;
                         return View(usuario);
                     }
                 }
@@ -110,14 +108,27 @@ namespace Inmobiliaria2Cuarti.Controllers
                     usuario.Contrasenia = usuarioActualContrasenia.Contrasenia;
                 }
 
-                bool actualizado = repo.ActualizarUsuario(usuario);
-                if (actualizado)
+                try
                 {
-                    return RedirectToAction(nameof(Index));
+                    bool actualizado = repo.ActualizarUsuario(usuario);
+                    if (actualizado)
+                    {
+                        TempData["SuccessMessage"] = "Usuario actualizado correctamente.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "No se pudo actualizar el usuario.";
+                    }
                 }
-                else
+                catch (MySqlException ex) when (ex.Number == 1062) // Código de error para duplicados
                 {
-                    ModelState.AddModelError("", "No se pudo actualizar el usuario.");
+                    TempData["ErrorMessage"] = "Ya existe un usuario con el mismo Email.";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] =
+                        "Hubo un error al actualizar el usuario: " + ex.Message;
                 }
             }
             return View(usuario);
@@ -139,49 +150,50 @@ namespace Inmobiliaria2Cuarti.Controllers
             {
                 try
                 {
+                    // Subir a Firebase Storage
                     var stream = Avatar.OpenReadStream();
-                    var task = new FirebaseStorage("inmobilirianet.appspot.com")
-                        .Child("avatars")
-                        .Child(usuario.Email)
-                        .Child(Avatar.FileName)
-                        .PutAsync(stream);
-
-                    usuario.Avatar = await task;
+                    var storageObject = await storageClient.UploadObjectAsync(
+                        "your-bucket-name",
+                        Avatar.FileName,
+                        null,
+                        stream
+                    );
+                    usuario.Avatar = storageObject.MediaLink;
                 }
                 catch (FirebaseStorageException ex)
                 {
-                    ModelState.AddModelError(
-                        string.Empty,
-                        "Error al subir el archivo: " + ex.Message
-                    );
+                    TempData["ErrorMessage"] = "Error al subir el avatar: " + ex.Message;
                     return View(usuario);
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty, "Ocurrió un error: " + ex.Message);
+                    TempData["ErrorMessage"] = "Error al subir el avatar: " + ex.Message;
                     return View(usuario);
                 }
             }
 
             if (ModelState.IsValid)
             {
-                usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
-                _logger.LogInformation(
-                    $"Hash generado para el usuario {usuario.Email}: {usuario.Contrasenia}"
-                );
-
-                repo.CrearUsuario(usuario);
-                _logger.LogInformation($"Usuario {usuario.Email} creado correctamente.");
-
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    usuario.Contrasenia = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia);
+                    repo.CrearUsuario(usuario);
+                    TempData["SuccessMessage"] = "Usuario creado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (MySqlException ex) when (ex.Number == 1062) // Código de error para duplicados
+                {
+                    TempData["ErrorMessage"] = "Ya existe un usuario con el mismo Email.";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "Hubo un error al crear el usuario: " + ex.Message;
+                }
             }
             else
             {
-                _logger.LogWarning(
-                    $"Error al crear el usuario {usuario.Email}: {string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage))}"
-                );
+                TempData["ErrorMessage"] = "Hubo un error en la validación del formulario.";
             }
-
             return View(usuario);
         }
 

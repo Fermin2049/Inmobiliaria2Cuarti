@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Linq;
 using Inmobiliaria2Cuarti.Models;
 using Inmobiliaria2Cuatri.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -52,8 +52,16 @@ namespace Inmobiliaria2Cuarti.Controllers
         {
             if (ModelState.IsValid)
             {
-                repo.ActualizarPago(pago);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    repo.ActualizarPago(pago);
+                    TempData["SuccessMessage"] = "Pago actualizado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "Hubo un error al actualizar el pago: " + ex.Message;
+                }
             }
             return View(pago);
         }
@@ -95,8 +103,16 @@ namespace Inmobiliaria2Cuarti.Controllers
         {
             if (ModelState.IsValid)
             {
-                repo.CrearPagos(pago, "UsuarioCreacion"); // Reemplazar "UsuarioCreacion" con el usuario actual
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    repo.CrearPagos(pago, "UsuarioCreacion"); // Reemplazar "UsuarioCreacion" con el usuario actual
+                    TempData["SuccessMessage"] = "Pago creado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "Hubo un error al crear el pago: " + ex.Message;
+                }
             }
 
             var contratos = repoContrato.ObtenerTodos();

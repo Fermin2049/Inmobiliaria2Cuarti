@@ -52,18 +52,35 @@ namespace Inmobiliaria2Cuarti.Controllers
                 return View(contrato);
             }
         }
-        
-        
 
-        // Método para manejar el envío del formulario de edicion
+        // Método para manejar el envío del formulario de edición
         [HttpPost]
         public IActionResult Edicion(Contrato contrato)
         {
             if (ModelState.IsValid)
             {
-                repo.ActualizarContrato(contrato);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    repo.ActualizarContrato(contrato);
+                    TempData["SuccessMessage"] = "Contrato actualizado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] =
+                        "Hubo un error al actualizar el contrato: " + ex.Message;
+                }
             }
+            ViewBag.Inmuebles = new SelectList(
+                repoInmueble.ObtenerTodos(),
+                "IdInmueble",
+                "Direccion"
+            );
+            ViewBag.Inquilinos = new SelectList(
+                repoInquilino.ObtenerTodos(),
+                "IdInquilino",
+                "Nombre"
+            );
             return View(contrato);
         }
 
@@ -83,21 +100,22 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View();
         }
 
-        public IActionResult FiltrarPorPlazo(int plazo)
-        {
-            var lista = repo.ObtenerPorPlazo(plazo);
-            ViewBag.PlazoSeleccionado = plazo;
-            return View("Index", lista);
-        }
-
-        // Método para manejar el envío del formulario de creacion
+        // Método para manejar el envío del formulario de creación
         [HttpPost]
         public IActionResult Crear(Contrato contrato)
         {
             if (ModelState.IsValid)
             {
-                repo.CrearContrato(contrato);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    repo.CrearContrato(contrato);
+                    TempData["SuccessMessage"] = "Contrato creado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = "Hubo un error al crear el contrato: " + ex.Message;
+                }
             }
             ViewBag.Inmuebles = new SelectList(
                 repoInmueble.ObtenerTodos(),
@@ -110,6 +128,13 @@ namespace Inmobiliaria2Cuarti.Controllers
                 "Nombre"
             );
             return View(contrato);
+        }
+
+        public IActionResult FiltrarPorPlazo(int plazo)
+        {
+            var lista = repo.ObtenerPorPlazo(plazo);
+            ViewBag.PlazoSeleccionado = plazo;
+            return View("Index", lista);
         }
 
         public IActionResult Eliminar(int id)

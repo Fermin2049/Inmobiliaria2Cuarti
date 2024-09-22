@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Inmobiliaria2Cuatri.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Inmobiliaria2Cuatri.Controllers
 {
@@ -35,14 +36,27 @@ namespace Inmobiliaria2Cuatri.Controllers
             }
         }
 
-        // Método para manejar el envío del formulario de edicion
+        // Método para manejar el envío del formulario de edición
         [HttpPost]
         public IActionResult Edicion(Inquilino inquilino)
         {
             if (ModelState.IsValid)
             {
-                repo.ActualizarInquilino(inquilino);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    repo.ActualizarInquilino(inquilino);
+                    TempData["SuccessMessage"] = "Inquilino actualizado correctamente.";
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] =
+                        "Hubo un error al actualizar el inquilino: " + ex.Message;
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Hubo un error en la validación del formulario.";
             }
             return View(inquilino);
         }
@@ -53,7 +67,6 @@ namespace Inmobiliaria2Cuatri.Controllers
             return View();
         }
 
-        [HttpPost]
         [HttpPost]
         public IActionResult Crear(Inquilino inquilino)
         {
