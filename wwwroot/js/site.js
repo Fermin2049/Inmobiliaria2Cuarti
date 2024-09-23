@@ -55,4 +55,100 @@
 			confirmButtonText: 'OK',
 		});
 	}
+
+	// SweetAlert for forms
+	document
+		.getElementById('uploadAvatarForm')
+		.addEventListener('submit', function (event) {
+			event.preventDefault();
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¡Subirás un nuevo avatar!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sí, subir',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.submit();
+				}
+			});
+		});
+
+	document
+		.getElementById('deleteAvatarForm')
+		.addEventListener('submit', function (event) {
+			event.preventDefault();
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¡Eliminarás tu avatar actual!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sí, eliminar',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.submit();
+				}
+			});
+		});
+
+	document.querySelectorAll('.selectAvatarForm').forEach((form) => {
+		form.addEventListener('submit', function (event) {
+			event.preventDefault();
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¡Seleccionarás este avatar!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sí, seleccionar',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.submit();
+				}
+			});
+		});
+	});
+
+	document.querySelectorAll('.deletePhotoForm').forEach((form) => {
+		form.addEventListener('submit', function (event) {
+			event.preventDefault();
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¡Eliminarás esta foto!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sí, eliminar',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.submit();
+				}
+			});
+		});
+	});
+
+	document
+		.getElementById('configurarPerfilForm')
+		.addEventListener('submit', function (event) {
+			event.preventDefault();
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¡Actualizarás tu perfil!',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Sí, actualizar',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					this.submit();
+				}
+			});
+		});
 });

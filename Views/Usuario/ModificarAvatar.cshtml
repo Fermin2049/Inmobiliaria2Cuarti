@@ -3,7 +3,7 @@
 <h2 class="text-center">Modificar Avatar</h2>
 
 <!-- Formulario para subir una nueva imagen -->
-<form asp-action="SubirAvatar" enctype="multipart/form-data" method="post" class="text-center">
+<form asp-action="SubirAvatar" enctype="multipart/form-data" method="post" class="text-center" id="uploadAvatarForm">
     <div class="form-group mb-3">
         <label for="avatar">Selecciona una imagen para tu avatar</label>
         <input type="file" name="Avatar" class="form-control w-50 mx-auto" />
@@ -12,7 +12,7 @@
 </form>
 
 <!-- Opción para eliminar el avatar actual -->
-<form asp-action="EliminarAvatar" method="post" class="text-center mt-3">
+<form asp-action="EliminarAvatar" method="post" class="text-center mt-3" id="deleteAvatarForm">
     <button type="submit" class="btn btn-danger">Eliminar Avatar Actual</button>
 </form>
 
@@ -25,11 +25,11 @@
         {
             <div class="m-2 text-center">
                 <img src="@url" alt="Avatar" class="img-thumbnail" style="width:150px;height:150px;" />
-                <form asp-action="SeleccionarAvatar" method="post" class="mt-2">
+                <form asp-action="SeleccionarAvatar" method="post" class="mt-2 selectAvatarForm">
                     <input type="hidden" name="avatarUrl" value="@url" />
                     <button type="submit" class="btn btn-success">Seleccionar</button>
                 </form>
-                <form asp-action="EliminarFoto" method="post" class="mt-2">
+                <form asp-action="EliminarFoto" method="post" class="mt-2 deletePhotoForm">
                     <input type="hidden" name="avatarUrl" value="@url" />
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
@@ -41,3 +41,4 @@ else
 {
     <p class="text-center">No hay imágenes disponibles.</p>
 }
+

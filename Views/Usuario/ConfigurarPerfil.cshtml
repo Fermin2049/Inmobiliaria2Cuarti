@@ -3,13 +3,13 @@
     ViewData["Title"] = "Configurar Perfil";
 }
 
-<div class="container mt-5">
+<div class="container mt-5" data-success-message="@TempData["SuccessMessage"]">
     <div class="d-flex justify-content-center">
         <div class="col-md-6">
             <h1>Configurar Perfil</h1>
             <hr />
 
-            <form asp-action="ConfigurarPerfil" method="post">
+            <form asp-action="ConfigurarPerfil" method="post" id="configurarPerfilForm">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 
                 <div class="form-group">

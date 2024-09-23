@@ -428,7 +428,8 @@ namespace Inmobiliaria2Cuarti.Controllers
                 }
 
                 repo.ActualizarUsuario(usuarioExistente);
-                return RedirectToAction("Index", "Home");
+                TempData["SuccessMessage"] = "Perfil actualizado exitosamente.";
+                return RedirectToAction(nameof(ConfigurarPerfil));
             }
 
             return View(modelo);
