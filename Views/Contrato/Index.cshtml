@@ -15,6 +15,23 @@
                 </a>
             </h4>
 
+            <!-- Formulario de filtro de inmuebles no ocupados -->
+            <div class="mb-3">
+                <form asp-action="FiltrarInmueblesNoOcupados" method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fechaFin" class="form-label">Fecha Fin</label>
+                        <input type="date" class="form-control" id="fechaFin" name="fechaFin" required />
+                    </div>
+                    <div class="col-md-4 align-self-end">
+                        <button type="submit" class="btn btn-primary">Filtrar Inmuebles No Ocupados</button>
+                    </div>
+                </form>
+            </div>
+
             <!-- Selector de plazo -->
             <div class="mb-3">
                 <label for="plazoSelect" class="form-label">Filtrar contratos que terminan en:</label>

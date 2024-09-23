@@ -344,30 +344,34 @@ namespace Inmobiliaria2Cuarti.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"
-                    SELECT i.*
+                    @"
+                    SELECT i.IdInmueble, i.IdPropietario, i.Direccion, i.Uso, i.Tipo, i.CantAmbiente, i.Valor, i.Disponible
                     FROM inmueble i
-                    WHERE i.IdInmueble NOT IN (
-                        SELECT c.IdInmueble
-                        FROM contrato c
-                        WHERE (c.FechaInicio <= @FechaFin AND c.FechaFin >= @FechaInicio)
-                    )";
+                    LEFT JOIN contrato c ON i.IdInmueble = c.IdInmueble
+                    WHERE (c.FechaInicio IS NULL OR c.FechaFin < @fechaInicio OR c.FechaInicio > @fechaFin)";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@FechaInicio", fechaInicio);
-                    command.Parameters.AddWithValue("@FechaFin", fechaFin);
+                    command.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+                    command.Parameters.AddWithValue("@fechaFin", fechaFin);
                     connection.Open();
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        Inmueble inmueble = new Inmueble
-                        {
-                            IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
-                            Direccion = reader.GetString(nameof(Inmueble.Direccion)),
-                            // Map other properties as needed
-                        };
-                        inmuebles.Add(inmueble);
+                        inmuebles.Add(
+                            new Inmueble
+                            {
+                                IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
+                                IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
+                                Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                                Uso = reader.GetString(nameof(Inmueble.Uso)),
+                                Tipo = (TipoInmueble)reader.GetInt32(nameof(Inmueble.Tipo)),
+                                CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
+                                Valor = reader.GetInt32(nameof(Inmueble.Valor)),
+                                Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                            }
+                        );
                     }
+                    connection.Close();
                 }
             }
             return inmuebles;

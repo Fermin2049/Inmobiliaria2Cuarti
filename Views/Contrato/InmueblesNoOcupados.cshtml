@@ -1,0 +1,46 @@
+@model IEnumerable<Inmobiliaria2Cuatri.Models.Inmueble>
+@{
+    ViewData["Title"] = "Inmuebles No Ocupados";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center mb-4">
+                <h1 class="display-4">Inmuebles No Ocupados</h1>
+            </div>
+            <table class="table table-hover table-bordered table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.IdInmueble)</th>
+                        <th>@Html.DisplayNameFor(model => model.Propietario)</th>
+                        <th>@Html.DisplayNameFor(model => model.Direccion)</th>
+                        <th>@Html.DisplayNameFor(model => model.Uso)</th>
+                        <th>@Html.DisplayNameFor(model => model.Tipo)</th>
+                        <th>@Html.DisplayNameFor(model => model.CantAmbiente)</th>
+                        <th>@Html.DisplayNameFor(model => model.Valor)</th>
+                        <th>@Html.DisplayNameFor(model => model.Disponible)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.IdInmueble)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Propietario)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Uso)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CantAmbiente)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Valor)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Disponible)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="text-center">
+                <a asp-action="Index" class="btn btn-primary">Volver al Listado de Contratos</a>
+            </div>
+        </div>
+    </div>
+</div>

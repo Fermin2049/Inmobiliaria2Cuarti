@@ -281,5 +281,11 @@ namespace Inmobiliaria2Cuarti.Controllers
             repo.ActualizarContrato(contrato);
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult FiltrarInmueblesNoOcupados(DateTime fechaInicio, DateTime fechaFin)
+        {
+            var inmuebles = repo.ObtenerInmueblesNoOcupados(fechaInicio, fechaFin);
+            return View("InmueblesNoOcupados", inmuebles);
+        }
     }
 }
