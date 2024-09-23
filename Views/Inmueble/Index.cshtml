@@ -21,32 +21,50 @@
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
 
+            <!-- Filtros -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <select id="disponibilidadFilter" class="form-control">
+                        <option value="">Filtrar por Disponibilidad</option>
+                        <option value="1">Disponible</option>
+                        <option value="0">No Disponible</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <select id="tipoFilter" class="form-control">
+                        <option value="">Filtrar por Tipo</option>
+                        @foreach (var item in Enum.GetValues(typeof(Inmobiliaria2Cuatri.Models.TipoInmueble)))
+                        {
+                            <option value="@((int)item)">@item.ToString()</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
             <table class="table table-hover table-bordered table-striped align-middle" id="inmueblesTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.First().IdInmueble)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().IdPropietario)</th>
+                        <th>Propietario</th>
                         <th>@Html.DisplayNameFor(model => model.First().Direccion)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Uso)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Tipo)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().CantAmbiente)</th>
+                        <th>Cantidad Ambientes</th>
                         <th>@Html.DisplayNameFor(model => model.First().Valor)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Estado)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Disponible)</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                    <tbody>
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.IdInmueble)</td>
-                            <td>@Html.DisplayFor(modelItem => item.IdPropietario)</td>
+                            <td>@(item.Propietario != null ? $"{item.Propietario.Apellido} {item.Propietario.Dni}" : "N/A")</td>
                             <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
                             <td>@Html.DisplayFor(modelItem => item.Uso)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
+                            <td data-tipo="@((int)item.Tipo)">@Html.DisplayFor(modelItem => item.Tipo)</td>
                             <td>@Html.DisplayFor(modelItem => item.CantAmbiente)</td>
                             <td>@Html.DisplayFor(modelItem => item.Valor)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                            <td>@(item.Disponible ? "Disponible" : "No Disponible")</td>
                             <td>
                                 <a asp-action="Edicion" asp-route-id="@item.IdInmueble" class="btn btn-sm btn-warning mx-1">
                                     <i class="fas fa-edit"></i> Editar
@@ -64,13 +82,31 @@
     </div>
 </div>
 
-<!-- Script para búsqueda en la tabla -->
+<!-- Script para búsqueda y filtros en la tabla -->
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         var input = this.value.toLowerCase();
         var rows = document.querySelectorAll('#inmueblesTable tbody tr');
         rows.forEach(row => {
             row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+        });
+    });
+
+    document.getElementById('disponibilidadFilter').addEventListener('change', function() {
+        var filter = this.value;
+        var rows = document.querySelectorAll('#inmueblesTable tbody tr');
+        rows.forEach(row => {
+            var disponible = row.cells[6].textContent.trim() === 'Disponible' ? '1' : '0';
+            row.style.display = (filter === '' || filter === disponible) ? '' : 'none';
+        });
+    });
+
+    document.getElementById('tipoFilter').addEventListener('change', function() {
+        var filter = this.value;
+        var rows = document.querySelectorAll('#inmueblesTable tbody tr');
+        rows.forEach(row => {
+            var tipo = row.cells[3].getAttribute('data-tipo');
+            row.style.display = (filter === '' || filter === tipo) ? '' : 'none';
         });
     });
 </script>

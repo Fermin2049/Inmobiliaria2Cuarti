@@ -27,7 +27,10 @@ namespace Inmobiliaria2Cuatri.Models
 
         [Required]
         public bool Estado { get; set; }
-        
+
+        [Required]
+        public bool Disponible { get; set; }
+
         public Propietario? Propietario { get; set; }
 
         public Inmueble() { }
@@ -40,7 +43,8 @@ namespace Inmobiliaria2Cuatri.Models
             TipoInmueble tipo,
             int cantAmbiente,
             int valor,
-            bool estado
+            bool estado,
+            bool disponible
         )
         {
             IdInmueble = idInmueble;
@@ -51,6 +55,7 @@ namespace Inmobiliaria2Cuatri.Models
             CantAmbiente = cantAmbiente;
             Valor = valor;
             Estado = estado;
+            Disponible = disponible;
         }
     }
 
@@ -61,5 +66,12 @@ namespace Inmobiliaria2Cuatri.Models
         Depto = 2,
         Oficina = 3,
         Almacen = 4,
+    }
+
+    // Enum para Disponibilidad
+    public enum Disponibilidad
+    {
+        Disponible = 1,
+        NoDisponible = 0,
     }
 }

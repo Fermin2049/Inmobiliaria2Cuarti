@@ -96,7 +96,7 @@ namespace Inmobiliaria2Cuatri.Controllers
                 .Select(p => new SelectListItem
                 {
                     Value = p.IdPropietario.ToString(),
-                    Text = $"{p.Nombre} {p.Apellido}",
+                    Text = $"{p.Apellido} {p.Dni}",
                 })
                 .ToList();
 
@@ -117,9 +117,7 @@ namespace Inmobiliaria2Cuatri.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"Error al crear el inmueble: {ex.Message}");
-                    TempData["ErrorMessage"] =
-                        "No se pudo crear el inmueble. Por favor, intente de nuevo.";
+                    TempData["ErrorMessage"] = "Hubo un error al crear el inmueble: " + ex.Message;
                 }
             }
 
@@ -129,30 +127,11 @@ namespace Inmobiliaria2Cuatri.Controllers
                 .Select(p => new SelectListItem
                 {
                     Value = p.IdPropietario.ToString(),
-                    Text = $"{p.Nombre} {p.Apellido}",
+                    Text = $"{p.Apellido} {p.Dni}",
                 })
                 .ToList();
 
             return View(inmueble);
-        }
-
-        public IActionResult Eliminar(int id)
-        {
-            if (id != 0)
-            {
-                try
-                {
-                    repo.EliminarLogico(id);
-                    _logger.LogInformation($"Inmueble con ID: {id} eliminado lógicamente.");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"Error al eliminar el inmueble: {ex.Message}");
-                    TempData["ErrorMessage"] =
-                        "No se pudo eliminar el inmueble. Por favor, intente de nuevo.";
-                }
-            }
-            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Detalle(int id)

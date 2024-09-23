@@ -13,7 +13,7 @@ namespace Inmobiliaria2Cuatri.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                        @$"SELECT I.{nameof(Inmueble.IdInmueble)},
+                    @$"SELECT I.{nameof(Inmueble.IdInmueble)},
                         I.{nameof(Inmueble.IdPropietario)},
                         I.{nameof(Inmueble.Direccion)},
                         I.{nameof(Inmueble.Uso)},
@@ -21,42 +21,46 @@ namespace Inmobiliaria2Cuatri.Models
                         I.{nameof(Inmueble.CantAmbiente)},
                         I.{nameof(Inmueble.Valor)},
                         I.{nameof(Inmueble.Estado)},
+                        I.{nameof(Inmueble.Disponible)},
                         P.Nombre AS PropietarioNombre,
-                        P.Apellido AS PropietarioApellido
+                        P.Apellido AS PropietarioApellido,
+                        P.Dni AS PropietarioDni
                     FROM inmueble I
                     JOIN propietario P ON P.IdPropietario = I.IdPropietario
-                    WHERE I.{nameof(Inmueble.Estado)} = true"; 
+                    WHERE I.{nameof(Inmueble.Estado)} = true";
 
-            using (MySqlCommand command = new MySqlCommand(query, connection))
-            {
-                connection.Open();
-                var reader = command.ExecuteReader();
-                while (reader.Read())
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    inmuebles.Add(
-                        new Inmueble
-                        {
-                            IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
-                            IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
-                            Direccion = reader.GetString(nameof(Inmueble.Direccion)),
-                            Uso = reader.GetString(nameof(Inmueble.Uso)),
-                            Tipo = (TipoInmueble)reader.GetInt32(nameof(Inmueble.Tipo)),
-                            CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
-                            Valor = reader.GetInt32(nameof(Inmueble.Valor)),
-                            Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
-                            Propietario = new Propietario
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        inmuebles.Add(
+                            new Inmueble
                             {
-                                IdPropietario = reader.GetInt32("IdPropietario"),
-                                Nombre = reader.GetString("PropietarioNombre"),
-                                Apellido = reader.GetString("PropietarioApellido")
+                                IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
+                                IdPropietario = reader.GetInt32(nameof(Inmueble.IdPropietario)),
+                                Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                                Uso = reader.GetString(nameof(Inmueble.Uso)),
+                                Tipo = (TipoInmueble)reader.GetInt32(nameof(Inmueble.Tipo)),
+                                CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
+                                Valor = reader.GetInt32(nameof(Inmueble.Valor)),
+                                Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                                Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
+                                Propietario = new Propietario
+                                {
+                                    IdPropietario = reader.GetInt32("IdPropietario"),
+                                    Nombre = reader.GetString("PropietarioNombre"),
+                                    Apellido = reader.GetString("PropietarioApellido"),
+                                    Dni = reader.GetInt32("PropietarioDni"),
+                                },
                             }
-                        });
+                        );
                     }
-                }   
+                }
             }
             return inmuebles;
         }
-
 
         public Inmueble? Obtener(int id)
         {
@@ -65,18 +69,20 @@ namespace Inmobiliaria2Cuatri.Models
             {
                 var query =
                     $@"SELECT i.{nameof(Inmueble.IdInmueble)},
-                                      i.{nameof(Inmueble.IdPropietario)},
-                                      i.{nameof(Inmueble.Direccion)},
-                                      i.{nameof(Inmueble.Uso)},
-                                      i.{nameof(Inmueble.Tipo)},
-                                      i.{nameof(Inmueble.CantAmbiente)},
-                                      i.{nameof(Inmueble.Valor)},
-                                      i.{nameof(Inmueble.Estado)},
-                                      p.Nombre,
-                                      p.Apellido
-                            FROM inmueble i
-                            INNER JOIN propietario p ON i.IdPropietario = p.IdPropietario
-                            WHERE i.{nameof(Inmueble.IdInmueble)} = @IdInmueble";
+                                  i.{nameof(Inmueble.IdPropietario)},
+                                  i.{nameof(Inmueble.Direccion)},
+                                  i.{nameof(Inmueble.Uso)},
+                                  i.{nameof(Inmueble.Tipo)},
+                                  i.{nameof(Inmueble.CantAmbiente)},
+                                  i.{nameof(Inmueble.Valor)},
+                                  i.{nameof(Inmueble.Estado)},
+                                  i.{nameof(Inmueble.Disponible)},
+                                  p.Nombre,
+                                  p.Apellido,
+                                  p.Dni
+                        FROM inmueble i
+                        INNER JOIN propietario p ON i.IdPropietario = p.IdPropietario
+                        WHERE i.{nameof(Inmueble.IdInmueble)} = @IdInmueble";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdInmueble", id);
@@ -94,17 +100,19 @@ namespace Inmobiliaria2Cuatri.Models
                             CantAmbiente = reader.GetInt32(nameof(Inmueble.CantAmbiente)),
                             Valor = reader.GetInt32(nameof(Inmueble.Valor)),
                             Estado = reader.GetBoolean(nameof(Inmueble.Estado)),
+                            Disponible = reader.GetBoolean(nameof(Inmueble.Disponible)),
                             Propietario = new Propietario
                             {
-                                Nombre = reader.GetString(nameof(Propietario.Nombre)),
-                                Apellido = reader.GetString(nameof(Propietario.Apellido))
-                            }
+                                IdPropietario = reader.GetInt32("IdPropietario"),
+                                Nombre = reader.GetString("Nombre"),
+                                Apellido = reader.GetString("Apellido"),
+                                Dni = reader.GetInt32("Dni"),
+                            },
                         };
                     }
-                    connection.Close();
                 }
-                return res;
             }
+            return res;
         }
 
         public int CrearInmueble(Inmueble inmueble)
@@ -138,8 +146,8 @@ namespace Inmobiliaria2Cuatri.Models
                     inmueble.IdInmueble = res;
                     connection.Close();
                 }
-            return res;
-        }
+                return res;
+            }
         }
 
         public bool ActualizarInmueble(Inmueble inmueble)
@@ -147,32 +155,31 @@ namespace Inmobiliaria2Cuatri.Models
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var sql =
-                    @$"UPDATE inmueble 
-                         SET {nameof(Inmueble.IdPropietario)} = @IdPropietario, 
-                             {nameof(Inmueble.Direccion)} = @Direccion, 
-                             {nameof(Inmueble.Uso)} = @Uso, 
-                             {nameof(Inmueble.Tipo)} = @Tipo, 
-                             {nameof(Inmueble.CantAmbiente)} = @CantAmbiente, 
-                             {nameof(Inmueble.Valor)} = @Valor,
-                             {nameof(Inmueble.Estado)} = @Estado
-                         WHERE {nameof(Inmueble.IdInmueble)} = @IdInmueble;";
+                    $@"UPDATE inmueble SET 
+                                IdPropietario = @IdPropietario,
+                                Direccion = @Direccion,
+                                Uso = @Uso,
+                                Tipo = @Tipo,
+                                CantAmbiente = @CantAmbiente,
+                                Valor = @Valor,
+                                Estado = @Estado,
+                                Disponible = @Disponible
+                            WHERE IdInmueble = @IdInmueble";
                 using (MySqlCommand command = new MySqlCommand(sql, connection))
                 {
-                    command.Parameters.AddWithValue("@IdInmueble", inmueble.IdInmueble);
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
                     command.Parameters.AddWithValue("@Direccion", inmueble.Direccion);
                     command.Parameters.AddWithValue("@Uso", inmueble.Uso);
-                    command.Parameters.AddWithValue("@Tipo", (int)inmueble.Tipo);
+                    command.Parameters.AddWithValue("@Tipo", inmueble.Tipo);
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);
-
+                    command.Parameters.AddWithValue("@Disponible", inmueble.Disponible);
+                    command.Parameters.AddWithValue("@IdInmueble", inmueble.IdInmueble);
                     connection.Open();
-                    int result = command.ExecuteNonQuery();
-                    return result > 0;
+                    return command.ExecuteNonQuery() > 0;
                 }
             }
-        
         }
 
         public int EliminarLogico(int id)
@@ -196,4 +203,3 @@ namespace Inmobiliaria2Cuatri.Models
         }
     }
 }
-

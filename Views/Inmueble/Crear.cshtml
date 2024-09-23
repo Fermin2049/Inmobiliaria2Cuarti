@@ -17,7 +17,7 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <!-- Campo para seleccionar Propietario -->
                     <div class="form-group">
-                        <label asp-for="IdPropietario" class="control-label">Nombre</label>
+                        <label asp-for="IdPropietario" class="control-label">Propietario</label>
                         <select asp-for="IdPropietario" class="form-control" asp-items="ViewBag.PropietariosLista"></select>
                         <span asp-validation-for="IdPropietario" class="text-danger"></span>
                     </div>
@@ -60,6 +60,11 @@
                     <div class="form-group form-check">
                         <input asp-for="Estado" type="checkbox" class="form-check-input" />
                         <label asp-for="Estado" class="form-check-label"></label>
+                    </div>
+                    <!-- Campo para Disponible -->
+                    <div class="form-group form-check">
+                        <input asp-for="Disponible" type="checkbox" class="form-check-input" />
+                        <label asp-for="Disponible" class="form-check-label"></label>
                     </div>
                     
                     <div class="d-flex justify-content-between">
