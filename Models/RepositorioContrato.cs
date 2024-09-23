@@ -165,13 +165,13 @@ namespace Inmobiliaria2Cuarti.Models
                             Deposito = reader.GetDecimal(nameof(Contrato.Deposito)),
                             Comision = reader.GetDecimal(nameof(Contrato.Comision)),
                             Condiciones = reader.GetString(nameof(Contrato.Condiciones)),
-                    
-                    // Asignar los datos del propietario e inquilino
+
+                            // Asignar los datos del propietario e inquilino
                             PropietarioNombre = reader.GetString("PropietarioNombre"),
                             PropietarioApellido = reader.GetString("PropietarioApellido"),
                             InmuebleDireccion = reader.GetString("InmuebleDireccion"),
                             InquilinoNombre = reader.GetString("InquilinoNombre"),
-                            InquilinoApellido = reader.GetString("InquilinoApellido")
+                            InquilinoApellido = reader.GetString("InquilinoApellido"),
                         };
                     }
                     connection.Close();
@@ -179,9 +179,6 @@ namespace Inmobiliaria2Cuarti.Models
             }
             return res;
         }
-
-
-        
 
         public int CrearContrato(Contrato contrato)
         {
@@ -269,6 +266,32 @@ namespace Inmobiliaria2Cuarti.Models
                     return result;
                 }
             }
+        }
+
+        public List<int> ObtenerNuevosContratosPorMes()
+        {
+            List<int> nuevosContratosPorMes = new List<int>(new int[12]); // Inicializar lista con 12 ceros
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    @"SELECT MONTH(FechaInicio) AS Mes, COUNT(IdContrato) AS CantidadContratos
+                              FROM contrato
+                              WHERE YEAR(FechaInicio) = YEAR(CURDATE())
+                              GROUP BY MONTH(FechaInicio)";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int mes = reader.GetInt32("Mes");
+                        int cantidadContratos = reader.GetInt32("CantidadContratos");
+                        nuevosContratosPorMes[mes - 1] = cantidadContratos; // Meses en MySQL van de 1 a 12
+                    }
+                    connection.Close();
+                }
+            }
+            return nuevosContratosPorMes;
         }
     }
 }

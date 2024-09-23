@@ -159,5 +159,31 @@ namespace Inmobiliaria2Cuarti.Models
                 }
             }
         }
+
+        public List<int> ObtenerPagosMensuales()
+        {
+            List<int> pagosMensuales = new List<int>(new int[12]); // Inicializar lista con 12 ceros
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    @"SELECT MONTH(FechaPago) AS Mes, COUNT(IdPago) AS CantidadPagos
+                              FROM Pagos
+                              WHERE YEAR(FechaPago) = YEAR(CURDATE())
+                              GROUP BY MONTH(FechaPago)";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int mes = reader.GetInt32("Mes");
+                        int cantidadPagos = reader.GetInt32("CantidadPagos");
+                        pagosMensuales[mes - 1] = cantidadPagos; // Meses en MySQL van de 1 a 12
+                    }
+                    connection.Close();
+                }
+            }
+            return pagosMensuales;
+        }
     }
 }

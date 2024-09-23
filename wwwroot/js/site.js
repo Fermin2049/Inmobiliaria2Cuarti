@@ -151,4 +151,125 @@
 				}
 			});
 		});
+
+	// Gráficos de Chart.js
+	var tenantDistributionCtx = document
+		.getElementById('tenantDistributionChart')
+		.getContext('2d');
+	var tenantDistributionChart = new Chart(tenantDistributionCtx, {
+		type: 'pie',
+		data: {
+			labels: ['Inmueble 1', 'Inmueble 2', 'Inmueble 3'], // Ajusta las etiquetas según tus datos
+			datasets: [
+				{
+					data: JSON.parse(
+						document.getElementById('tenantDistributionChart').dataset.values
+					),
+					backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+				},
+			],
+		},
+		options: {
+			responsive: true,
+			plugins: {
+				legend: {
+					position: 'top',
+				},
+				title: {
+					display: true,
+					text: 'Distribución de Inquilinos por Inmueble',
+				},
+			},
+		},
+	});
+
+	// Inicializar gráfico de pagos mensuales
+	var monthlyPaymentsCtx = document
+		.getElementById('monthlyPaymentsChart')
+		.getContext('2d');
+	var monthlyPaymentsChart = new Chart(monthlyPaymentsCtx, {
+		type: 'bar',
+		data: {
+			labels: [
+				'Enero',
+				'Febrero',
+				'Marzo',
+				'Abril',
+				'Mayo',
+				'Junio',
+				'Julio',
+				'Agosto',
+				'Septiembre',
+				'Octubre',
+				'Noviembre',
+				'Diciembre',
+			],
+			datasets: [
+				{
+					label: 'Pagos Mensuales',
+					data: JSON.parse(
+						document.getElementById('monthlyPaymentsChart').dataset.values
+					),
+					backgroundColor: '#36A2EB',
+				},
+			],
+		},
+		options: {
+			responsive: true,
+			plugins: {
+				legend: {
+					position: 'top',
+				},
+				title: {
+					display: true,
+					text: 'Pagos Recibidos Mensualmente',
+				},
+			},
+		},
+	});
+
+	// Inicializar gráfico de nuevos contratos por mes
+	var newContractsCtx = document
+		.getElementById('newContractsChart')
+		.getContext('2d');
+	var newContractsChart = new Chart(newContractsCtx, {
+		type: 'bar',
+		data: {
+			labels: [
+				'Enero',
+				'Febrero',
+				'Marzo',
+				'Abril',
+				'Mayo',
+				'Junio',
+				'Julio',
+				'Agosto',
+				'Septiembre',
+				'Octubre',
+				'Noviembre',
+				'Diciembre',
+			],
+			datasets: [
+				{
+					label: 'Nuevos Contratos',
+					data: JSON.parse(
+						document.getElementById('newContractsChart').dataset.values
+					),
+					backgroundColor: '#FF6384',
+				},
+			],
+		},
+		options: {
+			responsive: true,
+			plugins: {
+				legend: {
+					position: 'top',
+				},
+				title: {
+					display: true,
+					text: 'Nuevos Contratos por Mes',
+				},
+			},
+		},
+	});
 });

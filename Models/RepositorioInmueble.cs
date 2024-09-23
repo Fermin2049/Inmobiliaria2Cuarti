@@ -201,5 +201,30 @@ namespace Inmobiliaria2Cuatri.Models
                 }
             }
         }
+
+        public List<int> ObtenerInquilinosPorInmueble()
+        {
+            List<int> inquilinosPorInmueble = new List<int>();
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    @"SELECT COUNT(i.IdInquilino) AS CantidadInquilinos
+                              FROM inmueble AS im
+                              LEFT JOIN contrato AS c ON im.IdInmueble = c.IdInmueble
+                              LEFT JOIN inquilino AS i ON c.IdInquilino = i.IdInquilino
+                              GROUP BY im.IdInmueble";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        inquilinosPorInmueble.Add(reader.GetInt32("CantidadInquilinos"));
+                    }
+                    connection.Close();
+                }
+            }
+            return inquilinosPorInmueble;
+        }
     }
 }
