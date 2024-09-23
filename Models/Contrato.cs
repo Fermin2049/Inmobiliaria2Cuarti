@@ -1,4 +1,5 @@
 namespace Inmobiliaria2Cuarti.Models;
+
 using System.ComponentModel.DataAnnotations;
 
 public class Contrato
@@ -30,6 +31,12 @@ public class Contrato
     [DataType(DataType.Currency)]
     public decimal Comision { get; set; }
     public string? Condiciones { get; set; }
+
+    public string? UsuarioCreacion { get; set; }
+    public string? UsuarioTerminacion { get; set; }
+
+    public decimal? MultaTerminacionTemprana { get; set; }
+    public DateTime? FechaTerminacionTemprana { get; set; }
 
     // propiedades para mostrar datos
     public string? PropietarioNombre { get; set; }

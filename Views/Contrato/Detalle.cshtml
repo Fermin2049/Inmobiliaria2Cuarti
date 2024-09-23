@@ -72,6 +72,44 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Condiciones)
         </dd>
+
+        <dt class="col-sm-2">
+            Usuario Creación
+        </dt>
+        <dd class="col-sm-10">
+            @Model.UsuarioCreacion
+        </dd>
+
+        <dt class="col-sm-2">
+            Usuario Terminación
+        </dt>
+        <dd class="col-sm-10">
+            @Model.UsuarioTerminacion
+        </dd>
+
+        @if (Model.FechaTerminacionTemprana.HasValue)
+        {
+            <dt class="col-sm-2">
+                Fecha de Terminación Temprana
+            </dt>
+            <dd class="col-sm-10">
+                @Model.FechaTerminacionTemprana
+            </dd>
+
+            <dt class="col-sm-2">
+                Multa por Terminación Temprana
+            </dt>
+            <dd class="col-sm-10">
+                @Model.MultaTerminacionTemprana
+            </dd>
+
+            <dt class="col-sm-2">
+                Usuario que Terminó el Contrato
+            </dt>
+            <dd class="col-sm-10">
+                @Model.UsuarioTerminacion
+            </dd>
+        }
     </dl>
 </div>
 <div>

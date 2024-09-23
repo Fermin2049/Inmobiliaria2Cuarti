@@ -31,7 +31,6 @@ builder
         options.AccessDeniedPath = "/Error/401";
     });
 
-// Autorización para manejar permisos
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(

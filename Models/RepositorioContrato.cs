@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Inmobiliaria2Cuatri.Models;
 using MySql.Data.MySqlClient;
 
 namespace Inmobiliaria2Cuarti.Models
@@ -124,29 +125,34 @@ namespace Inmobiliaria2Cuarti.Models
 
         public Contrato? Obtener(int id)
         {
-            Contrato? res = null;
+            Contrato? contrato = null;
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    $@"SELECT c.{nameof(Contrato.IdContrato)},
-                      c.{nameof(Contrato.IdInmueble)},
-                      c.{nameof(Contrato.IdInquilino)},
-                      c.{nameof(Contrato.FechaInicio)},
-                      c.{nameof(Contrato.FechaFin)},
-                      c.{nameof(Contrato.MontoRenta)},
-                      c.{nameof(Contrato.Deposito)},
-                      c.{nameof(Contrato.Comision)},
-                      c.{nameof(Contrato.Condiciones)},
-                      p.Nombre AS PropietarioNombre,
-                      p.Apellido AS PropietarioApellido,
-                      i.Direccion AS InmuebleDireccion,
-                      inq.Nombre AS InquilinoNombre,
-                      inq.Apellido AS InquilinoApellido
-                FROM contrato c
-                JOIN inmueble i ON c.IdInmueble = i.IdInmueble
-                JOIN propietario p ON i.IdPropietario = p.IdPropietario
-                JOIN inquilino inq ON c.IdInquilino = inq.IdInquilino
-                WHERE c.{nameof(Contrato.IdContrato)} = @id";
+                    $@"
+                    SELECT c.{nameof(Contrato.IdContrato)},
+                           c.{nameof(Contrato.IdInmueble)},
+                           c.{nameof(Contrato.IdInquilino)},
+                           c.{nameof(Contrato.FechaInicio)},
+                           c.{nameof(Contrato.FechaFin)},
+                           c.{nameof(Contrato.MontoRenta)},
+                           c.{nameof(Contrato.Deposito)},
+                           c.{nameof(Contrato.Comision)},
+                           c.{nameof(Contrato.Condiciones)},
+                           c.{nameof(Contrato.UsuarioCreacion)},
+                           c.{nameof(Contrato.UsuarioTerminacion)},
+                           c.{nameof(Contrato.MultaTerminacionTemprana)},
+                           c.{nameof(Contrato.FechaTerminacionTemprana)},
+                           p.Nombre AS PropietarioNombre,
+                           p.Apellido AS PropietarioApellido,
+                           i.Direccion AS InmuebleDireccion,
+                           inq.Nombre AS InquilinoNombre,
+                           inq.Apellido AS InquilinoApellido
+                    FROM contrato c
+                    JOIN inmueble i ON c.IdInmueble = i.IdInmueble
+                    JOIN propietario p ON i.IdPropietario = p.IdPropietario
+                    JOIN inquilino inq ON c.IdInquilino = inq.IdInquilino
+                    WHERE c.{nameof(Contrato.IdContrato)} = @id";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
@@ -154,7 +160,7 @@ namespace Inmobiliaria2Cuarti.Models
                     var reader = command.ExecuteReader();
                     if (reader.Read())
                     {
-                        res = new Contrato
+                        contrato = new Contrato
                         {
                             IdContrato = reader.GetInt32(nameof(Contrato.IdContrato)),
                             IdInmueble = reader.GetInt32(nameof(Contrato.IdInmueble)),
@@ -164,9 +170,31 @@ namespace Inmobiliaria2Cuarti.Models
                             MontoRenta = reader.GetDecimal(nameof(Contrato.MontoRenta)),
                             Deposito = reader.GetDecimal(nameof(Contrato.Deposito)),
                             Comision = reader.GetDecimal(nameof(Contrato.Comision)),
-                            Condiciones = reader.GetString(nameof(Contrato.Condiciones)),
-
-                            // Asignar los datos del propietario e inquilino
+                            Condiciones = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Contrato.Condiciones))
+                            )
+                                ? null
+                                : reader.GetString(nameof(Contrato.Condiciones)),
+                            UsuarioCreacion = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Contrato.UsuarioCreacion))
+                            )
+                                ? null
+                                : reader.GetString(nameof(Contrato.UsuarioCreacion)),
+                            UsuarioTerminacion = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Contrato.UsuarioTerminacion))
+                            )
+                                ? null
+                                : reader.GetString(nameof(Contrato.UsuarioTerminacion)),
+                            MultaTerminacionTemprana = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Contrato.MultaTerminacionTemprana))
+                            )
+                                ? (decimal?)null
+                                : reader.GetDecimal(nameof(Contrato.MultaTerminacionTemprana)),
+                            FechaTerminacionTemprana = reader.IsDBNull(
+                                reader.GetOrdinal(nameof(Contrato.FechaTerminacionTemprana))
+                            )
+                                ? (DateTime?)null
+                                : reader.GetDateTime(nameof(Contrato.FechaTerminacionTemprana)),
                             PropietarioNombre = reader.GetString("PropietarioNombre"),
                             PropietarioApellido = reader.GetString("PropietarioApellido"),
                             InmuebleDireccion = reader.GetString("InmuebleDireccion"),
@@ -177,7 +205,7 @@ namespace Inmobiliaria2Cuarti.Models
                     connection.Close();
                 }
             }
-            return res;
+            return contrato;
         }
 
         public int CrearContrato(Contrato contrato)
@@ -194,8 +222,9 @@ namespace Inmobiliaria2Cuarti.Models
                              {nameof(Contrato.MontoRenta)}, 
                              {nameof(Contrato.Deposito)},
                              {nameof(Contrato.Comision)},
-                             {nameof(Contrato.Condiciones)}) 
-                         VALUES (@IdInmueble, @IdInquilino, @FechaInicio, @FechaFin, @MontoRenta, @Deposito, @Comision, @Condiciones); 
+                             {nameof(Contrato.Condiciones)},
+                             {nameof(Contrato.UsuarioCreacion)}) 
+                         VALUES (@IdInmueble, @IdInquilino, @FechaInicio, @FechaFin, @MontoRenta, @Deposito, @Comision, @Condiciones, @UsuarioCreacion); 
                          SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
@@ -207,6 +236,7 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Deposito", contrato.Deposito);
                     command.Parameters.AddWithValue("@Comision", contrato.Comision);
                     command.Parameters.AddWithValue("@Condiciones", contrato.Condiciones);
+                    command.Parameters.AddWithValue("@UsuarioCreacion", contrato.UsuarioCreacion);
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
@@ -219,20 +249,23 @@ namespace Inmobiliaria2Cuarti.Models
         {
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
-                var sql =
-                    @$"UPDATE contrato 
-                         SET {nameof(Contrato.IdInmueble)} = @IdInmueble, 
-                             {nameof(Contrato.IdInquilino)} = @IdInquilino, 
-                             {nameof(Contrato.FechaInicio)} = @FechaInicio, 
-                             {nameof(Contrato.FechaFin)} = @FechaFin, 
-                             {nameof(Contrato.MontoRenta)} = @MontoRenta, 
-                             {nameof(Contrato.Deposito)} = @Deposito,
-                             {nameof(Contrato.Comision)} = @Comision,
-                             {nameof(Contrato.Condiciones)} = @Condiciones
-                         WHERE {nameof(Contrato.IdContrato)} = @IdContrato;";
-                using (MySqlCommand command = new MySqlCommand(sql, connection))
+                var query =
+                    $@"
+                            UPDATE contrato SET
+                                IdInmueble = @IdInmueble,
+                                IdInquilino = @IdInquilino,
+                                FechaInicio = @FechaInicio,
+                                FechaFin = @FechaFin,
+                                MontoRenta = @MontoRenta,
+                                Deposito = @Deposito,
+                                Comision = @Comision,
+                                Condiciones = @Condiciones,
+                                UsuarioTerminacion = @UsuarioTerminacion,
+                                MultaTerminacionTemprana = @MultaTerminacionTemprana,
+                                FechaTerminacionTemprana = @FechaTerminacionTemprana
+                            WHERE IdContrato = @IdContrato";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@IdContrato", contrato.IdContrato);
                     command.Parameters.AddWithValue("@IdInmueble", contrato.IdInmueble);
                     command.Parameters.AddWithValue("@IdInquilino", contrato.IdInquilino);
                     command.Parameters.AddWithValue("@FechaInicio", contrato.FechaInicio);
@@ -241,10 +274,21 @@ namespace Inmobiliaria2Cuarti.Models
                     command.Parameters.AddWithValue("@Deposito", contrato.Deposito);
                     command.Parameters.AddWithValue("@Comision", contrato.Comision);
                     command.Parameters.AddWithValue("@Condiciones", contrato.Condiciones);
-
+                    command.Parameters.AddWithValue(
+                        "@UsuarioTerminacion",
+                        contrato.UsuarioTerminacion
+                    );
+                    command.Parameters.AddWithValue(
+                        "@MultaTerminacionTemprana",
+                        contrato.MultaTerminacionTemprana
+                    );
+                    command.Parameters.AddWithValue(
+                        "@FechaTerminacionTemprana",
+                        contrato.FechaTerminacionTemprana
+                    );
+                    command.Parameters.AddWithValue("@IdContrato", contrato.IdContrato);
                     connection.Open();
-                    int result = command.ExecuteNonQuery();
-                    return result > 0;
+                    return command.ExecuteNonQuery() > 0;
                 }
             }
         }
@@ -292,6 +336,72 @@ namespace Inmobiliaria2Cuarti.Models
                 }
             }
             return nuevosContratosPorMes;
+        }
+
+        public List<Inmueble> ObtenerInmueblesNoOcupados(DateTime fechaInicio, DateTime fechaFin)
+        {
+            List<Inmueble> inmuebles = new List<Inmueble>();
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    $@"
+                    SELECT i.*
+                    FROM inmueble i
+                    WHERE i.IdInmueble NOT IN (
+                        SELECT c.IdInmueble
+                        FROM contrato c
+                        WHERE (c.FechaInicio <= @FechaFin AND c.FechaFin >= @FechaInicio)
+                    )";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                    command.Parameters.AddWithValue("@FechaFin", fechaFin);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Inmueble inmueble = new Inmueble
+                        {
+                            IdInmueble = reader.GetInt32(nameof(Inmueble.IdInmueble)),
+                            Direccion = reader.GetString(nameof(Inmueble.Direccion)),
+                            // Map other properties as needed
+                        };
+                        inmuebles.Add(inmueble);
+                    }
+                }
+            }
+            return inmuebles;
+        }
+
+        public bool ExisteSuperposicionFechas(
+            int idInmueble,
+            DateTime fechaInicio,
+            DateTime fechaFin,
+            int? idContrato = null
+        )
+        {
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    $@"
+                    SELECT COUNT(*)
+                    FROM contrato
+                    WHERE IdInmueble = @IdInmueble
+                      AND (FechaInicio <= @FechaFin AND FechaFin >= @FechaInicio)
+                      {(idContrato.HasValue ? "AND IdContrato != @IdContrato" : "")}";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdInmueble", idInmueble);
+                    command.Parameters.AddWithValue("@FechaInicio", fechaInicio);
+                    command.Parameters.AddWithValue("@FechaFin", fechaFin);
+                    if (idContrato.HasValue)
+                    {
+                        command.Parameters.AddWithValue("@IdContrato", idContrato.Value);
+                    }
+                    connection.Open();
+                    return Convert.ToInt32(command.ExecuteScalar()) > 0;
+                }
+            }
         }
     }
 }
