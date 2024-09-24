@@ -8,39 +8,42 @@ namespace Inmobiliaria2Cuarti.Models
     {
         string ConectionString = "Server=localhost;User Id=root;Password=;Database=inmobiliaria2;";
 
-        public List<Pagos> ObtenerPagossPorContrato(int idContrato)
+        public List<Pagos> ObtenerPagossPorContrato(int IdPago)
         {
             List<Pagos> Pagoss = new List<Pagos>();
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
                 var query =
-                    idContrato == 0
+                    IdPago == 0
                         ? $@"SELECT {nameof(Pagos.IdPago)},
-                               {nameof(Pagos.IdContrato)},
-                               {nameof(Pagos.NroPago)},
-                               {nameof(Pagos.FechaPago)},
-                               {nameof(Pagos.Importe)},
-                               {nameof(Pagos.Detalle)},
-                               {nameof(Pagos.Estado)},
-                               {nameof(Pagos.UsuarioCreacion)},
-                               {nameof(Pagos.UsuarioAnulacion)}
-                        FROM Pagos"
+                           {nameof(Pagos.IdContrato)},
+                           {nameof(Pagos.NroPago)},
+                           {nameof(Pagos.FechaPago)},
+                           {nameof(Pagos.Importe)},
+                           {nameof(Pagos.Detalle)},
+                           {nameof(Pagos.Estado)},
+                           {nameof(Pagos.UsuarioCreacion)},
+                           {nameof(Pagos.UsuarioAnulacion)},
+                           {nameof(Pagos.UsuarioEliminacion)}
+                    FROM Pagos"
                         : $@"SELECT {nameof(Pagos.IdPago)},
-                               {nameof(Pagos.IdContrato)},
-                               {nameof(Pagos.NroPago)},
-                               {nameof(Pagos.FechaPago)},
-                               {nameof(Pagos.Importe)},
-                               {nameof(Pagos.Detalle)},
-                               {nameof(Pagos.Estado)},
-                               {nameof(Pagos.UsuarioCreacion)},
-                               {nameof(Pagos.UsuarioAnulacion)}
-                        FROM Pagos
-                        WHERE {nameof(Pagos.IdContrato)} = @idContrato";
+                           {nameof(Pagos.IdContrato)},
+                           {nameof(Pagos.NroPago)},
+                           {nameof(Pagos.FechaPago)},
+                           {nameof(Pagos.Importe)},
+                           {nameof(Pagos.Detalle)},
+                           {nameof(Pagos.Estado)},
+                           {nameof(Pagos.UsuarioCreacion)},
+                           {nameof(Pagos.UsuarioAnulacion)},
+                           {nameof(Pagos.UsuarioEliminacion)}
+                    FROM Pagos
+                    WHERE {nameof(Pagos.IdPago)} = @idPago";
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    if (idContrato != 0)
+                    if (IdPago != 0)
                     {
-                        command.Parameters.AddWithValue("@idContrato", idContrato);
+                        command.Parameters.AddWithValue("@idPago", IdPago);
                     }
                     connection.Open();
                     var reader = command.ExecuteReader();
@@ -52,12 +55,43 @@ namespace Inmobiliaria2Cuarti.Models
                                 IdPago = reader.GetInt32(nameof(Pagos.IdPago)),
                                 IdContrato = reader.GetInt32(nameof(Pagos.IdContrato)),
                                 NroPago = reader.GetInt32(nameof(Pagos.NroPago)),
-                                FechaPago = reader.GetDateTime(nameof(Pagos.FechaPago)),
-                                Importe = reader.GetDecimal(nameof(Pagos.Importe)),
-                                Detalle = reader.GetString(nameof(Pagos.Detalle)),
-                                Estado = reader.GetBoolean(nameof(Pagos.Estado)),
-                                UsuarioCreacion = reader.GetString(nameof(Pagos.UsuarioCreacion)),
-                                UsuarioAnulacion = reader.GetString(nameof(Pagos.UsuarioAnulacion)),
+
+                                // Verificación de valores nulos antes de asignarlos
+                                FechaPago = reader.IsDBNull(
+                                    reader.GetOrdinal(nameof(Pagos.FechaPago))
+                                )
+                                    ? DateTime.MinValue // Valor predeterminado si es nulo
+                                    : reader.GetDateTime(nameof(Pagos.FechaPago)),
+
+                                Importe = reader.IsDBNull(reader.GetOrdinal(nameof(Pagos.Importe)))
+                                    ? 0m // Valor predeterminado si es nulo
+                                    : reader.GetDecimal(nameof(Pagos.Importe)),
+
+                                Detalle = reader.IsDBNull(reader.GetOrdinal(nameof(Pagos.Detalle)))
+                                    ? string.Empty // Valor predeterminado si es nulo
+                                    : reader.GetString(nameof(Pagos.Detalle)),
+
+                                Estado = reader.IsDBNull(reader.GetOrdinal(nameof(Pagos.Estado)))
+                                    ? false
+                                    : reader.GetBoolean(nameof(Pagos.Estado)),
+
+                                UsuarioCreacion = reader.IsDBNull(
+                                    reader.GetOrdinal(nameof(Pagos.UsuarioCreacion))
+                                )
+                                    ? null
+                                    : reader.GetString(nameof(Pagos.UsuarioCreacion)),
+
+                                UsuarioAnulacion = reader.IsDBNull(
+                                    reader.GetOrdinal(nameof(Pagos.UsuarioAnulacion))
+                                )
+                                    ? null
+                                    : reader.GetString(nameof(Pagos.UsuarioAnulacion)),
+
+                                UsuarioEliminacion = reader.IsDBNull(
+                                    reader.GetOrdinal(nameof(Pagos.UsuarioEliminacion))
+                                )
+                                    ? null
+                                    : reader.GetString(nameof(Pagos.UsuarioEliminacion)),
                             }
                         );
                     }
@@ -146,7 +180,7 @@ namespace Inmobiliaria2Cuarti.Models
             {
                 var query =
                     @$"UPDATE Pagos 
-                               SET {nameof(Pagos.Estado)} = 1,
+                               SET {nameof(Pagos.Estado)} = 0,
                                    {nameof(Pagos.UsuarioAnulacion)} = @UsuarioAnulacion
                                WHERE {nameof(Pagos.IdPago)} = @IdPagos;";
                 using (MySqlCommand command = new MySqlCommand(query, connection))

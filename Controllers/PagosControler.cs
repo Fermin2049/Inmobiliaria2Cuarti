@@ -150,7 +150,6 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View();
         }
 
-        // Acción POST para crear un nuevo pago
         [HttpPost]
         public IActionResult Crear(Pagos pago)
         {
@@ -158,7 +157,20 @@ namespace Inmobiliaria2Cuarti.Controllers
             {
                 try
                 {
-                    repo.CrearPagos(pago, "UsuarioCreacion"); // Reemplazar "UsuarioCreacion" con el usuario actual
+                    // Obtener el ID del usuario logueado desde los claims
+                    var usuarioId = User.FindFirst(
+                        System.Security.Claims.ClaimTypes.NameIdentifier
+                    )?.Value;
+
+                    // Verificar que el usuarioId no sea nulo o vacío
+                    if (string.IsNullOrEmpty(usuarioId))
+                    {
+                        TempData["ErrorMessage"] = "No se pudo obtener el ID del usuario.";
+                        return View(pago);
+                    }
+
+                    // Pasar el usuarioId al método que crea el pago
+                    repo.CrearPagos(pago, usuarioId); // Ahora estamos pasando el ID del usuario logueado
                     TempData["SuccessMessage"] = "Pago creado correctamente.";
                     return RedirectToAction(nameof(Index));
                 }
@@ -191,9 +203,17 @@ namespace Inmobiliaria2Cuarti.Controllers
         // Acción para eliminar un pago (anulación lógica)
         public IActionResult Eliminar(int id)
         {
+            var usuarioId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (id != 0)
             {
-                repo.AnularPagos(id, "UsuarioAnulacion"); // Reemplazar "UsuarioAnulacion" con el usuario actual
+                if (!string.IsNullOrEmpty(usuarioId))
+                {
+                    repo.AnularPagos(id, usuarioId); // Reemplazar "UsuarioAnulacion" con el usuario actual
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "No se pudo obtener el ID del usuario.";
+                }
             }
             return RedirectToAction(nameof(Index));
         }
