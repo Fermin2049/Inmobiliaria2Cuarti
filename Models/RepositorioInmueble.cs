@@ -122,15 +122,16 @@ namespace Inmobiliaria2Cuatri.Models
             {
                 var query =
                     @$"INSERT INTO inmueble 
-                            ({nameof(Inmueble.IdPropietario)}, 
-                             {nameof(Inmueble.Direccion)}, 
-                             {nameof(Inmueble.Uso)}, 
-                             {nameof(Inmueble.Tipo)}, 
-                             {nameof(Inmueble.CantAmbiente)},
-                             {nameof(Inmueble.Valor)},
-                             {nameof(Inmueble.Estado)}) 
-                         VALUES (@IdPropietario, @Direccion, @Uso, @Tipo, @CantAmbiente, @Valor, @Estado); 
-                         SELECT LAST_INSERT_ID();";
+                    ({nameof(Inmueble.IdPropietario)}, 
+                     {nameof(Inmueble.Direccion)}, 
+                     {nameof(Inmueble.Uso)}, 
+                     {nameof(Inmueble.Tipo)}, 
+                     {nameof(Inmueble.CantAmbiente)},
+                     {nameof(Inmueble.Valor)},
+                     {nameof(Inmueble.Estado)}, 
+                     {nameof(Inmueble.Disponible)}) 
+                 VALUES (@IdPropietario, @Direccion, @Uso, @Tipo, @CantAmbiente, @Valor, @Estado, @Disponible); 
+                 SELECT LAST_INSERT_ID();";
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@IdPropietario", inmueble.IdPropietario);
@@ -140,6 +141,7 @@ namespace Inmobiliaria2Cuatri.Models
                     command.Parameters.AddWithValue("@CantAmbiente", inmueble.CantAmbiente);
                     command.Parameters.AddWithValue("@Valor", inmueble.Valor);
                     command.Parameters.AddWithValue("@Estado", inmueble.Estado);
+                    command.Parameters.AddWithValue("@Disponible", inmueble.Disponible);
 
                     connection.Open();
                     res = Convert.ToInt32(command.ExecuteScalar());
