@@ -74,4 +74,10 @@ namespace Inmobiliaria2Cuatri.Models
         Disponible = 1,
         NoDisponible = 0,
     }
+
+    public enum Uso
+    {
+        Residencial = 1,
+        Comercial = 2,
+    }
 }
