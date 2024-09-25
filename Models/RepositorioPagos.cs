@@ -143,6 +143,56 @@ namespace Inmobiliaria2Cuarti.Models
             return res;
         }
 
+        public void CrearPago2(Pagos pago)
+        {
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    @"INSERT INTO pagos (IdContrato, Importe, Detalle, FechaPago, Estado, UsuarioCreacion) 
+                      VALUES (@IdContrato, @Importe, @Detalle, @FechaPago, @Estado, @UsuarioCreacion); 
+                      SELECT LAST_INSERT_ID();"; // Asegurarse de obtener el último Id generado.
+
+                try
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        // Asegurar que los parámetros son válidos y tienen los valores adecuados
+                        command.Parameters.AddWithValue("@IdContrato", pago.IdContrato);
+                        command.Parameters.AddWithValue("@Importe", pago.Importe);
+                        command.Parameters.AddWithValue("@Detalle", pago.Detalle); // Detalle es correcto para el método de pago
+                        command.Parameters.AddWithValue("@FechaPago", pago.FechaPago);
+                        command.Parameters.AddWithValue("@Estado", pago.Estado);
+                        command.Parameters.AddWithValue("@UsuarioCreacion", pago.UsuarioCreacion);
+
+                        connection.Open();
+
+                        // Ejecutar la inserción y obtener el ID generado
+                        int idPago = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Actualizar el número de pago para el nuevo registro
+                        var updateNroPagoQuery =
+                            "UPDATE pagos SET NroPago = @NroPago WHERE IdPago = @IdPago;";
+                        using (var updateCommand = new MySqlCommand(updateNroPagoQuery, connection))
+                        {
+                            updateCommand.Parameters.AddWithValue("@NroPago", idPago); // Utilizar el ID del pago como número de pago
+                            updateCommand.Parameters.AddWithValue("@IdPago", idPago);
+                            updateCommand.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejar cualquier excepción que ocurra
+                    throw new Exception($"Error al registrar el pago: {ex.Message}");
+                }
+                finally
+                {
+                    // Asegurar que la conexión siempre se cierre
+                    connection.Close();
+                }
+            }
+        }
+
         public bool ActualizarPago(Pagos pago)
         {
             using (MySqlConnection connection = new MySqlConnection(ConectionString))

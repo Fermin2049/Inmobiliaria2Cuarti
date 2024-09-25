@@ -60,7 +60,7 @@
             <table class="table table-hover table-bordered table-striped align-middle" id="contratosTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.IdContrato)</th>
+                        <th style="display:none;">@Html.DisplayNameFor(model => model.IdContrato)</th>
                         <th>Propietario</th>
                         <th>Dirección del Inmueble</th>
                         <th>Inquilino</th>
@@ -69,7 +69,7 @@
                         <th>@Html.DisplayNameFor(model => model.MontoRenta)</th>
                         <th>@Html.DisplayNameFor(model => model.Deposito)</th>
                         <th>@Html.DisplayNameFor(model => model.Comision)</th>
-                        <th>@Html.DisplayNameFor(model => model.Condiciones)</th>
+                        <th>@Html.DisplayNameFor(model => model.Condiciones)</th> <!-- Columna para Condiciones -->
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -77,7 +77,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.IdContrato)</td>
+                            <td style="display:none;">@Html.DisplayFor(modelItem => item.IdContrato)</td>
                             <td>@item.PropietarioNombre @item.PropietarioApellido</td>
                             <td>@item.InmuebleDireccion</td>
                             <td>@item.InquilinoNombre @item.InquilinoApellido</td>
@@ -86,15 +86,13 @@
                             <td>@Html.DisplayFor(modelItem => item.MontoRenta)</td>
                             <td>@Html.DisplayFor(modelItem => item.Deposito)</td>
                             <td>@Html.DisplayFor(modelItem => item.Comision)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Condiciones)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Condiciones)</td> <!-- Mostrar condiciones -->
                             <td>
-                                <a asp-action="Edicion" asp-route-id="@item.IdContrato" class="btn btn-sm btn-warning mx-1">
-                                    <i class="fas fa-edit"></i> Editar
+                                <a asp-action="Renovar" asp-route-id="@item.IdContrato" class="btn btn-sm btn-warning mx-1">Renovar Contrato</a>
+                                <a asp-action="Edicion" asp-route-id="@item.IdContrato" >
+                                    @Html.ActionLink("Detalles", "Detalle", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
                                 </a>
-                                @Html.ActionLink("Detalles", "Detalle", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
-                                <button class="btn btn-sm btn-danger mx-1" data-delete-url="@Url.Action("Eliminar", "Contrato", new { id = item.IdContrato })">
-                                    <i class="fas fa-trash"></i> Eliminar
-                                </button>
+                                <button class="btn btn-sm btn-danger mx-1" onclick="confirmCancel(@item.IdContrato)">Cancelar Contrato</button>
                             </td>
                         </tr>
                     }
@@ -104,9 +102,11 @@
     </div>
 </div>
 
-<!-- Script para búsqueda en la tabla -->
-<script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+        document.getElementById('searchInput').addEventListener('keyup', function() {
         var input = this.value.toLowerCase();
         var rows = document.querySelectorAll('#contratosTable tbody tr');
         rows.forEach(row => {
@@ -123,4 +123,86 @@
             window.location.href = '@Url.Action("Index", "Contrato")';
         }
     }
-</script>
+
+    function confirmCancel(idContrato) {
+        Swal.fire({
+            title: '¿Quiere cancelar el contrato?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Con aviso anticipado',
+            denyButtonText: 'Sin aviso anticipado',
+        }).then((result) => {
+            let conAviso = result.isConfirmed ? true : false;
+            
+            // Paso 2: Consultar la multa
+            $.post('@Url.Action("CalcularMulta", "Contrato")', { id: idContrato, conAviso: conAviso }, function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Multa Calculada',
+                        text: response.message,
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Continuar con la cancelación',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Paso 3: Selección del método de pago
+                            Swal.fire({
+                                title: 'Seleccione el método de pago',
+                                input: 'select',
+                                inputOptions: {
+                                    'Credito': 'Credito',
+                                    'Debito': 'Debito',
+                                    'Transferencia': 'Transferencia',
+                                    'Efectivo': 'Efectivo'
+                                },
+                                inputPlaceholder: 'Seleccione un método de pago',
+                                showCancelButton: true,
+                                inputValidator: (value) => {
+                                    if (!value) {
+                                        return 'Debe seleccionar un método de pago!';
+                                    }
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Paso 4: Procesar la cancelación
+                                    $.post('@Url.Action("ProcesarCancelacion", "Contrato")', 
+                                    { id: idContrato, metodoPago: result.value, conAviso: conAviso, multa: response.multa },
+                                    function(result) {
+                                        if (result.success) {
+                                            Swal.fire({
+                                                title: 'Éxito',
+                                                text: result.message,
+                                                icon: 'success',
+                                                confirmButtonText: 'OK'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    window.location.href = '@Url.Action("Index", "Contrato")';
+                                                }
+                                            });
+                                        } else {
+                                            Swal.fire({
+                                                title: 'Error',
+                                                text: result.message,
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    // Si el contrato no está vigente o está cancelado, mostrar el error
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    }
+    </script>
+}
