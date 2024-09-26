@@ -57,7 +57,7 @@
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
             </div>
 
-            <table class="table table-hover table-bordered table-striped align-middle" id="contratosTable">
+                        <table class="table table-hover table-bordered table-striped align-middle" id="contratosTable">
                 <thead class="table-dark">
                     <tr>
                         <th style="display:none;">@Html.DisplayNameFor(model => model.IdContrato)</th>
@@ -76,7 +76,7 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        <tr data-id="@item.IdContrato">
                             <td style="display:none;">@Html.DisplayFor(modelItem => item.IdContrato)</td>
                             <td>@item.PropietarioNombre @item.PropietarioApellido</td>
                             <td>@item.InmuebleDireccion</td>
@@ -96,111 +96,107 @@
                     }
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-
-        document.getElementById('searchInput').addEventListener('keyup', function() {
-        var input = this.value.toLowerCase();
-        var rows = document.querySelectorAll('#contratosTable tbody tr');
-        rows.forEach(row => {
-            row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
-        });
-    });
-
-    function filtrarPorPlazo() {
-        var plazo = document.getElementById('plazoSelect').value;
-        if (plazo != 0) {
-            window.location.href = '@Url.Action("FiltrarPorPlazo", "Contrato")?plazo=' + plazo;
-        } else {
-            // Refrescar la lista completa de contratos sin filtrar
-            window.location.href = '@Url.Action("Index", "Contrato")';
-        }
-    }
-
-    function confirmCancel(idContrato) {
-        Swal.fire({
-            title: '¿Quiere cancelar el contrato?',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: 'Con aviso anticipado',
-            denyButtonText: 'Sin aviso anticipado',
-        }).then((result) => {
-            let conAviso = result.isConfirmed ? true : false;
             
-            // Paso 2: Consultar la multa
-            $.post('@Url.Action("CalcularMulta", "Contrato")', { id: idContrato, conAviso: conAviso }, function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Multa Calculada',
-                        text: response.message,
-                        icon: 'info',
-                        showCancelButton: true,
-                        confirmButtonText: 'Continuar con la cancelación',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Paso 3: Selección del método de pago
-                            Swal.fire({
-                                title: 'Seleccione el método de pago',
-                                input: 'select',
-                                inputOptions: {
-                                    'Credito': 'Credito',
-                                    'Debito': 'Debito',
-                                    'Transferencia': 'Transferencia',
-                                    'Efectivo': 'Efectivo'
-                                },
-                                inputPlaceholder: 'Seleccione un método de pago',
-                                showCancelButton: true,
-                                inputValidator: (value) => {
-                                    if (!value) {
-                                        return 'Debe seleccionar un método de pago!';
-                                    }
-                                }
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Paso 4: Procesar la cancelación
-                                    $.post('@Url.Action("ProcesarCancelacion", "Contrato")', 
-                                    { id: idContrato, metodoPago: result.value, conAviso: conAviso, multa: response.multa },
-                                    function(result) {
-                                        if (result.success) {
+            @section Scripts {
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    document.getElementById('searchInput').addEventListener('keyup', function() {
+                        var input = this.value.toLowerCase();
+                        var rows = document.querySelectorAll('#contratosTable tbody tr');
+                        rows.forEach(row => {
+                            row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+                        });
+                    });
+            
+                    function filtrarPorPlazo() {
+                        var plazo = document.getElementById('plazoSelect').value;
+                        if (plazo != 0) {
+                            window.location.href = '@Url.Action("FiltrarPorPlazo", "Contrato")?plazo=' + plazo;
+                        } else {
+                            // Refrescar la lista completa de contratos sin filtrar
+                            window.location.href = '@Url.Action("Index", "Contrato")';
+                        }
+                    }
+            
+                    function confirmCancel(idContrato) {
+                        Swal.fire({
+                            title: '¿Quiere cancelar el contrato?',
+                            showDenyButton: true,
+                            showCancelButton: true,
+                            confirmButtonText: 'Con aviso anticipado',
+                            denyButtonText: 'Sin aviso anticipado',
+                        }).then((result) => {
+                            let conAviso = result.isConfirmed ? true : false;
+                            
+                            // Paso 2: Consultar la multa
+                            $.post('@Url.Action("CalcularMulta", "Contrato")', { id: idContrato, conAviso: conAviso }, function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Multa Calculada',
+                                        text: response.message,
+                                        icon: 'info',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Continuar con la cancelación',
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // Paso 3: Selección del método de pago
                                             Swal.fire({
-                                                title: 'Éxito',
-                                                text: result.message,
-                                                icon: 'success',
-                                                confirmButtonText: 'OK'
+                                                title: 'Seleccione el método de pago',
+                                                input: 'select',
+                                                inputOptions: {
+                                                    'Credito': 'Credito',
+                                                    'Debito': 'Debito',
+                                                    'Transferencia': 'Transferencia',
+                                                    'Efectivo': 'Efectivo'
+                                                },
+                                                inputPlaceholder: 'Seleccione un método de pago',
+                                                showCancelButton: true,
+                                                inputValidator: (value) => {
+                                                    if (!value) {
+                                                        return 'Debe seleccionar un método de pago!';
+                                                    }
+                                                }
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
-                                                    window.location.href = '@Url.Action("Index", "Contrato")';
+                                                    // Paso 4: Procesar la cancelación
+                                                    $.post('@Url.Action("ProcesarCancelacion", "Contrato")', 
+                                                    { id: idContrato, metodoPago: result.value, conAviso: conAviso, multa: response.multa },
+                                                    function(result) {
+                                                        if (result.success) {
+                                                            Swal.fire({
+                                                                title: 'Éxito',
+                                                                text: result.message,
+                                                                icon: 'success',
+                                                                confirmButtonText: 'OK'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    window.location.href = '@Url.Action("Index", "Contrato")';
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Swal.fire({
+                                                                title: 'Error',
+                                                                text: result.message,
+                                                                icon: 'error',
+                                                                confirmButtonText: 'OK'
+                                                            });
+                                                        }
+                                                    });
                                                 }
-                                            });
-                                        } else {
-                                            Swal.fire({
-                                                title: 'Error',
-                                                text: result.message,
-                                                icon: 'error',
-                                                confirmButtonText: 'OK'
                                             });
                                         }
                                     });
+                                } else {
+                                    // Si el contrato no está vigente o está cancelado, mostrar el error
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
                                 }
                             });
-                        }
-                    });
-                } else {
-                    // Si el contrato no está vigente o está cancelado, mostrar el error
-                    Swal.fire({
-                        title: 'Error',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            });
-        });
-    }
-    </script>
-}
+                        });
+                    }
+                </script>
+            }

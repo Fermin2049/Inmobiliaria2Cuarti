@@ -28,7 +28,7 @@ namespace Inmobiliaria2Cuarti.Controllers
 
         public IActionResult Index()
         {
-            var lista = repo.ObtenerTodos();
+            var lista = repo.ObtenerTodos().OrderBy(c => c.IdContrato).ToList();
             return View(lista);
         }
 
