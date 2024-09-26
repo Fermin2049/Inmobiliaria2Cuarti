@@ -88,10 +88,8 @@
                             <td>@Html.DisplayFor(modelItem => item.Comision)</td>
                             <td>@Html.DisplayFor(modelItem => item.Condiciones)</td> <!-- Mostrar condiciones -->
                             <td>
-                                <a asp-action="Renovar" asp-route-id="@item.IdContrato" class="btn btn-sm btn-warning mx-1">Renovar Contrato</a>
-                                <a asp-action="Edicion" asp-route-id="@item.IdContrato" >
-                                    @Html.ActionLink("Detalles", "Detalle", new { id = item.IdContrato }, new { @class = "btn btn-sm btn-info mx-1" })
-                                </a>
+                                <a asp-action="Edicion" asp-route-id="@item.IdContrato" class="btn btn-sm btn-warning mx-1">Renovar Contrato</a>
+                                <a asp-action="Detalle" asp-route-id="@item.IdContrato" class="btn btn-sm btn-info mx-1">Detalles</a>
                                 <button class="btn btn-sm btn-danger mx-1" onclick="confirmCancel(@item.IdContrato)">Cancelar Contrato</button>
                             </td>
                         </tr>
