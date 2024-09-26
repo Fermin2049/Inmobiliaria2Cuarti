@@ -1,0 +1,53 @@
+@model Inmobiliaria2Cuatri.Models.TipoInmueble
+
+@{
+    ViewData["Title"] = "Crear Tipo de Inmueble";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6">
+            <h1>Crear Tipo de Inmueble</h1>
+            <h4>Formulario de creación</h4>
+            <hr />
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success">@successMessage</div>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+
+            <form asp-action="CrearTipoInmueble" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <!-- Campo para Nombre del Tipo de Inmueble -->
+                <div class="form-group">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <!-- Campo para Activo -->
+                <div class="form-group form-check">
+                    <input asp-for="Activo" type="checkbox" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Activo</label>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                    <a asp-action="ListarTiposInmueble" class="btn btn-secondary">Volver a la Lista</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -1,0 +1,34 @@
+﻿@model Inmobiliaria2Cuatri.Models.TipoInmueble
+
+
+@{
+    ViewData["Title"] = "Editar Tipo de Inmueble";
+}
+
+<div class="container mt-4">
+    <h2>Editar Tipo de Inmueble</h2>
+
+    <form asp-action="Edicion" method="post">
+        <input type="hidden" asp-for="IdTipoInmueble" />
+
+        <div class="form-group">
+            <label asp-for="Nombre" class="control-label">Nombre</label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <input asp-for="Activo" type="checkbox" />
+            <label asp-for="Activo" class="control-label">Activo</label>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
