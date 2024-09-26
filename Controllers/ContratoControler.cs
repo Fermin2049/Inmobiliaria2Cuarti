@@ -93,7 +93,6 @@ namespace Inmobiliaria2Cuarti.Controllers
                     contrato.FechaFin
                 );
 
-                // Check if any of the overlapping contracts have conditions not equal to "Cancelado" or null
                 var contratoInvalido = contratosSuperpuestos.FirstOrDefault(c =>
                     !string.IsNullOrEmpty(c.Condiciones) && c.Condiciones != "Cancelado"
                 );
@@ -161,7 +160,17 @@ namespace Inmobiliaria2Cuarti.Controllers
                     contrato.FechaFin
                 );
 
-                if (contratosSuperpuestos.Any())
+                // Exclude the current contract and canceled contracts from the overlapping check
+                contratosSuperpuestos = contratosSuperpuestos
+                    .Where(c => c.IdContrato != contrato.IdContrato && c.Condiciones != "Cancelado")
+                    .ToList();
+
+                // Check if any of the remaining overlapping contracts have conditions not equal to null
+                var contratoInvalido = contratosSuperpuestos.FirstOrDefault(c =>
+                    !string.IsNullOrEmpty(c.Condiciones)
+                );
+
+                if (contratoInvalido != null)
                 {
                     var fechasSuperpuestas = string.Join(
                         ", ",
@@ -171,7 +180,8 @@ namespace Inmobiliaria2Cuarti.Controllers
                     );
                     ModelState.AddModelError(
                         "",
-                        $"Las fechas del contrato se superponen con otros contratos existentes: {fechasSuperpuestas}."
+                        $"Las fechas del contrato se superponen con otros contratos en las fechas: {fechasSuperpuestas}. "
+                            + "Solo se pueden modificar contratos si el contrato existente está cancelado o no tiene condiciones."
                     );
                 }
                 else
@@ -199,6 +209,7 @@ namespace Inmobiliaria2Cuarti.Controllers
                 }
             }
 
+            // Repopulate ViewBags if there's an error
             ViewBag.Inmuebles = new SelectList(
                 repoInmueble.ObtenerTodos(),
                 "IdInmueble",

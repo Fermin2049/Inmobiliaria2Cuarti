@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-09-2024 a las 17:11:27
+-- Tiempo de generación: 26-09-2024 a las 13:47:37
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -36,21 +36,33 @@ CREATE TABLE `contrato` (
   `MontoRenta` int(60) NOT NULL,
   `Deposito` int(50) NOT NULL,
   `Comision` int(50) NOT NULL,
-  `Condiciones` varchar(100) NOT NULL
+  `Condiciones` varchar(100) NOT NULL,
+  `MultaTerminacionTemprana` decimal(10,2) DEFAULT NULL,
+  `FechaTerminacionTemprana` date DEFAULT NULL,
+  `UsuarioCreacion` varchar(255) DEFAULT NULL,
+  `UsuarioTerminacion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `contrato`
 --
 
-INSERT INTO `contrato` (`IdContrato`, `IdInmueble`, `IdInquilino`, `FechaInicio`, `FechaFin`, `MontoRenta`, `Deposito`, `Comision`, `Condiciones`) VALUES
-(1, 2, 1, '2024-09-24', '2024-09-22', 12132, 2000, 25, '0'),
-(2, 1, 1, '2024-09-05', '2024-10-12', 300000, 600000, 50000, 're nuevita'),
-(6, 4, 4, '2024-09-01', '2024-09-30', 50000, 10000, 5000, 'ninguna'),
-(7, 3, 5, '2024-09-01', '2024-11-30', 75000, 15000, 5000, 'rota ventena'),
-(8, 1, 1, '2024-09-01', '2024-12-30', 100000, 50000, 5000, 'sanita'),
-(9, 4, 4, '2024-09-22', '2024-12-22', 150000, 75000, 5000, 'Eliminado'),
-(10, 7, 7, '2024-09-26', '2024-10-12', 300000, 600000, 50000, 'no se 02');
+INSERT INTO `contrato` (`IdContrato`, `IdInmueble`, `IdInquilino`, `FechaInicio`, `FechaFin`, `MontoRenta`, `Deposito`, `Comision`, `Condiciones`, `MultaTerminacionTemprana`, `FechaTerminacionTemprana`, `UsuarioCreacion`, `UsuarioTerminacion`) VALUES
+(1, 2, 1, '2024-09-01', '2024-09-30', 12132, 2000, 25000, 'Renovado', NULL, NULL, NULL, NULL),
+(2, 1, 1, '2025-02-01', '2025-01-31', 300000, 600000, 50000, 'Renovado', NULL, NULL, NULL, NULL),
+(7, 3, 5, '2024-04-01', '2024-11-30', 75000, 15000, 6000, 'Renovado', NULL, NULL, NULL, NULL),
+(8, 1, 1, '2025-01-01', '2025-01-30', 100000, 50000, 5000, 'Renovado', NULL, NULL, NULL, NULL),
+(10, 7, 7, '2024-09-26', '2024-10-12', 300000, 600000, 50000, 'Cancelado', 1800000.00, '2024-09-25', NULL, '16'),
+(11, 2, 5, '2024-12-01', '2024-12-31', 300000, 600000, 50000, 'copada', NULL, NULL, NULL, NULL),
+(12, 5, 1, '2025-03-01', '2025-03-31', 666666, 666666, 777, 'expectacular', NULL, NULL, NULL, NULL),
+(13, 8, 1, '2024-10-01', '2024-10-30', 150000, 75000, 30000, 'a estrenar', NULL, NULL, NULL, NULL),
+(14, 8, 5, '2024-11-01', '2024-11-30', 777777, 3333, 2222, 'Cancelado', 777777.00, '2024-09-25', '16', '16'),
+(15, 2, 1, '2025-03-24', '2025-04-01', 10000, 600000, 50000, 'Cancelado', 110000.00, '2024-09-25', '16', '16'),
+(16, 8, 1, '2024-09-01', '2024-09-30', 123456, 123456, 123456, 'fgdsfdsfds', NULL, NULL, '16', NULL),
+(17, 4, 1, '2024-09-01', '2026-09-01', 100000, 50000, 25000, 'Cancelado', 600000.00, '2024-09-25', NULL, '16'),
+(18, 1, 1, '2024-09-01', '2024-09-30', 300000, 666666, 5000, 'Nuevo', NULL, NULL, NULL, NULL),
+(20, 5, 1, '2025-04-01', '2027-04-01', 999999, 88888, 7777, 'Nuevo', NULL, NULL, '16', NULL),
+(21, 2, 7, '2025-03-24', '2025-04-01', 4444444, 22222, 1111, 'Nuevo', NULL, NULL, '16', NULL);
 
 -- --------------------------------------------------------
 
@@ -81,7 +93,10 @@ INSERT INTO `inmueble` (`IdInmueble`, `IdPropietario`, `Direccion`, `Uso`, `Tipo
 (4, 2, 'Avenida Siempre Viva 742', 'Comercial', 2, 1, 100000, 0, 1),
 (5, 15, 'Ilusión 1234', 'Trabajo', 3, 3, 1000000, 1, 1),
 (6, 17, 'por alla lejos 02', 'coemrcial', 4, 3, 500000, 0, 0),
-(7, 11, 'por alla lejos 03', 'coemrcial', 2, 5, 800000, 0, 1);
+(7, 11, 'por alla lejos 03', 'coemrcial', 2, 5, 800000, 0, 1),
+(8, 13, 'Rivaravia 999', 'vivienda', 1, 5, 350000, 0, 1),
+(9, 19, 'por alla lejos 02', 'coemrcial', 1, 456, 345, 0, 1),
+(10, 24, 'Rivaravia 999', 'otros', 3, 5, 5000, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -125,20 +140,25 @@ CREATE TABLE `pagos` (
   `Importe` decimal(10,2) NOT NULL,
   `Estado` tinyint(1) NOT NULL,
   `UsuarioCreacion` varchar(50) NOT NULL,
-  `UsuarioAnulacion` varchar(50) NOT NULL
+  `UsuarioAnulacion` varchar(50) NOT NULL,
+  `UsuarioEliminacion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pagos`
 --
 
-INSERT INTO `pagos` (`IdPago`, `IdContrato`, `NroPago`, `FechaPago`, `Detalle`, `Importe`, `Estado`, `UsuarioCreacion`, `UsuarioAnulacion`) VALUES
-(1, 1, 1, '2024-09-08', 'debito', 6000.00, 1, '', ''),
-(2, 2, 2, '2024-09-08', 'efectivo', 300000.00, 1, 'UsuarioCreacion', 'UsuarioAnulacion'),
-(3, 1, 22012, '2024-09-22', 'efectivo', 200000.00, 1, 'UsuarioCreacion', 'UsuarioAnulacion'),
-(4, 9, 123456789, '2024-09-10', 'efectivo', 200000.00, 1, 'UsuarioCreacion', ''),
-(5, 9, 5, '2024-09-22', 'devito', 200000.00, 1, 'UsuarioCreacion', ''),
-(6, 2, 6, '2024-09-22', 'efectivo', 6000.00, 1, 'UsuarioCreacion', '');
+INSERT INTO `pagos` (`IdPago`, `IdContrato`, `NroPago`, `FechaPago`, `Detalle`, `Importe`, `Estado`, `UsuarioCreacion`, `UsuarioAnulacion`, `UsuarioEliminacion`) VALUES
+(9, 1, 0, '2024-09-23', 'efectivo', 60000.00, 0, '16', '16', NULL),
+(10, 10, 10, '2024-09-24', 'devito', 300000.00, 1, 'UsuarioCreacion', '', NULL),
+(11, 10, 11, '2024-09-24', 'devito', 55550.00, 1, '16', '', NULL),
+(12, 7, 0, '2024-09-25', 'Credito', 75000.00, 0, '', '', NULL),
+(13, 14, 0, '2024-09-25', 'Transferencia', 777777.00, 0, '', '', NULL),
+(14, 17, 0, '2024-09-25', 'Transferencia', 100000.00, 0, '', '', NULL),
+(15, 17, 15, '2024-09-25', 'Efectivo', 100000.00, 1, '16', '', NULL),
+(16, 17, 16, '2024-09-25', 'Debito', 600000.00, 1, '16', '', NULL),
+(17, 10, 17, '2024-09-25', 'Credito', 1800000.00, 1, '16', '', NULL),
+(18, 15, 18, '2024-09-25', 'Transferencia', 110000.00, 1, '16', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -177,7 +197,8 @@ INSERT INTO `propietario` (`IdPropietario`, `Nombre`, `Apellido`, `Dni`, `Telefo
 (21, 'ENRIQUE ROLANDO', 'GODOY', 78901234, '2664010204', 'GODOY4695@GMAIL.COM', 0),
 (22, 'dsdsd', 'bgbgbg', 25987321, '789632514', 'v@j.com', 0),
 (23, 'Pichi', 'Papuchi 02', 33001002, '2664000001', 'pichi@gmail.com', 0),
-(24, 'Fermin', 'Fernandez', 33539061, '2664297704', 'fermin2049@gmail.com', 1);
+(24, 'Fermin', 'Fernandez', 33539061, '2664297704', 'fermin2049@gmail.com', 1),
+(27, 'pepe 03', 'GODOY', 335260564, '02050604', 'fermin2049@gmail.com.ar', 1);
 
 -- --------------------------------------------------------
 
@@ -215,7 +236,7 @@ INSERT INTO `usuario` (`IdUsuario`, `Nombre`, `Apellido`, `Email`, `Contrasenia`
 (12, 'Fermin4', 'Fernandez4', 'fermin2049@gmail.com4', '$2a$11$QrDzFIbnlqwU4R0N5I7sIux0gbRgsZZw3aXopBrzZ8PGxrOPpoXSK', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2Fperro%20argentino.jpg?alt=media&token=e5da2dfa-469f-428f-9f49-f590a3c63828', 1, 1),
 (13, 'Fermin5', 'Fernandez5', 'fermin2049@gmail.com5', '$2a$11$z74M1KJI7HehBK8YfHIzIuVp5SsqHanHlOyJydTWw3cVDhu89wH5m', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2Fgigachad.jpg?alt=media&token=d81572b6-7397-4c86-a7dd-8a9338f09ac8', 1, 1),
 (14, 'prueba', 'de contraseña', 'prueba01@gmail.com', '$2a$11$y0gs77hXSkaJYkAW/Uh5r.WohR.KGx.iF6ATrAPeEs.OLkWpcXAWC', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2FRobloxScreenShot20221120_134524886.png?alt=media&token=388ef5c4-9eea-46ea-a601-265ae63b300b', 1, 1),
-(15, 'Tomas1', 'Fernandez1', 'tomas1@gmail.com', '$2a$11$FzSZijGFhzmUTJvnp5hpqexZFWT3QHPKumjeJLK54sUdfDIyPJbEG', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2Fball.jpg?alt=media&token=7bde1752-0e8b-4488-bf2f-9fabc17da81a', 1, 1),
+(15, 'Tomas1', 'Fernandez1', 'tomas1@gmail.com', '$2a$11$b5MxkaVP8s5a/FNSD6ZtyO/rI0rsLaRkMnxS4skRY3zUKag3zuHoW', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2Fball.jpg?alt=media&token=7bde1752-0e8b-4488-bf2f-9fabc17da81a', 2, 1),
 (16, 'Alma Lucia ', 'Fernandez', 'alma1@gmail.com', '$2a$11$wS.GBf5uzOMnO.YN9kVyeeVPHd/4qIIMtD.5nuGnrrrYX/dsVAr9q', 'https://storage.googleapis.com/inmobilirianet.appspot.com/avatars/alma1@gmail.com/sonic.jpg', 1, 1),
 (17, 'empleado', 'pinche', 'empleado@gmail.com', '$2a$11$c5ol87WfB0fTr8.gfT45ReUkHe.G.wRCTgXL6fqEnvdTQ6b1rjN4u', 'https://storage.googleapis.com/inmobilirianet.appspot.com/avatars/empleado@gmail.com/DALL·E 2024-08-23 11.23.18 - A visually striking image featuring a stylized star with a modern design in the center, using the colors of the United States flag—red, white', 2, 0),
 (18, 'ppauchi', 'papuchi 02', 'papuchi@gmail.com', '$2a$11$lIzt4NeH4ZxU/2iu0heyCea9Hy9Zfuqp3MZChg3Ooa8SybF3eGaoW', 'https://firebasestorage.googleapis.com/v0/b/inmobilirianet.appspot.com/o/avatars%2Fpapuchi%40gmail.com%2Ferror.webp?alt=media&token=09c8469e-3d9d-48cb-8362-7a79f6cb41cb', 1, 0),
@@ -285,13 +306,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `IdContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `IdContrato` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `inmueble`
 --
 ALTER TABLE `inmueble`
-  MODIFY `IdInmueble` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `IdInmueble` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `inquilino`
@@ -303,13 +324,13 @@ ALTER TABLE `inquilino`
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `IdPago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `IdPago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `propietario`
 --
 ALTER TABLE `propietario`
-  MODIFY `IdPropietario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `IdPropietario` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
