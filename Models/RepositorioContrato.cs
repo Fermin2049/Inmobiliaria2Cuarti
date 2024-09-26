@@ -343,43 +343,57 @@ namespace Inmobiliaria2Cuarti.Models
             List<Inmueble> inmuebles = new List<Inmueble>();
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
-                var query =
-                    @"
-                    SELECT i.IdInmueble, i.IdTipoInmueble, i.Direccion, i.Uso, i.CantAmbiente, i.Valor, i.Disponible,
-                           p.IdPropietario, p.Nombre AS PropietarioNombre, p.Apellido AS PropietarioApellido, p.Dni AS PropietarioDni
-                    FROM inmueble i
-                    JOIN propietario p ON i.IdPropietario = p.IdPropietario
-                    LEFT JOIN contrato c ON i.IdInmueble = c.IdInmueble
-                    WHERE c.IdContrato IS NULL OR c.FechaFin < @fechaInicio OR c.FechaInicio > @fechaFin";
+                string query =
+                    @"SELECT I.IdInmueble, I.IdPropietario, I.IdTipoInmueble, I.Direccion, I.Uso, I.CantAmbiente, I.Valor, I.Estado, I.Disponible
+                                 FROM inmueble I
+                                 LEFT JOIN contrato C ON I.IdInmueble = C.IdInmueble
+                                 WHERE (C.FechaInicio IS NULL OR C.FechaFin < @fechaInicio OR C.FechaInicio > @fechaFin) AND I.Disponible = 1";
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@fechaInicio", fechaInicio);
                     command.Parameters.AddWithValue("@fechaFin", fechaFin);
+
                     connection.Open();
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        inmuebles.Add(
-                            new Inmueble
+                        while (reader.Read())
+                        {
+                            Inmueble inmueble = new Inmueble
                             {
-                                IdInmueble = reader.GetInt32("IdInmueble"),
-                                IdTipoInmueble = reader.GetInt32("IdTipoInmueble"),
-                                Direccion = reader.GetString("Direccion"),
-                                Uso = (Uso)reader.GetInt32("Uso"),
-                                CantAmbiente = reader.GetInt32("CantAmbiente"),
-                                Valor = (int)reader.GetDecimal("Valor"),
-                                Disponible = reader.GetBoolean("Disponible"),
-                                Propietario = new Propietario
-                                {
-                                    IdPropietario = reader.GetInt32("IdPropietario"),
-                                    Nombre = reader.GetString("PropietarioNombre"),
-                                    Apellido = reader.GetString("PropietarioApellido"),
-                                    Dni = reader.GetInt32("PropietarioDni"),
-                                },
-                            }
-                        );
+                                IdInmueble = reader.IsDBNull(reader.GetOrdinal("IdInmueble"))
+                                    ? 0
+                                    : reader.GetInt32(reader.GetOrdinal("IdInmueble")),
+                                IdPropietario = reader.IsDBNull(reader.GetOrdinal("IdPropietario"))
+                                    ? 0
+                                    : reader.GetInt32(reader.GetOrdinal("IdPropietario")),
+                                IdTipoInmueble = reader.IsDBNull(
+                                    reader.GetOrdinal("IdTipoInmueble")
+                                )
+                                    ? 0
+                                    : reader.GetInt32(reader.GetOrdinal("IdTipoInmueble")),
+                                Direccion = reader.IsDBNull(reader.GetOrdinal("Direccion"))
+                                    ? string.Empty
+                                    : reader.GetString(reader.GetOrdinal("Direccion")),
+                                Uso = reader.IsDBNull(reader.GetOrdinal("Uso"))
+                                    ? Uso.Residencial
+                                    : (Uso)reader.GetInt32(reader.GetOrdinal("Uso")),
+                                CantAmbiente = reader.IsDBNull(reader.GetOrdinal("CantAmbiente"))
+                                    ? 0
+                                    : reader.GetInt32(reader.GetOrdinal("CantAmbiente")),
+                                Valor = reader.IsDBNull(reader.GetOrdinal("Valor"))
+                                    ? 0
+                                    : reader.GetInt32(reader.GetOrdinal("Valor")),
+                                Estado = reader.IsDBNull(reader.GetOrdinal("Estado"))
+                                    ? false
+                                    : reader.GetBoolean(reader.GetOrdinal("Estado")),
+                                Disponible = reader.IsDBNull(reader.GetOrdinal("Disponible"))
+                                    ? false
+                                    : reader.GetBoolean(reader.GetOrdinal("Disponible")),
+                            };
+                            inmuebles.Add(inmueble);
+                        }
                     }
-                    connection.Close();
                 }
             }
             return inmuebles;

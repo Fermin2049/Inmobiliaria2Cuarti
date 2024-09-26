@@ -269,5 +269,38 @@ namespace Inmobiliaria2Cuarti.Models
             }
             return pagosMensuales;
         }
+
+        public List<string> ObtenerMesesNoPagados(
+            int idContrato,
+            DateTime fechaInicioContrato,
+            DateTime fechaFinContrato
+        )
+        {
+            List<string> mesesNoPagados = new List<string>();
+            List<Pagos> pagosRealizados = ObtenerPagossPorContrato(idContrato);
+
+            DateTime fechaInicio = fechaInicioContrato;
+
+            while (fechaInicio <= fechaFinContrato)
+            {
+                // Filtra los pagos que coincidan con el mes y año del contrato, y que además estén marcados como pagados (Estado = true)
+                var pago = pagosRealizados.FirstOrDefault(p =>
+                    p.FechaPago.Month == fechaInicio.Month
+                    && p.FechaPago.Year == fechaInicio.Year
+                    && p.Estado == true // Verifica que el pago esté marcado como pagado
+                );
+
+                // Si no se encuentra un pago para el mes en curso, agrega el mes a la lista de no pagados
+                if (pago == null)
+                {
+                    mesesNoPagados.Add(fechaInicio.ToString("MMMM yyyy"));
+                }
+
+                // Avanza al siguiente mes
+                fechaInicio = fechaInicio.AddMonths(1);
+            }
+
+            return mesesNoPagados;
+        }
     }
 }

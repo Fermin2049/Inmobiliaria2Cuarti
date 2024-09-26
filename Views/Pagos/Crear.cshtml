@@ -2,10 +2,12 @@
 
 @{
     ViewData["Title"] = "Crear Pago";
+    var pagosViewModel = ViewBag.PagosViewModel as Inmobiliaria2Cuarti.Models.PagosViewModel;
 }
 
 <div class="container">
-    <div class="d-flex justify-content-center">
+    <div class="row">
+        <!-- Parte izquierda: Formulario de creación de pago -->
         <div class="col-md-6">
             <h1>Crear Pago</h1>
             <hr />
@@ -14,7 +16,7 @@
 
                 <div class="form-group">
                     <label class="control-label">Datos del Contrato</label>
-                    <select asp-for="IdContrato" class="form-control" asp-items="ViewBag.ContratosInquilinos"></select>
+                    <select asp-for="IdContrato" class="form-control" asp-items="ViewBag.ContratosInquilinos" id="contratoSelect"></select>
                     <span asp-validation-for="IdContrato" class="text-danger"></span>
                 </div>
 
@@ -53,9 +55,108 @@
                 </div>
             </form>
         </div>
+
+        <!-- Parte derecha: Información del contrato -->
+        <div class="col-md-6">
+            <h2>Pagos del contrato</h2>
+            <table class="table table-striped" id="pagosTable">
+                <thead>
+                    <tr>
+                        <th>Número de Pago</th>
+                        <th>Fecha</th>
+                        <th>Detalle</th>
+                        <th>Importe</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var pago in pagosViewModel.PagosRealizados)
+                    {
+                        <tr>
+                            <td>@pago.NroPago</td>
+                            <td>@pago.FechaPago.ToString("dd/MM/yyyy")</td>
+                            <td>@pago.Detalle</td>
+                            <td>@pago.Importe</td>
+                            <td class="@(pago.Estado ? "text-success" : "text-danger")">@pago.Estado ? "Pagado" : "No Pagado"</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h3>Meses no pagados</h3>
+            <ul id="mesesNoPagadosList">
+                @foreach (var mes in pagosViewModel.MesesNoPagados)
+                {
+                    <li class="text-danger">@mes</li>
+                }
+            </ul>
+
+            @if (pagosViewModel.MultaPendiente.HasValue)
+            {
+                <h3>Multa por terminación anticipada: @pagosViewModel.MultaPendiente.Value.ToString("C")</h3>
+            }
+        </div>
     </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+                                document.getElementById('contratoSelect').addEventListener('change', function () {
+                                var idContrato = this.value;
+                                if (idContrato) {
+                                    fetch(`/Pagos/ObtenerDatosContrato?idContrato=${idContrato}`)
+                                        .then(response => {
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            console.log("Datos recibidos:", data);
+                            
+                                            // Actualizar la tabla de pagos realizados
+                                            var pagosTableBody = document.querySelector('#pagosTable tbody');
+                                            pagosTableBody.innerHTML = '';
+                            
+                                            data.pagosRealizados.forEach(pago => {
+                                                var row = document.createElement('tr');
+                                                row.innerHTML = `
+                                                    <td>${pago.nroPago}</td>
+                                                    <td>${pago.fechaPago}</td>
+                                                    <td>${pago.detalle}</td>
+                                                    <td>${pago.importe}</td>
+                                                    <td class="${pago.estado ? 'text-success' : 'text-danger'}">${pago.estado ? 'Pagado' : 'No Pagado'}</td>
+                                                `;
+                                                pagosTableBody.appendChild(row);
+                                            });
+                            
+                                            // Actualizar la lista de meses no pagados
+                                            var mesesNoPagadosList = document.getElementById('mesesNoPagadosList');
+                                            mesesNoPagadosList.innerHTML = '';
+                            
+                                            if (data.mesesNoPagados && data.mesesNoPagados.length > 0) {
+                                                data.mesesNoPagados.forEach(mes => {
+                                                    var listItem = document.createElement('li');
+                                                    listItem.className = 'text-danger';
+                                                    listItem.textContent = mes;
+                                                    mesesNoPagadosList.appendChild(listItem);
+                                                });
+                                            } else {
+                                                var noDataMessage = document.createElement('li');
+                                                noDataMessage.className = 'text-success';
+                                                noDataMessage.textContent = "Todos los meses han sido pagados";
+                                                mesesNoPagadosList.appendChild(noDataMessage);
+                                            }
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                }
+                            });
+
+
+
+    </script>
 }

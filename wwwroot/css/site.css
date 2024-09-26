@@ -79,6 +79,14 @@
     --bs-highlight-bg: #fff3cd;
 }
 
+.text-success {
+    color: green;
+}
+
+.text-danger {
+    color: red;
+}
+
 *,
 *::before,
 *::after {

@@ -131,28 +131,52 @@ namespace Inmobiliaria2Cuarti.Controllers
         [HttpGet]
         public IActionResult Crear()
         {
-            var contratos = repoContrato
-                .ObtenerTodos()
-                .Where(c => c.Condiciones == "Nuevo" || c.Condiciones == "Renovado");
+            var contratos = repoContrato.ObtenerTodos();
             var inquilinos = repoInquilino.ObtenerTodos();
 
-            var contratosInquilinos = contratos.Join(
-                inquilinos,
-                contrato => contrato.IdInquilino,
-                inquilino => inquilino.IdInquilino,
-                (contrato, inquilino) =>
-                    new
-                    {
-                        contrato.IdContrato,
-                        DatosContrato = $"{contrato.InmuebleDireccion} - {inquilino.Apellido}, {inquilino.Dni}",
-                    }
-            );
+            var contratosInquilinos = contratos
+                .Join(
+                    inquilinos,
+                    contrato => contrato.IdInquilino,
+                    inquilino => inquilino.IdInquilino,
+                    (contrato, inquilino) =>
+                        new
+                        {
+                            contrato.IdContrato,
+                            DatosContrato = $"{contrato.InmuebleDireccion} - {inquilino.Apellido}, {inquilino.Dni}",
+                            contrato.FechaInicio,
+                            contrato.FechaFin,
+                            contrato.MultaTerminacionTemprana,
+                        }
+                )
+                .ToList();
+
+            var viewModel = new PagosViewModel();
+
+            foreach (var contrato in contratosInquilinos)
+            {
+                var pagosRealizados = repo.ObtenerPagossPorContrato(contrato.IdContrato);
+                var mesesNoPagados = repo.ObtenerMesesNoPagados(
+                    contrato.IdContrato,
+                    contrato.FechaInicio,
+                    contrato.FechaFin
+                );
+
+                viewModel.PagosRealizados.AddRange(pagosRealizados);
+                viewModel.MesesNoPagados.AddRange(mesesNoPagados);
+                if (contrato.MultaTerminacionTemprana.HasValue)
+                {
+                    viewModel.MultaPendiente = contrato.MultaTerminacionTemprana;
+                }
+            }
 
             ViewBag.ContratosInquilinos = new SelectList(
                 contratosInquilinos,
                 "IdContrato",
                 "DatosContrato"
             );
+
+            ViewBag.PagosViewModel = viewModel;
 
             return View();
         }
@@ -221,6 +245,60 @@ namespace Inmobiliaria2Cuarti.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [HttpGet]
+        public IActionResult ObtenerDatosContrato(int idContrato)
+        {
+            var contrato = repoContrato.Obtener(idContrato);
+            if (contrato == null)
+            {
+                return NotFound();
+            }
+
+            var pagosRealizados = repo.ObtenerPagossPorContrato(idContrato);
+            var mesesNoPagados = repo.ObtenerMesesNoPagados(
+                idContrato,
+                contrato.FechaInicio,
+                contrato.FechaFin
+            );
+
+            var viewModel = new PagosViewModel
+            {
+                PagosRealizados = pagosRealizados,
+                MesesNoPagados = mesesNoPagados,
+                MultaPendiente = contrato.MultaTerminacionTemprana,
+            };
+
+            return Json(viewModel);
+        }
+
+        public List<string> ObtenerMesesNoPagados(
+            int idContrato,
+            DateTime fechaInicioContrato,
+            DateTime fechaFinContrato
+        )
+        {
+            List<string> mesesNoPagados = new List<string>();
+            List<Pagos> pagosRealizados = repo.ObtenerPagossPorContrato(idContrato);
+
+            DateTime fechaActual = DateTime.Now;
+            DateTime fechaInicio = fechaInicioContrato;
+
+            while (fechaInicio <= fechaFinContrato)
+            {
+                var pago = pagosRealizados.FirstOrDefault(p =>
+                    p.FechaPago.Month == fechaInicio.Month && p.FechaPago.Year == fechaInicio.Year
+                );
+                if (pago == null)
+                {
+                    mesesNoPagados.Add(fechaInicio.ToString("MMMM yyyy"));
+                }
+                fechaInicio = fechaInicio.AddMonths(1);
+            }
+
+            return mesesNoPagados;
         }
     }
 }

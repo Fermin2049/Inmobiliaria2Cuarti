@@ -301,11 +301,11 @@ namespace Inmobiliaria2Cuarti.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var usuario = await Task.Run(() => repo.ObtenerPorEmail(email));
+            var usuario = repo.ObtenerPorEmail(email);
             if (usuario != null)
             {
-                usuario.Avatar = null;
-                await Task.Run(() => repo.ActualizarUsuario(usuario));
+                usuario.Avatar = null; // Eliminar el avatar
+                repo.ActualizarUsuario(usuario); // Actualizar el usuario en la base de datos
             }
 
             return RedirectToAction(nameof(ModificarAvatar));

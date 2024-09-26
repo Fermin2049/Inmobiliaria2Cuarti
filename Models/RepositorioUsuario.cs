@@ -199,40 +199,33 @@ namespace Inmobiliaria2Cuarti.Models
         {
             using (MySqlConnection connection = new MySqlConnection(ConectionString))
             {
-                // Construimos la query dinámicamente para no actualizar el avatar si no ha sido modificado
                 var query =
-                    $@"
-            UPDATE usuario SET
-                {nameof(Usuario.Nombre)} = @Nombre,
-                {nameof(Usuario.Apellido)} = @Apellido,
-                {nameof(Usuario.Email)} = @Email,
-                {nameof(Usuario.Contrasenia)} = @Contrasenia,
-                {nameof(Usuario.Rol)} = @Rol,
-                {nameof(Usuario.Estado)} = @Estado"
-                    + (usuario.Avatar != null ? $", {nameof(Usuario.Avatar)} = @Avatar" : "")
-                    + $" WHERE {nameof(Usuario.IdUsuario)} = @IdUsuario";
+                    @"UPDATE usuario SET
+                                Nombre = @Nombre,
+                                Apellido = @Apellido,
+                                Email = @Email,
+                                Contrasenia = @Contrasenia,
+                                Avatar = @Avatar,
+                                Rol = @Rol,
+                                Estado = @Estado
+                              WHERE IdUsuario = @IdUsuario";
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
                     command.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     command.Parameters.AddWithValue("@Apellido", usuario.Apellido);
                     command.Parameters.AddWithValue("@Email", usuario.Email);
                     command.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
-
-                    if (usuario.Avatar != null)
-                    {
-                        command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
-                    }
-
+                    command.Parameters.AddWithValue("@Avatar", usuario.Avatar);
                     command.Parameters.AddWithValue("@Rol", usuario.Rol);
                     command.Parameters.AddWithValue("@Estado", usuario.Estado);
+                    command.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
 
                     connection.Open();
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int result = command.ExecuteNonQuery();
                     connection.Close();
 
-                    return rowsAffected > 0;
+                    return result > 0;
                 }
             }
         }
