@@ -37,11 +37,14 @@
                     <input asp-for="Importe" class="form-control" />
                     <span asp-validation-for="Importe" class="text-danger"></span>
                 </div>
+                @if (User.IsInRole("Administrador"))
+                                {
                 <div class="form-group">
                     <label asp-for="Estado" class="control-label"></label>
                     <input asp-for="Estado" type="checkbox" class="form-check-input" />
                     <span asp-validation-for="Estado" class="text-danger"></span>
                 </div>
+                }
                 <div class="d-flex justify-content-between mt-3">
                     <input type="submit" value="Guardar" class="btn btn-primary" />
                     <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>

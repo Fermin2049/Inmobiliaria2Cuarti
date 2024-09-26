@@ -59,11 +59,14 @@ namespace Inmobiliaria2Cuatri.Controllers
                 {
                     Value = t.IdTipoInmueble.ToString(),
                     Text = t.Nombre,
-                    Selected = t.IdTipoInmueble == inmueble.IdTipoInmueble // Seleccionar el tipo actual del inmueble
+                    Selected =
+                        t.IdTipoInmueble
+                        == inmueble.IdTipoInmueble // Seleccionar el tipo actual del inmueble
+                    ,
                 })
                 .ToList();
 
-                return View(inmueble); // Pasar el inmueble a la vista para ser editado
+            return View(inmueble); // Pasar el inmueble a la vista para ser editado
         }
 
         // Método para manejar el envío del formulario de edición
@@ -95,8 +98,8 @@ namespace Inmobiliaria2Cuatri.Controllers
                     Text = $"{p.Nombre} {p.Apellido}",
                 })
                 .ToList();
-                
-                var tiposinmueble = repoTipoInmueble?.ObtenerTodos();
+
+            var tiposinmueble = repoTipoInmueble?.ObtenerTodos();
             ViewBag.TiposInmueble = tiposinmueble
                 ?.Select(p => new SelectListItem
                 {
@@ -172,6 +175,32 @@ namespace Inmobiliaria2Cuatri.Controllers
                 return NotFound();
             }
             return View(inmueble);
+        }
+
+        [Authorize(Roles = "Administrador")]
+        public IActionResult Eliminar(int id)
+        {
+            if (id != 0)
+            {
+                try
+                {
+                    bool result = repo.EliminarLogico(id);
+                    if (result)
+                    {
+                        TempData["SuccessMessage"] = "Inmueble eliminado correctamente.";
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "No se pudo eliminar el inmueble.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error al eliminar el inmueble: {ex.Message}");
+                    TempData["ErrorMessage"] = "Hubo un error al eliminar el inmueble.";
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

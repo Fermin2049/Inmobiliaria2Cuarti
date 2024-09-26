@@ -91,6 +91,7 @@ namespace Inmobiliaria2Cuatri.Controllers
             return View(inquilino);
         }
 
+        [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id)
         {
             if (id != 0)

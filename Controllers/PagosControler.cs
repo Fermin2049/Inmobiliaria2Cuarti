@@ -229,7 +229,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             return View(pago);
         }
 
-        // Acción para eliminar un pago (anulación lógica)
+        [Authorize(Roles = "Administrador")]
         public IActionResult Eliminar(int id)
         {
             var usuarioId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
