@@ -79,21 +79,26 @@ namespace Inmobiliaria2Cuarti.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public IActionResult Crear(Contrato contrato)
         {
             if (ModelState.IsValid)
             {
                 var idUsuario = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                contrato.Condiciones = "Nuevo";
                 contrato.UsuarioCreacion = idUsuario;
+
+                // Check for overlapping contracts
                 var contratosSuperpuestos = repo.ObtenerContratosSuperpuestos(
                     contrato.IdInmueble,
                     contrato.FechaInicio,
                     contrato.FechaFin
                 );
 
-                if (contratosSuperpuestos.Any())
+                // Check if any of the overlapping contracts have conditions not equal to "Cancelado" or null
+                var contratoInvalido = contratosSuperpuestos.FirstOrDefault(c =>
+                    !string.IsNullOrEmpty(c.Condiciones) && c.Condiciones != "Cancelado"
+                );
+
+                if (contratoInvalido != null)
                 {
                     var fechasSuperpuestas = string.Join(
                         ", ",
@@ -103,13 +108,16 @@ namespace Inmobiliaria2Cuarti.Controllers
                     );
                     ModelState.AddModelError(
                         "",
-                        $"Las fechas del contrato se superponen con otros contratos existentes: {fechasSuperpuestas}."
+                        $"Las fechas del contrato se superponen con otros contratos en las fechas: {fechasSuperpuestas}. "
+                            + "Solo se pueden crear contratos si el contrato existente está cancelado o no tiene condiciones."
                     );
                 }
                 else
                 {
+                    // If no invalid contract exists, create the new one
                     try
                     {
+                        contrato.Condiciones = "Nuevo";
                         repo.CrearContrato(contrato);
                         TempData["SuccessMessage"] = "Contrato creado exitosamente.";
                         return RedirectToAction(nameof(Index));
@@ -122,6 +130,7 @@ namespace Inmobiliaria2Cuarti.Controllers
                 }
             }
 
+            // Repopulate ViewBags if there's an error
             ViewBag.Inmuebles = new SelectList(
                 repoInmueble.ObtenerTodos(),
                 "IdInmueble",
@@ -142,7 +151,7 @@ namespace Inmobiliaria2Cuarti.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edicion(Contrato contrato)
+        public IActionResult Edicion(Contrato contrato)
         {
             if (ModelState.IsValid)
             {
@@ -245,7 +254,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             }
             contrato.MultaTerminacionTemprana = multa;
             contrato.FechaTerminacionTemprana = DateTime.Now;
-            contrato.UsuarioTerminacion = User.Identity.Name;
+            contrato.UsuarioTerminacion = User.Identity?.Name ?? "Unknown";
             repo.ActualizarContrato(contrato);
             return RedirectToAction(nameof(Index));
         }
@@ -349,7 +358,7 @@ namespace Inmobiliaria2Cuarti.Controllers
             }
 
             // Obtenemos el id del usuario actual desde los claims
-            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            string usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "Unknown";
 
             var pago = new Pagos
             {
