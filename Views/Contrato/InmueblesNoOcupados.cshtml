@@ -12,14 +12,14 @@
             <table class="table table-hover table-bordered table-striped align-middle">
                 <thead class="table-dark">
                     <tr>
-                        <th>@Html.DisplayNameFor(model => model.IdInmueble)</th>
-                        <th>@Html.DisplayNameFor(model => model.Propietario)</th>
-                        <th>@Html.DisplayNameFor(model => model.Direccion)</th>
-                        <th>@Html.DisplayNameFor(model => model.Uso)</th>
-                        <th>@Html.DisplayNameFor(model => model.Tipo)</th>
-                        <th>@Html.DisplayNameFor(model => model.CantAmbiente)</th>
-                        <th>@Html.DisplayNameFor(model => model.Valor)</th>
-                        <th>@Html.DisplayNameFor(model => model.Disponible)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().IdInmueble)</th>
+                        <th>Propietario</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Direccion)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Uso)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Tipo)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().CantAmbiente)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Valor)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Disponible)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,7 +27,7 @@
                     {
                         <tr>
                             <td>@Html.DisplayFor(modelItem => item.IdInmueble)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Propietario)</td>
+                            <td>@(item.Propietario != null ? $"{item.Propietario.Apellido} {item.Propietario.Dni}" : "N/A")</td>
                             <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
                             <td>@Html.DisplayFor(modelItem => item.Uso)</td>
                             <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
