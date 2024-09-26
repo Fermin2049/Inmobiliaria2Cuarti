@@ -131,20 +131,27 @@ namespace Inmobiliaria2Cuarti.Controllers
         [HttpGet]
         public IActionResult Crear()
         {
-            var contratos = repoContrato.ObtenerTodos();
+            var contratos = repoContrato
+                .ObtenerTodos()
+                .Where(c => c.Condiciones == "Nuevo" || c.Condiciones == "Renovado");
             var inquilinos = repoInquilino.ObtenerTodos();
 
             var contratosInquilinos = contratos.Join(
                 inquilinos,
                 contrato => contrato.IdInquilino,
                 inquilino => inquilino.IdInquilino,
-                (contrato, inquilino) => new { contrato.IdContrato, InquilinoDni = inquilino.Dni }
+                (contrato, inquilino) =>
+                    new
+                    {
+                        contrato.IdContrato,
+                        DatosContrato = $"{contrato.InmuebleDireccion} - {inquilino.Apellido}, {inquilino.Dni}",
+                    }
             );
 
             ViewBag.ContratosInquilinos = new SelectList(
                 contratosInquilinos,
                 "IdContrato",
-                "InquilinoDni"
+                "DatosContrato"
             );
 
             return View();
@@ -157,20 +164,17 @@ namespace Inmobiliaria2Cuarti.Controllers
             {
                 try
                 {
-                    // Obtener el ID del usuario logueado desde los claims
                     var usuarioId = User.FindFirst(
                         System.Security.Claims.ClaimTypes.NameIdentifier
                     )?.Value;
 
-                    // Verificar que el usuarioId no sea nulo o vacío
                     if (string.IsNullOrEmpty(usuarioId))
                     {
                         TempData["ErrorMessage"] = "No se pudo obtener el ID del usuario.";
                         return View(pago);
                     }
 
-                    // Pasar el usuarioId al método que crea el pago
-                    repo.CrearPagos(pago, usuarioId); // Ahora estamos pasando el ID del usuario logueado
+                    repo.CrearPagos(pago, usuarioId);
                     TempData["SuccessMessage"] = "Pago creado correctamente.";
                     return RedirectToAction(nameof(Index));
                 }
@@ -180,8 +184,9 @@ namespace Inmobiliaria2Cuarti.Controllers
                 }
             }
 
-            // Si no es válido, recargar los datos para los dropdowns
-            var contratos = repoContrato.ObtenerTodos();
+            var contratos = repoContrato
+                .ObtenerTodos()
+                .Where(c => c.Condiciones == "Nuevo" || c.Condiciones == "Renovado");
             var inquilinos = repoInquilino.ObtenerTodos();
 
             var contratosInquilinos = contratos.Join(

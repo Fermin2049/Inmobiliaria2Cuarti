@@ -101,6 +101,13 @@
                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                 <script>
                     document.getElementById('searchInput').addEventListener('keyup', function() {
+            var input = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#contratosTable tbody tr');
+            rows.forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+            });
+        });
+                    document.getElementById('searchInput').addEventListener('keyup', function() {
                         var input = this.value.toLowerCase();
                         var rows = document.querySelectorAll('#contratosTable tbody tr');
                         rows.forEach(row => {
