@@ -16,7 +16,6 @@
                         <th>Propietario</th>
                         <th>@Html.DisplayNameFor(model => model.First().Direccion)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Uso)</th>
-                        <th>@Html.DisplayNameFor(model => model.First().Tipo)</th>
                         <th>@Html.DisplayNameFor(model => model.First().CantAmbiente)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Valor)</th>
                         <th>@Html.DisplayNameFor(model => model.First().Disponible)</th>
@@ -30,7 +29,6 @@
                             <td>@(item.Propietario != null ? $"{item.Propietario.Apellido} {item.Propietario.Dni}" : "N/A")</td>
                             <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
                             <td>@Html.DisplayFor(modelItem => item.Uso)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Tipo)</td>
                             <td>@Html.DisplayFor(modelItem => item.CantAmbiente)</td>
                             <td>@Html.DisplayFor(modelItem => item.Valor)</td>
                             <td>@Html.DisplayFor(modelItem => item.Disponible)</td>

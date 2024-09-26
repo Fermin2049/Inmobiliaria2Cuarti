@@ -21,6 +21,9 @@ FirebaseConfig.Initialize();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 
+// Registrar RepositorioTipoInmueble en el contenedor de dependencias
+builder.Services.AddScoped<RepositorioTipoInmueble>();
+
 // Autenticación - cookies
 builder
     .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -43,7 +46,6 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
-
     options.AddPolicy("Empleado", policy => policy.RequireRole("Empleado"));
 });
 

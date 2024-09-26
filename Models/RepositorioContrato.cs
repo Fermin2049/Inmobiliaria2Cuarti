@@ -345,7 +345,7 @@ namespace Inmobiliaria2Cuarti.Models
             {
                 var query =
                     @"
-                    SELECT i.IdInmueble, i.Direccion, i.Uso, i.Tipo, i.CantAmbiente, i.Valor, i.Disponible,
+                    SELECT i.IdInmueble, i.IdTipoInmueble, i.Direccion, i.Uso, i.CantAmbiente, i.Valor, i.Disponible,
                            p.IdPropietario, p.Nombre AS PropietarioNombre, p.Apellido AS PropietarioApellido, p.Dni AS PropietarioDni
                     FROM inmueble i
                     JOIN propietario p ON i.IdPropietario = p.IdPropietario
@@ -363,9 +363,9 @@ namespace Inmobiliaria2Cuarti.Models
                             new Inmueble
                             {
                                 IdInmueble = reader.GetInt32("IdInmueble"),
+                                IdTipoInmueble = reader.GetInt32("IdTipoInmueble"),
                                 Direccion = reader.GetString("Direccion"),
-                                Uso = reader.GetString("Uso"),
-                                Tipo = (TipoInmueble)reader.GetInt32("Tipo"),
+                                Uso = (Uso)reader.GetInt32("Uso"),
                                 CantAmbiente = reader.GetInt32("CantAmbiente"),
                                 Valor = (int)reader.GetDecimal("Valor"),
                                 Disponible = reader.GetBoolean("Disponible"),

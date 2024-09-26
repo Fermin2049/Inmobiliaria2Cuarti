@@ -13,12 +13,14 @@ namespace Inmobiliaria2Cuatri.Controllers
         private readonly ILogger<InmuebleController> _logger;
         private RepositorioInmueble repo;
         private RepositorioPropietario repoPropietario;
+        private RepositorioTipoInmueble repoTipoInmueble;
 
         public InmuebleController(ILogger<InmuebleController> logger)
         {
             _logger = logger;
             repo = new RepositorioInmueble();
             repoPropietario = new RepositorioPropietario();
+            repoTipoInmueble = new RepositorioTipoInmueble();
         }
 
         public IActionResult Index()
@@ -51,7 +53,17 @@ namespace Inmobiliaria2Cuatri.Controllers
                 })
                 .ToList();
 
-            return View(inmueble); // Pasar el inmueble a la vista para ser editado
+            var tiposInmueble = repoTipoInmueble?.ObtenerTodos();
+            ViewBag.TiposInmueble = tiposInmueble
+                ?.Select(t => new SelectListItem
+                {
+                    Value = t.IdTipoInmueble.ToString(),
+                    Text = t.Nombre,
+                    Selected = t.IdTipoInmueble == inmueble.IdTipoInmueble // Seleccionar el tipo actual del inmueble
+                })
+                .ToList();
+
+                return View(inmueble); // Pasar el inmueble a la vista para ser editado
         }
 
         // Método para manejar el envío del formulario de edición
@@ -83,6 +95,15 @@ namespace Inmobiliaria2Cuatri.Controllers
                     Text = $"{p.Nombre} {p.Apellido}",
                 })
                 .ToList();
+                
+                var tiposinmueble = repoTipoInmueble?.ObtenerTodos();
+            ViewBag.TiposInmueble = tiposinmueble
+                ?.Select(p => new SelectListItem
+                {
+                    Value = p.IdTipoInmueble.ToString(),
+                    Text = $"{p.Nombre}",
+                })
+                .ToList();
 
             return View(inmueble); // Devolver la vista de edición con los datos actuales y el mensaje de error
         }
@@ -97,6 +118,15 @@ namespace Inmobiliaria2Cuatri.Controllers
                 {
                     Value = p.IdPropietario.ToString(),
                     Text = $"{p.Apellido} {p.Dni}",
+                })
+                .ToList();
+
+            var tiposinmueble = repoTipoInmueble?.ObtenerTodos();
+            ViewBag.TiposInmueble = tiposinmueble
+                ?.Select(p => new SelectListItem
+                {
+                    Value = p.IdTipoInmueble.ToString(),
+                    Text = $"{p.Nombre}",
                 })
                 .ToList();
 
