@@ -65,9 +65,15 @@ namespace Inmobiliaria2Cuarti.Controllers
                 "Direccion"
             );
             ViewBag.Inquilinos = new SelectList(
-                repoInquilino.ObtenerTodos(),
+                repoInquilino
+                    .ObtenerTodos()
+                    .Select(i => new
+                    {
+                        i.IdInquilino,
+                        NombreCompleto = $"{i.Dni} - {i.Apellido}, {i.Nombre}",
+                    }),
                 "IdInquilino",
-                "Nombre"
+                "NombreCompleto"
             );
             return View();
         }
@@ -78,17 +84,23 @@ namespace Inmobiliaria2Cuarti.Controllers
             if (ModelState.IsValid)
             {
                 contrato.Condiciones = "Nuevo";
-                if (
-                    repo.ExisteSuperposicionFechas(
-                        contrato.IdInmueble,
-                        contrato.FechaInicio,
-                        contrato.FechaFin
-                    )
-                )
+                var contratosSuperpuestos = repo.ObtenerContratosSuperpuestos(
+                    contrato.IdInmueble,
+                    contrato.FechaInicio,
+                    contrato.FechaFin
+                );
+
+                if (contratosSuperpuestos.Any())
                 {
+                    var fechasSuperpuestas = string.Join(
+                        ", ",
+                        contratosSuperpuestos.Select(c =>
+                            $"{c.FechaInicio.ToShortDateString()} - {c.FechaFin.ToShortDateString()}"
+                        )
+                    );
                     ModelState.AddModelError(
                         "",
-                        "Las fechas del contrato se superponen con otro contrato existente."
+                        $"Las fechas del contrato se superponen con otros contratos existentes: {fechasSuperpuestas}."
                     );
                 }
                 else
@@ -97,11 +109,11 @@ namespace Inmobiliaria2Cuarti.Controllers
                     {
                         repo.CrearContrato(contrato);
                         TempData["SuccessMessage"] = "Contrato creado exitosamente.";
-                        return RedirectToAction("Index");
+                        return RedirectToAction(nameof(Index));
                     }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError("", "Error al crear el contrato: " + ex.Message);
+                        ModelState.AddModelError("", "Ocurrió un error al crear el contrato.");
                     }
                 }
             }
@@ -112,15 +124,21 @@ namespace Inmobiliaria2Cuarti.Controllers
                 "Direccion"
             );
             ViewBag.Inquilinos = new SelectList(
-                repoInquilino.ObtenerTodos(),
+                repoInquilino
+                    .ObtenerTodos()
+                    .Select(i => new
+                    {
+                        i.IdInquilino,
+                        NombreCompleto = $"{i.Dni} - {i.Apellido}, {i.Nombre}",
+                    }),
                 "IdInquilino",
-                "Nombre"
+                "NombreCompleto"
             );
             return View(contrato);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edicion(Contrato contrato, string terminarContrato)
+        public async Task<IActionResult> Edicion(Contrato contrato)
         {
             if (ModelState.IsValid)
             {
@@ -142,40 +160,23 @@ namespace Inmobiliaria2Cuarti.Controllers
                 {
                     try
                     {
-                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        Console.WriteLine($"User ID: {userId}"); // Punto de impresión para verificar el ID del usuario
-
-                        if (terminarContrato == "si")
-                        {
-                            contrato.FechaTerminacionTemprana = DateTime.Now;
-                            contrato.MultaTerminacionTemprana =
-                                contrato.MultaTerminacionTemprana ?? 0;
-                            contrato.UsuarioTerminacion = userId;
-                        }
-                        else
-                        {
-                            contrato.FechaTerminacionTemprana = null;
-                            contrato.MultaTerminacionTemprana = null;
-                            contrato.UsuarioTerminacion = null;
-                        }
+                        contrato.Condiciones = "Renovado";
 
                         if (contrato.IdContrato == 0)
                         {
-                            contrato.UsuarioCreacion = userId;
                             repo.CrearContrato(contrato);
+                            TempData["SuccessMessage"] = "Contrato creado exitosamente.";
                         }
                         else
                         {
                             repo.ActualizarContrato(contrato);
+                            TempData["SuccessMessage"] = "Contrato actualizado exitosamente.";
                         }
-
-                        TempData["SuccessMessage"] = "Contrato guardado correctamente.";
-                        return RedirectToAction(nameof(Index));
                     }
                     catch (Exception ex)
                     {
-                        TempData["ErrorMessage"] =
-                            "Hubo un error al guardar el contrato: " + ex.Message;
+                        _logger.LogError(ex, "Error al guardar el contrato.");
+                        TempData["ErrorMessage"] = "Ocurrió un error al guardar el contrato.";
                     }
                 }
             }

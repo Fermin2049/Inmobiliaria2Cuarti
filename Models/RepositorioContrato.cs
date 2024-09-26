@@ -415,5 +415,51 @@ namespace Inmobiliaria2Cuarti.Models
                 }
             }
         }
+
+        public List<Contrato> ObtenerContratosSuperpuestos(
+            int idInmueble,
+            DateTime fechaInicio,
+            DateTime fechaFin
+        )
+        {
+            List<Contrato> contratos = new List<Contrato>();
+            using (MySqlConnection connection = new MySqlConnection(ConectionString))
+            {
+                var query =
+                    $@"
+                    SELECT * FROM contrato
+                    WHERE IdInmueble = @idInmueble
+                    AND (
+                        (FechaInicio <= @fechaFin AND FechaFin >= @fechaInicio)
+                    )";
+                using (MySqlCommand command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@idInmueble", idInmueble);
+                    command.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+                    command.Parameters.AddWithValue("@fechaFin", fechaFin);
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        contratos.Add(
+                            new Contrato
+                            {
+                                IdContrato = reader.GetInt32(nameof(Contrato.IdContrato)),
+                                IdInmueble = reader.GetInt32(nameof(Contrato.IdInmueble)),
+                                IdInquilino = reader.GetInt32(nameof(Contrato.IdInquilino)),
+                                FechaInicio = reader.GetDateTime(nameof(Contrato.FechaInicio)),
+                                FechaFin = reader.GetDateTime(nameof(Contrato.FechaFin)),
+                                MontoRenta = reader.GetDecimal(nameof(Contrato.MontoRenta)),
+                                Deposito = reader.GetDecimal(nameof(Contrato.Deposito)),
+                                Comision = reader.GetDecimal(nameof(Contrato.Comision)),
+                                Condiciones = reader.GetString(nameof(Contrato.Condiciones)),
+                            }
+                        );
+                    }
+                    connection.Close();
+                }
+            }
+            return contratos;
+        }
     }
 }

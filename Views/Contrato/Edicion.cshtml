@@ -46,33 +46,10 @@
                     <input asp-for="Comision" class="form-control" />
                     <span asp-validation-for="Comision" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none;">
                     <label asp-for="Condiciones" class="control-label"></label>
-                    <textarea asp-for="Condiciones" class="form-control"></textarea>
+                    <input asp-for="Condiciones" class="form-control" value="Renovado" />
                     <span asp-validation-for="Condiciones" class="text-danger"></span>
-                </div>
-
-                <!-- Nuevo campo para terminar contrato -->
-                <div class="form-group">
-                    <label class="control-label">¿Terminar contrato?</label>
-                    <select id="terminarContrato" name="terminarContrato" class="form-control">
-                        <option value="no">No</option>
-                        <option value="si">Sí</option>
-                    </select>
-                </div>
-
-                <!-- Campos de multa y fecha de terminación -->
-                <div id="terminacionTemprana" style="display: none;">
-                    <div class="form-group">
-                        <label asp-for="MultaTerminacionTemprana" class="control-label">Multa</label>
-                        <input asp-for="MultaTerminacionTemprana" class="form-control" />
-                        <span asp-validation-for="MultaTerminacionTemprana" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="FechaTerminacionTemprana" class="control-label">Fecha de Terminación</label>
-                        <input asp-for="FechaTerminacionTemprana" class="form-control" />
-                        <span asp-validation-for="FechaTerminacionTemprana" class="text-danger"></span>
-                    </div>
                 </div>
 
                 <div class="d-flex justify-content-between">
@@ -86,16 +63,6 @@
 
 @section Scripts {
     <script>
-        document.getElementById('terminarContrato').addEventListener('change', function () {
-            var terminarContrato = this.value;
-            var terminacionTemprana = document.getElementById('terminacionTemprana');
-            if (terminarContrato === 'si') {
-                terminacionTemprana.style.display = 'block';
-            } else {
-                terminacionTemprana.style.display = 'none';
-            }
-        });
-
         // Mostrar mensajes de SweetAlert basados en TempData
         @if (TempData["SuccessMessage"] != null)
         {
